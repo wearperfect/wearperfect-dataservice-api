@@ -1,0 +1,38 @@
+# Spring Boot configuration
+spring:
+  profiles:
+    active: development
+# Database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wearperfect
+    username: root
+    password: Test!234
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    open-in-view: false
+    generate-ddl: false
+# Logger configuration
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    org.hibernate: DEBUG
+# Server configuration
+server:
+  port: 8080
+  sessionTimeout: 30
+  servlet:
+    context-path: /wearperfect/api/v1
+# Security configuration
+security:
+  user:
+    name: user
+    password: user
+
