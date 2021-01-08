@@ -50,8 +50,23 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User createUser(User user) {
-		// TODO Auto-generated method stub
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
+		if(null == user.getUsername() || user.getUsername().isEmpty() || null == user.getPassword()) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+		user.setUsername(user.getUsername().toLowerCase());
+		if(null != user.getEmail() && !user.getEmail().isEmpty()) {
+			user.setEmail(user.getEmail().toLowerCase());
+		}
+		// Validate Email
+		// Validate Phone number
+		// Validate username
+		// Validate password
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoleId(1); //Default role USER
 		user.setCreatedOn(new Date());
+		user.setActive(true);
+		
 		try {
 			System.out.println(">>>>>>>>>"+objectMapper.writeValueAsString(user));
 		} catch (JsonProcessingException e) {
@@ -74,7 +89,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User authenticateUser(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
-		List<User> users = userRepository.findAll(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(user.getUsername()));
+		List<User> users = userRepository.findAll(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(user.getUsername().toLowerCase()));
 		if(users.size()==1 && passwordEncoder.matches(user.getPassword(), users.get(0).getPassword())) {
 			return users.get(0);
 		}else {

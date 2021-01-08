@@ -36,8 +36,8 @@ public class UserDetailsSpecification {
 				Predicate userMobileOrEmailOrUsernamePredicate=cq.where(
 						cb.or(
 						cb.equal(root.get(User_.phone), username),
-			    		cb.equal(root.get(User_.email), username),
-			    		cb.equal(root.get(User_.username), username))
+			    		cb.equal(root.get(User_.email), username.toLowerCase()),
+			    		cb.equal(root.get(User_.username), username.toLowerCase()))
 						).getRestriction();
 							    
 				return userMobileOrEmailOrUsernamePredicate;
@@ -67,10 +67,10 @@ public class UserDetailsSpecification {
 				Predicate userMobileOrEmailOrUsernameAndPasswordPredicate=cq.where(
 						cb.or(
 						cb.equal(root.get(User_.phone), username),
-			    		cb.equal(root.get(User_.email), username),
+			    		cb.equal(root.get(User_.email), username.toLowerCase()),
 			    		cb.equal(root.get(User_.username), username)
 			    		),
-						cb.and(cb.equal(root.get(User_.password), password))
+						cb.and(cb.equal(root.get(User_.password), password.toLowerCase()))
 						).getRestriction();
 							    
 				return userMobileOrEmailOrUsernameAndPasswordPredicate;

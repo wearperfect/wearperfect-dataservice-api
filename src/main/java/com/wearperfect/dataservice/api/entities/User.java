@@ -39,7 +39,7 @@ public class User {
 	private String password;
 
 	@Column(name = "role_id")
-	private String roleId;
+	private Integer roleId;
 
 	@Column(name = "fullname")
 	private String fullname;
