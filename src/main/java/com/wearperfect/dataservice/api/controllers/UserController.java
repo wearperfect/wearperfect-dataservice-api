@@ -29,14 +29,14 @@ public class UserController {
 	@GetMapping("/users")
 	public List<UserDTO> getUsers() {
 		List<User> users = userService.getUsers();
-		return users.stream().map(user -> userMapper.mapUserToUserDTO(user)).collect(Collectors.toList());
+		return users.stream().map(user -> userMapper.mapUserToUserDto(user)).collect(Collectors.toList());
 	}
 	
 	@PutMapping("/users")
 	public UserDTO updateUser(@RequestBody(required = true) UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUse(userDto);
 		User userResponse = userService.updateUser(user);
-		return userMapper.mapUserToUserDTO(userResponse);
+		return userMapper.mapUserToUserDto(userResponse);
 	}
 	
 	@GetMapping(value = "/users/{id}", produces={"application/json","application/xml"})
