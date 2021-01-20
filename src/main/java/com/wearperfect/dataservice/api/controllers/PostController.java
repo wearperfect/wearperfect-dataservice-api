@@ -4,15 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
@@ -38,16 +41,27 @@ public class PostController {
 		return postsDtoList;
 	}
 
-	@GetMapping(path = "/users/{userId}/posts/{postId}")
-	PostDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return null;
+	@PostMapping(path = "/users/{userId}/posts")
+	PostDetailsDTO createPost(Authentication authentication ,@PathVariable(name = "userId", required = true) Long userId,
+			@RequestBody PostDTO postDto) {
+		System.out.println("::::::::"+authentication.getName());
+		Post post = postMapper.mapPostDtoToPost(postDto);
+		Post savedPost = postService.createPost(post, userId, authentication.getName());
+		PostDetailsDTO postDetailsDto = postDetailsMapper.mapPostToPostDetailsDto(savedPost);
+		return postDetailsDto;
+	}
+	
+	@PostMapping(path = "/msaters")
+	Master createMaster(@RequestBody Master master) {
+		return postService.createMaster(master);
 	}
 
-	@PostMapping(path = "/users/{userId}/posts/{postId}")
-	PostDTO createPost(@PathVariable(name = "userId", required = true) Long userId,
+	@GetMapping(path = "/users/{userId}/posts/{postId}")
+	PostDetailsDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		return null;
+		Post post = postService.getPostByUserIdAndPostId(userId, postId);
+		PostDetailsDTO postDto = postDetailsMapper.mapPostToPostDetailsDto(post);
+		return postDto;
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")

@@ -2,6 +2,7 @@ package com.wearperfect.dataservice.api.entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +24,7 @@ public class PostItem {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
 	@Column(name = "post_id")
@@ -36,7 +37,7 @@ public class PostItem {
 	String sourceLink;
 
 	@Column(name = "content_type")
-	Integer contentTypeId;
+	String contentType;
 
 	@Column(name = "active")
 	Boolean active;
@@ -47,13 +48,12 @@ public class PostItem {
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
 	
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Post.class)
 	@JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Post postDetails;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "content_type", referencedColumnName = "id", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "content_type", referencedColumnName = "extension", insertable = false, updatable = false)
 	ContentType contentTypeDetails;
 
 }

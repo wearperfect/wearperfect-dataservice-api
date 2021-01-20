@@ -10,7 +10,7 @@ public class PostDetailsDTO {
 
 	Long id;
 	String title;
-	String desc;
+	String description;
 	Boolean active;
 	BasicUserDetailsDTO createdBy;
 	Date createdOn;

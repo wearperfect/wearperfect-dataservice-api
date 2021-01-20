@@ -17,7 +17,7 @@ public class PostDTO {
 
 	Long id;
 	String title;
-	String desc;
+	String description;
 	Boolean active;
 	Long createdBy;
 	Date createdOn;

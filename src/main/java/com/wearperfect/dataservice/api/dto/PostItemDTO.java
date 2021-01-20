@@ -11,7 +11,7 @@ public class PostItemDTO {
 	Long postId;
 	Integer sequenceId;
 	String sourceLink;
-	Integer contentType;
+	String contentType;
 	Boolean active;
 	Date createdOn;
 	Date lastUpdatedOn;

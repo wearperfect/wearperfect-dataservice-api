@@ -24,14 +24,14 @@ public class Post {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
 	@Column(name = "title")
 	String title;
 
-	@Column(name = "desc")
-	String desc;
+	@Column(name = "description")
+	String description;
 
 	@Column(name = "active")
 	Boolean active;
@@ -48,15 +48,15 @@ public class Post {
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	@JoinColumn(name = "created_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User createdByUserDetails;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	@JoinColumn(name = "last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User lastUpdatedByUserDetails;
 	
-	@OneToMany(mappedBy = "postDetails", targetEntity = PostItem.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "postDetails", targetEntity = PostItem.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<PostItem> postItems;
 	
 }
