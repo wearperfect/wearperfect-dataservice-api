@@ -26,15 +26,11 @@ public class FeedController {
 	
 	@GetMapping(path = "/feed")
 	List<PostDetailsDTO> getFeed(){
-		List<Post> posts = feedService.getFeed();
-		List<PostDetailsDTO> postsDtoList = posts.stream().map(post->postDetailsMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		return postsDtoList;
+		return feedService.getFeed();
 	}
 	
 	@GetMapping(path = "/users/{userId}/feed")
 	List<PostDetailsDTO> getFeedBUserId(@PathVariable(name = "userId", required = true) Long userId){
-		List<Post> posts = feedService.getFeedByUserId(userId);
-		List<PostDetailsDTO> postsDtoList = posts.stream().map(post->postDetailsMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		return postsDtoList;
+		return feedService.getFeedByUserId(userId);
 	}
 }
