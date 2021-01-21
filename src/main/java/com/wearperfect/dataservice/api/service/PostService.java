@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PostLikeDTO;
+import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
@@ -23,9 +25,13 @@ public interface PostService {
 	/**
 	 * Post Action APIs begin here
 	 **/
-	PostDTO likePost(Long userId, Long postId, Boolean isLiked);
+	PostLikeDTO likePost(Long userId, Long postId);
 	
-	PostDTO savePost(Long userId, Long postId, Boolean isSaved);
+	void unLikePost(Long userId, Long postId);
+	
+	PostSaveDTO savePost(Long userId, Long postId);
+	
+	void unSavePost(Long userId, Long postId);
 	
 	PostDTO commentPost(Long userId, Long postId);
 	

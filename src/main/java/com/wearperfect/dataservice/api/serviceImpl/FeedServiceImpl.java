@@ -3,6 +3,8 @@ package com.wearperfect.dataservice.api.serviceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import com.wearperfect.dataservice.api.service.FeedService;
 import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 
 @Service
+@Transactional
 public class FeedServiceImpl implements FeedService{
 	
 	@Autowired

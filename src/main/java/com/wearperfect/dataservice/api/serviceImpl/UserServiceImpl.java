@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService{
 		// Validate username
 		// Validate password
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoleId(1); //Default role USER
+		user.setRoleId(2); //Default role USER
 		user.setCreatedOn(new Date());
 		user.setActive(true);
 		

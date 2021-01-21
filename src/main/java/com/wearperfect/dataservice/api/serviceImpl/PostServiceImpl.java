@@ -17,17 +17,25 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PostLikeDTO;
+import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
+import com.wearperfect.dataservice.api.entities.PostLike;
+import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
+import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
+import com.wearperfect.dataservice.api.mappers.PostSaveMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostItemRepository;
+import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
+import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
@@ -51,21 +59,33 @@ public class PostServiceImpl implements PostService {
 	ContentTypeRepository contentTypeRepository;
 
 	@Autowired
+	PostLikeRepository postLikeRepository;
+
+	@Autowired
+	PostSaveRepository postSaveRepository;
+
+	@Autowired
 	MasterRepository masterRepository;
-	
+
 	@Autowired
 	EntityManagerFactory emf;
-	
+
 	@Autowired
 	PostMapper postMapper;
-	
+
 	@Autowired
 	PostDetailsMapper postDetailsmapper;
+
+	@Autowired
+	PostLikeMapper postLikeMapper;
+
+	@Autowired
+	PostSaveMapper postSaveMapper;
 
 	@Override
 	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
-		return posts.stream().map(post->postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		return posts.stream().map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -77,7 +97,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDetailsDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername) {
-		
+
 		Post post = postMapper.mapPostDtoToPost(postDto);
 
 		Optional<User> loggedInUser = userRepository
@@ -164,15 +184,60 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDTO likePost(Long userId, Long postId, Boolean isLiked) {
-		// TODO Auto-generated method stub
-		return null;
+	public PostLikeDTO likePost(Long userId, Long postId) {
+
+		Optional<PostLike> existingPostLike = Optional
+				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
+
+		if (existingPostLike.isPresent()) {
+			return postLikeMapper.mapPostLikeToPostLikeDto(existingPostLike.get());
+		}
+
+		PostLike like = new PostLike();
+		like.setPostId(postId);
+		like.setLikedBy(userId);
+		like.setLikedOn(new Date());
+		PostLike postLike = postLikeRepository.save(like);
+		return postLikeMapper.mapPostLikeToPostLikeDto(postLike);
 	}
 
 	@Override
-	public PostDTO savePost(Long userId, Long postId, Boolean isSaved) {
-		// TODO Auto-generated method stub
-		return null;
+	public void unLikePost(Long userId, Long postId) {
+		Optional<PostLike> existingPostLike = Optional
+				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
+
+		if (existingPostLike.isPresent()) {
+			postLikeRepository.deleteByPostIdAndLikedBy(postId, userId);
+		}
+	}
+
+	@Override
+	public PostSaveDTO savePost(Long userId, Long postId) {
+
+		Optional<PostSave> existingPostSave = Optional
+				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
+
+		if (existingPostSave.isPresent()) {
+			return postSaveMapper.mapPostSaveToPostSaveDto(existingPostSave.get());
+		}
+
+		PostSave save = new PostSave();
+		save.setPostId(postId);
+		save.setSavedBy(userId);
+		save.setSavedOn(new Date());
+		PostSave postSave = postSaveRepository.save(save);
+		return postSaveMapper.mapPostSaveToPostSaveDto(postSave);
+	}
+
+	@Override
+	public void unSavePost(Long userId, Long postId) {
+
+		Optional<PostSave> existingPostSave = Optional
+				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
+
+		if (existingPostSave.isPresent()) {
+			postSaveRepository.deleteByPostIdAndSavedBy(postId, userId);
+		}
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.wearperfect.dataservice.api.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,4 +20,17 @@ public class PostSave {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+	
+	@Column(name="post_id")
+	Long postId;
+	
+	@Column(name="saved_to")
+	Long savedTo;
+	
+	@Column(name="saved_by")
+	Long savedBy;
+	
+	@Column(name="saved_on")
+	Date savedOn;
+	
 }

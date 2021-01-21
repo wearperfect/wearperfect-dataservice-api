@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PostLikeDTO;
+import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
@@ -44,7 +46,7 @@ public class PostController {
 		return postService.createPost(postDto, userId, authentication.getName());
 	}
 	
-	@PostMapping(path = "/msaters")
+	@PostMapping(path = "/masters")
 	Master createMaster(@RequestBody Master master) {
 		return postService.createMaster(master);
 	}
@@ -63,18 +65,28 @@ public class PostController {
 	/**
 	 * Post Action APIs begin here
 	 **/
-	@PostMapping(path = "/users/{userId}/{postId}/like/{isLiked}")
-	PostDTO likePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId,
-			@PathVariable(name = "isLiked", required = true) Boolean isLiked) {
-		return null;
+	@PostMapping(path = "/users/{userId}/posts/{postId}/like/true")
+	PostLikeDTO likePost(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "postId", required = true) Long postId) {
+		return postService.likePost(userId, postId);
+	}
+	
+	@DeleteMapping(path = "/users/{userId}/posts/{postId}/like/false")
+	void unLikePost(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "postId", required = true) Long postId) {
+		postService.unLikePost(userId, postId);
 	}
 
-	@PostMapping(path = "/users/{userId}/{postId}/save/{isSaved}")
-	PostDTO savePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId,
-			@PathVariable(name = "isSaved", required = true) Boolean isSaved) {
-		return null;
+	@PostMapping(path = "/users/{userId}/posts/{postId}/save/true")
+	PostSaveDTO savePost(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "postId", required = true) Long postId) {
+		return postService.savePost(userId, postId);
+	}
+	
+	@DeleteMapping(path = "/users/{userId}/posts/{postId}/save/false")
+	void unSavePost(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "postId", required = true) Long postId) {
+		postService.unSavePost(userId, postId);
 	}
 
 	@PostMapping(path = "/users/{userId}/{postId}/comment")
