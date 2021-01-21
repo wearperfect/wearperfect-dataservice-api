@@ -65,28 +65,28 @@ public class PostController {
 	/**
 	 * Post Action APIs begin here
 	 **/
-	@PostMapping(path = "/users/{userId}/posts/{postId}/like/true")
+	@PostMapping(path = "/users/{userId}/posts/{postId}/like")
 	PostLikeDTO likePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.likePost(userId, postId);
 	}
 	
-	@DeleteMapping(path = "/users/{userId}/posts/{postId}/like/false")
-	void unLikePost(@PathVariable(name = "userId", required = true) Long userId,
+	@DeleteMapping(path = "/users/{userId}/posts/{postId}/like")
+	Long unLikePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		postService.unLikePost(userId, postId);
+		return postService.unLikePost(userId, postId);
 	}
 
-	@PostMapping(path = "/users/{userId}/posts/{postId}/save/true")
+	@PostMapping(path = "/users/{userId}/posts/{postId}/save")
 	PostSaveDTO savePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.savePost(userId, postId);
 	}
 	
-	@DeleteMapping(path = "/users/{userId}/posts/{postId}/save/false")
-	void unSavePost(@PathVariable(name = "userId", required = true) Long userId,
+	@DeleteMapping(path = "/users/{userId}/posts/{postId}/save")
+	Long unSavePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		postService.unSavePost(userId, postId);
+		return postService.unSavePost(userId, postId);
 	}
 
 	@PostMapping(path = "/users/{userId}/{postId}/comment")

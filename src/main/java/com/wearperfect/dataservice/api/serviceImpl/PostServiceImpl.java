@@ -85,14 +85,20 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
-		return posts.stream().map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		postDetailsList.forEach(post->{
+			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
+		});
+		return postDetailsList;
 	}
 
 	@Override
 	public PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId) {
 		Optional<Post> post = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
-		return postDetailsmapper.mapPostToPostDetailsDto(post.get());
+		PostDetailsDTO postDetails = postDetailsmapper.mapPostToPostDetailsDto(post.get());
+		postDetails.setTotalLikes(postLikeRepository.countByPostId(post.get().getId()));
+		return postDetails;
 	}
 
 	@Override
@@ -202,13 +208,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void unLikePost(Long userId, Long postId) {
+	public Long unLikePost(Long userId, Long postId) {
 		Optional<PostLike> existingPostLike = Optional
 				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
 
 		if (existingPostLike.isPresent()) {
 			postLikeRepository.deleteByPostIdAndLikedBy(postId, userId);
 		}
+		return postId;
 	}
 
 	@Override
@@ -230,7 +237,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void unSavePost(Long userId, Long postId) {
+	public Long unSavePost(Long userId, Long postId) {
 
 		Optional<PostSave> existingPostSave = Optional
 				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
@@ -238,6 +245,7 @@ public class PostServiceImpl implements PostService {
 		if (existingPostSave.isPresent()) {
 			postSaveRepository.deleteByPostIdAndSavedBy(postId, userId);
 		}
+		return postId;
 	}
 
 	@Override

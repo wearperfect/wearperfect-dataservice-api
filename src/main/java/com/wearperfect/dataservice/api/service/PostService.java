@@ -27,11 +27,11 @@ public interface PostService {
 	 **/
 	PostLikeDTO likePost(Long userId, Long postId);
 	
-	void unLikePost(Long userId, Long postId);
+	Long unLikePost(Long userId, Long postId);
 	
 	PostSaveDTO savePost(Long userId, Long postId);
 	
-	void unSavePost(Long userId, Long postId);
+	Long unSavePost(Long userId, Long postId);
 	
 	PostDTO commentPost(Long userId, Long postId);
 	
