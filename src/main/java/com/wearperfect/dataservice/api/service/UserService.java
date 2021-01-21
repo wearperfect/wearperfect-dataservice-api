@@ -2,17 +2,18 @@ package com.wearperfect.dataservice.api.service;
 
 import java.util.List;
 
+import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.entities.User;
 
 public interface UserService {
 
-	List<User> getUsers();
+	List<UserDTO> getUsers();
 	
-	User getUserDetailsById(Long userId);
+	UserDTO getUserDetailsById(Long userId);
 	
-	User createUser(User user);
+	UserDTO createUser(User user);
 
-	User updateUser(User user);
+	UserDTO updateUser(User user);
 
-	User authenticateUser(User user);
+	UserDTO authenticateUser(User user);
 }

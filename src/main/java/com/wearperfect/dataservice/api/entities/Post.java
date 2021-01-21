@@ -38,7 +38,7 @@ public class Post {
 
 	@Column(name = "created_by")
 	Long createdBy;
-	
+
 	@Column(name = "created_on")
 	Date createdOn;
 
@@ -47,16 +47,16 @@ public class Post {
 
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	@JoinColumn(name = "created_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User createdByUserDetails;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	@JoinColumn(name = "last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User lastUpdatedByUserDetails;
-	
-	@OneToMany(mappedBy = "postDetails", targetEntity = PostItem.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = PostItem.class, mappedBy = "postDetails", cascade = CascadeType.ALL, orphanRemoval = true)
 	List<PostItem> postItems;
-	
+
 }

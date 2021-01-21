@@ -3,19 +3,20 @@ package com.wearperfect.dataservice.api.service;
 import java.util.List;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
+import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
 
 public interface PostService {
 	
-	List<Post> getPostsByUserId(Long userId);
+	List<PostDetailsDTO> getPostsByUserId(Long userId);
 	
-	Post getPostByUserIdAndPostId(Long userId, Long postId);
+	PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId);
 	
-	Post createPost(Post post, Long postBy, String loggedInUsername);
+	PostDetailsDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername);
 	
-	Post createPostItems(List<PostItem> postItems, Long postId, Long userId);
+	PostDetailsDTO createPostItems(List<PostItem> postItems, Long postId, Long userId);
 	
 	void deletePost(Long userId, Long postId);
 	

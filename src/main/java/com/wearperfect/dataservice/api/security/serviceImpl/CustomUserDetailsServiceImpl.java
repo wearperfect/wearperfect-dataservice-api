@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
 @Service
+@Transactional
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
 	@Autowired
@@ -50,15 +52,15 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 		} else if (users.size() > 1) {
 			throw new HttpClientErrorException(HttpStatus.CONFLICT);
 		} else {
-			org.springframework.security.core.userdetails.User x = new org.springframework.security.core.userdetails.User(users.get(0).getUsername(),
+			org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(users.get(0).getUsername(),
 					users.get(0).getPassword(), mapRolesToAuthorities(users.get(0).getRole()));
 			try {
-				System.out.println("@@@@@@"+mapper.writeValueAsString(x));
+				System.out.println("@@@@@@"+mapper.writeValueAsString(userDetails));
 			} catch (JsonProcessingException e) {
 				System.out.println("Exception@@@@@@");
 				e.printStackTrace();
 			}
-			return x;
+			return userDetails;
 		}
 	}
 

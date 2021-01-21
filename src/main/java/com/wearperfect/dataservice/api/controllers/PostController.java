@@ -35,20 +35,13 @@ public class PostController {
 
 	@GetMapping(path = "/users/{userId}/posts")
 	List<PostDetailsDTO> postsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
-		List<Post> posts = postService.getPostsByUserId(userId);
-		List<PostDetailsDTO> postsDtoList = posts.stream().map(post -> postDetailsMapper.mapPostToPostDetailsDto(post))
-				.collect(Collectors.toList());
-		return postsDtoList;
+		return postService.getPostsByUserId(userId);
 	}
 
 	@PostMapping(path = "/users/{userId}/posts")
 	PostDetailsDTO createPost(Authentication authentication ,@PathVariable(name = "userId", required = true) Long userId,
 			@RequestBody PostDTO postDto) {
-		System.out.println("::::::::"+authentication.getName());
-		Post post = postMapper.mapPostDtoToPost(postDto);
-		Post savedPost = postService.createPost(post, userId, authentication.getName());
-		PostDetailsDTO postDetailsDto = postDetailsMapper.mapPostToPostDetailsDto(savedPost);
-		return postDetailsDto;
+		return postService.createPost(postDto, userId, authentication.getName());
 	}
 	
 	@PostMapping(path = "/msaters")
@@ -59,9 +52,7 @@ public class PostController {
 	@GetMapping(path = "/users/{userId}/posts/{postId}")
 	PostDetailsDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		Post post = postService.getPostByUserIdAndPostId(userId, postId);
-		PostDetailsDTO postDto = postDetailsMapper.mapPostToPostDetailsDto(post);
-		return postDto;
+		return postService.getPostByUserIdAndPostId(userId, postId);
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")

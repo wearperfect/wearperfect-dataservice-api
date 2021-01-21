@@ -5,27 +5,25 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
+import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
+import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostItemRepository;
@@ -37,6 +35,7 @@ import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
 @Service
+@Transactional
 public class PostServiceImpl implements PostService {
 
 	@Autowired
@@ -56,41 +55,30 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	EntityManagerFactory emf;
+	
+	@Autowired
+	PostMapper postMapper;
+	
+	@Autowired
+	PostDetailsMapper postDetailsmapper;
 
 	@Override
-	@Transactional
-	public List<Post> getPostsByUserId(Long userId) {
-		
+	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
-		posts.forEach(post -> {
-			Assert.notNull(post.getCreatedByUserDetails(), "Error in fetching user created by user details");
-			Assert.notNull(post.getPostItems(), "Error in fetching post items for post id: "+ post.getId());
-			post.getPostItems().forEach(postItem -> {
-				Assert.notNull(postItem.getContentTypeDetails(),
-						"Error in fetching content type for post item id: " + postItem.getId());
-			});
-		});
-		return posts;
+		return posts.stream().map(post->postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
-	@Transactional
-	public Post getPostByUserIdAndPostId(Long userId, Long postId) {
+	public PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId) {
 		Optional<Post> post = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
-		if (post.isPresent()) {
-			Assert.notNull(post.get().getCreatedByUserDetails(), "Error in fetching user created by user details");
-			Assert.notNull(post.get().getPostItems(), "Error in fetching post items for post id: "+ post.get().getId());
-			post.get().getPostItems().forEach(postItem -> {
-				Assert.notNull(postItem.getContentTypeDetails(),
-						"Error in fetching content type for post item id: " + postItem.getId());
-			});
-		}
-		return post.get();
+		return postDetailsmapper.mapPostToPostDetailsDto(post.get());
 	}
 
 	@Override
-	public Post createPost(Post post, Long postBy, String loggedInUsername) {
+	public PostDetailsDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername) {
+		
+		Post post = postMapper.mapPostDtoToPost(postDto);
 
 		Optional<User> loggedInUser = userRepository
 				.findOne(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(loggedInUsername));
@@ -146,7 +134,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post createPostItems(List<PostItem> postItems, Long postId, Long userId) {
+	public PostDetailsDTO createPostItems(List<PostItem> postItems, Long postId, Long userId) {
 		postItems.forEach(postItem -> {
 			postItem.setSequenceId(postItems.indexOf(postItem));
 			postItem.setPostId(postId);

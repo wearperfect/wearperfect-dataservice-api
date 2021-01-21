@@ -28,20 +28,18 @@ public class UserController {
 	
 	@GetMapping("/users")
 	public List<UserDTO> getUsers() {
-		List<User> users = userService.getUsers();
-		return users.stream().map(user -> userMapper.mapUserToUserDto(user)).collect(Collectors.toList());
+		return userService.getUsers();
 	}
 	
 	@PutMapping("/users")
 	public UserDTO updateUser(@RequestBody(required = true) UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUse(userDto);
-		User userResponse = userService.updateUser(user);
-		return userMapper.mapUserToUserDto(userResponse);
+		return userService.updateUser(user);
 	}
 	
 	@GetMapping(value = "/users/{id}", produces={"application/json","application/xml"})
 	@ResponseBody
-	public User getUserById(@PathVariable(name = "id") Long userId) {
+	public UserDTO getUserById(@PathVariable(name = "id") Long userId) {
 		return userService.getUserDetailsById(userId);
 	}
 }

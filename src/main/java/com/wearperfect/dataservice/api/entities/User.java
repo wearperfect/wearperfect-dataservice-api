@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.entities;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -11,10 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.Transient;
@@ -77,7 +73,7 @@ public class User {
 	@Column(name = "active")
 	private Boolean active;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Role role;
 

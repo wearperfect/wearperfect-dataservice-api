@@ -48,11 +48,11 @@ public class PostItem {
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Post.class)
+	@ManyToOne(optional = false, targetEntity = Post.class)
 	@JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Post postDetails;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, targetEntity = ContentType.class)
 	@JoinColumn(name = "content_type", referencedColumnName = "extension", insertable = false, updatable = false)
 	ContentType contentTypeDetails;
 

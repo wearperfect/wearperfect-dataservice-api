@@ -22,15 +22,13 @@ public class LoginController {
 	@PostMapping("/signin")
 	public UserDTO userSignin(@RequestBody(required = true) UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUse(userDto);
-		User userResponse = userService.authenticateUser(user);
-		return userMapper.mapUserToUserDto(userResponse);
+		return userService.authenticateUser(user);
 	}
 	
 	@PostMapping("/signup")
 	public UserDTO userSignup(@RequestBody(required = true) UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUse(userDto);
-		User userResponse = userService.createUser(user);
-		return userMapper.mapUserToUserDto(userResponse);
+		return userService.createUser(user);
 	}
 	
 }
