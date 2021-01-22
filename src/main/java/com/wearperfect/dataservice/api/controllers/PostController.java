@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
 import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
+import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.service.PostService;
@@ -58,8 +61,9 @@ public class PostController {
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")
-	void deletePost(@PathVariable(name = "userId", required = true) Long userId,
+	Long deletePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
+		return null;
 	}
 
 	/**
@@ -88,23 +92,32 @@ public class PostController {
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.unSavePost(userId, postId);
 	}
-
-	@PostMapping(path = "/users/{userId}/{postId}/comment")
-	PostDTO commentPost(@PathVariable(name = "userId", required = true) Long userId,
+	
+	@GetMapping(path = "/users/{userId}/posts/{postId}/comments")
+	List<PostCommentDTO> getPostComments(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		return null;
+		return postService.getComments(userId, postId);
 	}
 
-	@PutMapping(path = "/users/{userId}/{postId}/comment/{commentId}")
-	PostDTO editPostComment(@PathVariable(name = "userId", required = true) Long userId,
+	@PostMapping(path = "/users/{userId}/posts/{postId}/comments")
+	PostCommentDTO commentPost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId,
-			@PathVariable(name = "commentId", required = true) Long commentId) {
-		return null;
+			@RequestBody PostCommentDTO postCommentDto) {
+		return postService.commentPost(userId, postId, postCommentDto);
 	}
 
-	@DeleteMapping(path = "/users/{userId}/{postId}/comment/{commentId}")
-	void deletePostComment(@PathVariable(name = "userId", required = true) Long userId,
+	@PutMapping(path = "/users/{userId}/posts/{postId}/comments/{commentId}")
+	PostCommentDTO editPostComment(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "postId", required = true) Long postId,
+			@PathVariable(name = "commentId", required = true) Long commentId,
+			@RequestBody PostCommentDTO postCommentDto) {
+		return postService.editPostComment(userId, postId, commentId, postCommentDto);
+	}
+
+	@DeleteMapping(path = "/users/{userId}/posts/{postId}/comments/{commentId}")
+	Long deletePostComment(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId,
 			@PathVariable(name = "commentId", required = true) Long commentId) {
+		return postService.deletePostComment(userId, postId, commentId);
 	}
 }

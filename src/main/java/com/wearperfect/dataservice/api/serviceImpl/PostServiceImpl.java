@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
@@ -22,16 +23,19 @@ import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
+import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
 import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.mappers.PostSaveMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
+import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
 import com.wearperfect.dataservice.api.repositories.PostItemRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
@@ -65,6 +69,9 @@ public class PostServiceImpl implements PostService {
 	PostSaveRepository postSaveRepository;
 
 	@Autowired
+	PostCommentRepository postCommentRepository;
+
+	@Autowired
 	MasterRepository masterRepository;
 
 	@Autowired
@@ -82,11 +89,15 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	PostSaveMapper postSaveMapper;
 
+	@Autowired
+	PostCommentMapper postCommentMapper;
+
 	@Override
 	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
-		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		postDetailsList.forEach(post->{
+		List<PostDetailsDTO> postDetailsList = posts.stream()
+				.map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		postDetailsList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 		});
 		return postDetailsList;
@@ -249,21 +260,38 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDTO commentPost(Long userId, Long postId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostCommentDTO> getComments(Long userId, Long postId) {
+		List<PostComment> postComments = postCommentRepository.findAll();
+		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDto(comment))
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public PostDTO editPostComment(Long userId, Long postId, Long commentId) {
-		// TODO Auto-generated method stub
-		return null;
+	public PostCommentDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto) {
+		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
+		postComment.setPostId(postId);
+		postComment.setCommentedBy(userId);
+		postComment.setCommentedOn(new Date());
+		postComment.setActive(true);
+		postCommentRepository.save(postComment);
+		return postCommentMapper.mapPostCommentToPostCommentDto(postComment);
 	}
 
 	@Override
-	public void deletePostComment(Long userId, Long postId, Long commentId) {
-		// TODO Auto-generated method stub
+	public PostCommentDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto) {
+		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
+		postComment.setLastUpdatedOn(new Date());
+		postCommentRepository.save(postComment);
+		return postCommentMapper.mapPostCommentToPostCommentDto(postComment);
+	}
 
+	@Override
+	public Long deletePostComment(Long userId, Long postId, Long commentId) {
+		Optional<PostComment> postComment = Optional.ofNullable(postCommentRepository.findByIdAndPostIdAndCommentedBy(commentId, postId, userId));
+		if(postComment.isPresent()) {
+			postCommentRepository.deleteById(postComment.get().getId());
+		}
+		return postId;
 	}
 
 	@Override

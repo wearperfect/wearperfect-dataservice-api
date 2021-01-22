@@ -2,12 +2,12 @@ package com.wearperfect.dataservice.api.service;
 
 import java.util.List;
 
+import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
 import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
-import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
 
 public interface PostService {
@@ -33,11 +33,13 @@ public interface PostService {
 	
 	Long unSavePost(Long userId, Long postId);
 	
-	PostDTO commentPost(Long userId, Long postId);
+	List<PostCommentDTO> getComments(Long userId, Long postId);
 	
-	PostDTO editPostComment(Long userId, Long postId, Long commentId);
+	PostCommentDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto);
 	
-	void deletePostComment(Long userId, Long postId, Long commentId);
+	PostCommentDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto);
+	
+	Long deletePostComment(Long userId, Long postId, Long commentId);
 
 	Master createMaster(Master master);
 }

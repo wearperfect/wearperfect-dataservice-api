@@ -24,13 +24,15 @@ public class PostDetailsDTO {
 	
 	Date lastUpdatedOn;
 	
+	Boolean isLiked;
+	
+	Boolean isSaved;
+	
 	Long totalLikes;
 	
 	Long totalComments;
 	
-	Boolean isLiked;
-	
-	Boolean isSaved;
+	List<PostCommentDTO> comments;
 	
 	List<PostItemDetailsDTO> postItems;
 }
