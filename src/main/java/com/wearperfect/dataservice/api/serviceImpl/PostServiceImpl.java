@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.wearperfect.dataservice.api.dto.BasicUserDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
+import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
@@ -29,10 +31,10 @@ import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
-import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
 import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.mappers.PostSaveMapper;
+import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
@@ -76,12 +78,12 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	EntityManagerFactory emf;
+	
+	@Autowired
+	UserMapper userMapper;
 
 	@Autowired
 	PostMapper postMapper;
-
-	@Autowired
-	PostDetailsMapper postDetailsmapper;
 
 	@Autowired
 	PostLikeMapper postLikeMapper;
@@ -96,7 +98,7 @@ public class PostServiceImpl implements PostService {
 	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
 		List<PostDetailsDTO> postDetailsList = posts.stream()
-				.map(post -> postDetailsmapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+				.map(post -> postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 		});
@@ -107,7 +109,7 @@ public class PostServiceImpl implements PostService {
 	public PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId) {
 		Optional<Post> post = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
-		PostDetailsDTO postDetails = postDetailsmapper.mapPostToPostDetailsDto(post.get());
+		PostDetailsDTO postDetails = postMapper.mapPostToPostDetailsDto(post.get());
 		postDetails.setTotalLikes(postLikeRepository.countByPostId(post.get().getId()));
 		return postDetails;
 	}
@@ -260,29 +262,32 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostCommentDTO> getComments(Long userId, Long postId) {
+	public List<PostCommentDetailsDTO> getComments(Long userId, Long postId) {
 		List<PostComment> postComments = postCommentRepository.findAll();
-		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDto(comment))
+		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public PostCommentDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto) {
+	public PostCommentDetailsDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto) {
 		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
 		postComment.setPostId(postId);
 		postComment.setCommentedBy(userId);
 		postComment.setCommentedOn(new Date());
 		postComment.setActive(true);
 		postCommentRepository.save(postComment);
-		return postCommentMapper.mapPostCommentToPostCommentDto(postComment);
+		PostCommentDetailsDTO savedCommentDto = postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
+		BasicUserDetailsDTO userDetails = userMapper.mapUserToBasicUserDetailsDto(userRepository.findById(userId).get());
+		savedCommentDto.setCommentedBy(userDetails);
+		return savedCommentDto;
 	}
 
 	@Override
-	public PostCommentDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto) {
+	public PostCommentDetailsDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto) {
 		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
 		postComment.setLastUpdatedOn(new Date());
 		postCommentRepository.save(postComment);
-		return postCommentMapper.mapPostCommentToPostCommentDto(postComment);
+		return postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
 	}
 
 	@Override

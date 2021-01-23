@@ -3,6 +3,7 @@ package com.wearperfect.dataservice.api.service;
 import java.util.List;
 
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
+import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
@@ -33,11 +34,11 @@ public interface PostService {
 	
 	Long unSavePost(Long userId, Long postId);
 	
-	List<PostCommentDTO> getComments(Long userId, Long postId);
+	List<PostCommentDetailsDTO> getComments(Long userId, Long postId);
 	
-	PostCommentDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto);
+	PostCommentDetailsDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto);
 	
-	PostCommentDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto);
+	PostCommentDetailsDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto);
 	
 	Long deletePostComment(Long userId, Long postId, Long commentId);
 

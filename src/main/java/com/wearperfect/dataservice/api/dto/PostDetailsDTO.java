@@ -32,7 +32,7 @@ public class PostDetailsDTO {
 	
 	Long totalComments;
 	
-	List<PostCommentDTO> comments;
+	List<PostCommentDetailsDTO> comments;
 	
 	List<PostItemDetailsDTO> postItems;
 }

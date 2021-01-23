@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,13 +8,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
-import com.wearperfect.dataservice.api.dto.PostCommentDTO;
+import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
@@ -23,7 +20,7 @@ import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
-import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
+import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
@@ -48,8 +45,8 @@ public class FeedServiceImpl implements FeedService {
 	PostCommentRepository postCommentRepository;
 
 	@Autowired
-	PostDetailsMapper postDetailsMapper;
-
+	PostMapper postMapper;
+	
 	@Autowired
 	PostCommentMapper postCommentMapper;
 
@@ -61,13 +58,13 @@ public class FeedServiceImpl implements FeedService {
 	public List<PostDetailsDTO> getFeed() {
 		List<Post> posts = postRepository.findAll();
 		List<PostDetailsDTO> postDetailsList = posts.stream()
-				.map(post -> postDetailsMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+				.map(post -> postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
 					PageRequest.of(POST_COMMENTS_DEFAULT_PAGE_OFFSET, POST_COMMENTS_DEFAULT_PAGE_SIZE,
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
-			List<PostCommentDTO> comments = commentsList.stream().map(comment->postCommentMapper.mapPostCommentToPostCommentDto(comment)).collect(Collectors.toList());
+			List<PostCommentDetailsDTO> comments = commentsList.stream().map(comment->postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment)).collect(Collectors.toList());
 			post.setComments(comments);
 		});
 		return postDetailsList;
@@ -77,7 +74,7 @@ public class FeedServiceImpl implements FeedService {
 	public List<PostDetailsDTO> getFeedByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
 		List<PostDetailsDTO> postDetailsList = posts.stream()
-				.map(post -> postDetailsMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+				.map(post -> postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 			Optional<PostLike> like = Optional
@@ -98,7 +95,7 @@ public class FeedServiceImpl implements FeedService {
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
 					PageRequest.of(POST_COMMENTS_DEFAULT_PAGE_OFFSET, POST_COMMENTS_DEFAULT_PAGE_SIZE,
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
-			List<PostCommentDTO> comments = commentsList.stream().map(comment->postCommentMapper.mapPostCommentToPostCommentDto(comment)).collect(Collectors.toList());
+			List<PostCommentDetailsDTO> comments = commentsList.stream().map(comment->postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment)).collect(Collectors.toList());
 			post.setComments(comments);
 		});
 		return postDetailsList;

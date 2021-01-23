@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
+import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
@@ -22,7 +23,6 @@ import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
-import com.wearperfect.dataservice.api.mappers.PostDetailsMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.service.PostService;
 
@@ -34,9 +34,6 @@ public class PostController {
 
 	@Autowired
 	PostMapper postMapper;
-	
-	@Autowired
-	PostDetailsMapper postDetailsMapper;
 
 	@GetMapping(path = "/users/{userId}/posts")
 	List<PostDetailsDTO> postsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
@@ -94,20 +91,20 @@ public class PostController {
 	}
 	
 	@GetMapping(path = "/users/{userId}/posts/{postId}/comments")
-	List<PostCommentDTO> getPostComments(@PathVariable(name = "userId", required = true) Long userId,
+	List<PostCommentDetailsDTO> getPostComments(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.getComments(userId, postId);
 	}
 
 	@PostMapping(path = "/users/{userId}/posts/{postId}/comments")
-	PostCommentDTO commentPost(@PathVariable(name = "userId", required = true) Long userId,
+	PostCommentDetailsDTO commentPost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId,
 			@RequestBody PostCommentDTO postCommentDto) {
 		return postService.commentPost(userId, postId, postCommentDto);
 	}
 
 	@PutMapping(path = "/users/{userId}/posts/{postId}/comments/{commentId}")
-	PostCommentDTO editPostComment(@PathVariable(name = "userId", required = true) Long userId,
+	PostCommentDetailsDTO editPostComment(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId,
 			@PathVariable(name = "commentId", required = true) Long commentId,
 			@RequestBody PostCommentDTO postCommentDto) {

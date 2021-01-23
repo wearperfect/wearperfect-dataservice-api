@@ -7,7 +7,7 @@ import com.wearperfect.dataservice.api.dto.BasicContentTypeDetailsDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface BasicContentTypeDetailsMapper {
+public interface ContentTypeMapper {
 
 	BasicContentTypeDetailsDTO mapContentTypeToBasicContentTypeDetailsDTO(ContentType contentType);
 }

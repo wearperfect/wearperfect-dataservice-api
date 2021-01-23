@@ -5,15 +5,15 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class PostCommentDTO {
+public class PostCommentDetailsDTO {
 
-	Long id;
+    Long id;
 	
 	Long postId;
 
 	String description;
 
-	Long commentedBy;
+	BasicUserDetailsDTO commentedBy;
 
 	Date commentedOn;
 
