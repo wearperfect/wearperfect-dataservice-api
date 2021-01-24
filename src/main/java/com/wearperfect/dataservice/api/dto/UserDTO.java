@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -20,8 +18,8 @@ public class UserDTO {
 	private Long homeAddressId;
 	private Long DeliveryAddressId;
 	private Long businessAddressId;
-	private Date createdOn;
-	private Date lastUpdatedOn;
+	private Long createdOn;
+	private Long lastUpdatedOn;
 	private Boolean active;
 }
 

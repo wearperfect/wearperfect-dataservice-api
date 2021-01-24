@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -15,5 +13,5 @@ public class PostSaveDTO {
 	
 	Long savedBy;
 	
-	Date savedOn;
+	Long savedOn;
 }

@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import com.wearperfect.dataservice.api.entities.User;
 
 import lombok.Data;
@@ -25,9 +23,9 @@ public class ContentTypeDTO {
 
 	User createdBy;
 
-	Date createdOn;
+	Long createdOn;
 
 	User lastUpdatedBy;
 
-	Date lastUpdatedOn;
+	Long lastUpdatedOn;
 }

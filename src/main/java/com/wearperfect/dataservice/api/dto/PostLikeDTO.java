@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -13,5 +11,5 @@ public class PostLikeDTO {
 		
 	Long likedBy;
 	
-	Date likedOn;
+	Long likedOn;
 }

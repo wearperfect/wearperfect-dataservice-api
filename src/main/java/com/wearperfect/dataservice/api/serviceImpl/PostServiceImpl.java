@@ -11,6 +11,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -26,6 +29,7 @@ import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
+import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostSave;
@@ -263,7 +267,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostCommentDetailsDTO> getComments(Long userId, Long postId) {
-		List<PostComment> postComments = postCommentRepository.findAll();
+		List<PostComment> postComments = postCommentRepository.findByPostId(postId, PageRequest.of(0, 15, Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
 		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
 				.collect(Collectors.toList());
 	}

@@ -11,7 +11,7 @@ import com.wearperfect.dataservice.api.entities.PostComment;
 
 @Repository
 public interface PostCommentRepository extends JpaRepository<PostComment, Long>, JpaSpecificationExecutor<PostComment>{
-
+	
 	List<PostComment> findByPostId(Long postId, Pageable page);
 	
 	PostComment findByIdAndPostIdAndCommentedBy(Long commentId, Long postId, Long commentedBy);

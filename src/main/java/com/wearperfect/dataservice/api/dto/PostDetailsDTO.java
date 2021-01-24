@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -18,11 +17,11 @@ public class PostDetailsDTO {
 	
 	BasicUserDetailsDTO createdBy;
 	
-	Date createdOn;
+	Long createdOn;
 	
 	BasicUserDetailsDTO lastUpdatedBy;
 	
-	Date lastUpdatedOn;
+	Long lastUpdatedOn;
 	
 	Boolean isLiked;
 	

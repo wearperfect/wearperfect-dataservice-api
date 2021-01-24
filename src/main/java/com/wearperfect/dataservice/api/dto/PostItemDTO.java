@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -13,6 +11,6 @@ public class PostItemDTO {
 	String sourceLink;
 	String contentType;
 	Boolean active;
-	Date createdOn;
-	Date lastUpdatedOn;
+	Long createdOn;
+	Long lastUpdatedOn;
 }

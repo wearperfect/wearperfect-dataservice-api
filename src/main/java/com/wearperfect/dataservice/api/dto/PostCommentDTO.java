@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -15,9 +13,9 @@ public class PostCommentDTO {
 
 	Long commentedBy;
 
-	Date commentedOn;
+	Long commentedOn;
 
-	Date lastUpdatedOn;
+	Long lastUpdatedOn;
 	
 	Boolean active;
 }

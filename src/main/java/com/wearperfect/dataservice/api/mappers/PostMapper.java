@@ -6,19 +6,24 @@ import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostItemDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Post;
-import com.wearperfect.dataservice.api.entities.PostItem;
 
-@Mapper(uses = { UserMapper.class, PostItemMapper.class, PostCommentMapper.class },
+@Mapper(uses = { UserMapper.class, PostItemMapper.class, PostCommentMapper.class, UtilityMapper.class },
 		unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMapper {
 	
+	
+	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
+	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
 	PostDTO mapPostToPostDto(Post post);
 
+	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
+	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	Post mapPostDtoToPost(PostDTO postDto);
 	
 	@Mapping(source = "createdByUserDetails", target = "createdBy")
 	@Mapping(source = "lastUpdatedByUserDetails", target = "lastUpdatedBy")
+	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
+	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
 	PostDetailsDTO mapPostToPostDetailsDto(Post post);
 }
