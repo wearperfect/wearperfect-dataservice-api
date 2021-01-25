@@ -79,7 +79,8 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public List<PostDetailsDTO> getFeedByUserId(Long userId) {
-		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
+		List<Post> posts = postRepository.findAll();
+		//List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
 		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
@@ -88,25 +89,30 @@ public class FeedServiceImpl implements FeedService {
 			Optional<PostLike> like = Optional
 					.ofNullable(postLikeRepository.findByPostIdAndLikedBy(post.getId(), userId));
 			if (like.isPresent() && like.get().getLikedBy() == userId) {
-				post.setIsLiked(true);
+				post.setLiked(true);
 			} else {
-				post.setIsLiked(false);
+				post.setLiked(false);
 			}
 			//
 			Optional<PostSave> save = Optional
 					.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
 			if (save.isPresent() && save.get().getSavedBy() == userId) {
-				post.setIsSaved(true);
+				post.setSaved(true);
 			} else {
-				post.setIsSaved(false);
+				post.setSaved(false);
 			}
 			//
-			Optional<Follow> follow = Optional
-					.ofNullable(followRepository.findByUserIdAndFollowedBy(post.getCreatedBy().getId(), userId));
-			if(follow.isPresent()) {
+			if (post.getCreatedBy().getId() == userId) {
 				post.setFollowing(true);
-			}else {
-				post.setFollowing(false);
+			} else {
+				Optional<Follow> follow = Optional
+						.ofNullable(followRepository.findByUserIdAndFollowedBy(post.getCreatedBy().getId(), userId));
+				System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
+				if (follow.isPresent()) {
+					post.setFollowing(true);
+				} else {
+					post.setFollowing(false);
+				}
 			}
 			post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),

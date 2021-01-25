@@ -25,9 +25,9 @@ public class PostDetailsDTO {
 	
 	Boolean following;
 	
-	Boolean isLiked;
+	Boolean liked;
 	
-	Boolean isSaved;
+	Boolean saved;
 	
 	Long totalLikes;
 	
