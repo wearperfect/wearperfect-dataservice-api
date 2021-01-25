@@ -38,9 +38,9 @@ public class UserController {
 		return userService.updateUser(user);
 	}
 	
-	@GetMapping(value = "/users/{id}", produces={"application/json","application/xml"})
+	@GetMapping(value = "/users/{userId}", produces={"application/json","application/xml"})
 	@ResponseBody
-	public UserDetailsDTO getUserById(@PathVariable(name = "id") Long userId) {
+	public UserDetailsDTO getUserById(@PathVariable(name = "userId") Long userId) {
 		return userService.getUserDetailsById(userId);
 	}
 }

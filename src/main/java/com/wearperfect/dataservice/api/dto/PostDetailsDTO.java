@@ -23,6 +23,8 @@ public class PostDetailsDTO {
 	
 	Long lastUpdatedOn;
 	
+	Boolean following;
+	
 	Boolean isLiked;
 	
 	Boolean isSaved;
