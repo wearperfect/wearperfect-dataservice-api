@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.dto.BasicUserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
@@ -281,7 +281,7 @@ public class PostServiceImpl implements PostService {
 		postComment.setActive(true);
 		postCommentRepository.save(postComment);
 		PostCommentDetailsDTO savedCommentDto = postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
-		BasicUserDetailsDTO userDetails = userMapper.mapUserToBasicUserDetailsDto(userRepository.findById(userId).get());
+		UserBasicDetailsDTO userDetails = userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get());
 		savedCommentDto.setCommentedBy(userDetails);
 		return savedCommentDto;
 	}

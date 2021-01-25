@@ -17,8 +17,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.UserDTO;
+import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.repositories.FollowRepository;
+import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.UserService;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
@@ -29,6 +32,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	PostRepository postRepository;
+	
+	@Autowired
+	FollowRepository followRepository;
 	
 	@Autowired
 	UserMapper userMapper;
@@ -43,13 +52,18 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserDTO getUserDetailsById(Long userId) {
+	public UserDetailsDTO getUserDetailsById(Long userId) {
 		Optional<User> user = userRepository.findById(userId);
+		UserDetailsDTO userDetails;
 		if (user.isPresent()) {
-			return userMapper.mapUserToUserDto(user.get());
+			userDetails = userMapper.mapUserToUserDetailsDto(user.get());
 		} else {
 			return null;
 		}
+		userDetails.setTotalPosts(postRepository.countByCreatedBy(userId));
+		userDetails.setTotalFollowers(followRepository.countByFollowedBy(userId));
+		userDetails.setTotalFollowing(followRepository.countByUserId(userId));
+		return userDetails;
 	}
 
 	@Override

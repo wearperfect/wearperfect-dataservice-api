@@ -11,7 +11,7 @@ public class PostCommentDetailsDTO {
 
 	String description;
 
-	BasicUserDetailsDTO commentedBy;
+	UserBasicDetailsDTO commentedBy;
 
 	Long commentedOn;
 

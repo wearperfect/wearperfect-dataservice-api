@@ -4,11 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import com.wearperfect.dataservice.api.dto.BasicUserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
+import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.User;
 
-@Mapper(uses = {User.class, UtilityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = {User.class, UtilityMapper.class, RoleMapper.class, GenderMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
 	@Mapping(ignore = true, target = "password")
@@ -20,5 +21,11 @@ public interface UserMapper {
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	User mapUserDtoToUse(UserDTO userDto);
 	
-	BasicUserDetailsDTO mapUserToBasicUserDetailsDto(User user);	
+	UserBasicDetailsDTO mapUserToUserBasicDetailsDto(User user);	
+	
+	@Mapping(source = "roleDetails", target = "role")
+	@Mapping(source = "genderDetails", target = "gender")
+	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
+	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
+	UserDetailsDTO mapUserToUserDetailsDto(User user);	
 }

@@ -4,11 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.Post;
+import com.wearperfect.dataservice.api.entities.Gender;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post>{
-	
-	Long countByCreatedBy(Long userId);
-}
+public interface GenderRepository extends JpaRepository<Gender, Integer>, JpaSpecificationExecutor<Gender>{
 
+}

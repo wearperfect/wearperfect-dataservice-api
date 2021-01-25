@@ -15,11 +15,11 @@ public class PostDetailsDTO {
 	
 	Boolean active;
 	
-	BasicUserDetailsDTO createdBy;
+	UserBasicDetailsDTO createdBy;
 	
 	Long createdOn;
 	
-	BasicUserDetailsDTO lastUpdatedBy;
+	UserBasicDetailsDTO lastUpdatedBy;
 	
 	Long lastUpdatedOn;
 	

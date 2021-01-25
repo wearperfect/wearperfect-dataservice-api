@@ -39,27 +39,27 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		List<User> users = userRepository.findAll(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(username));
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			System.out.println(">>>>>>>>>>"+mapper.writeValueAsString(users.get(0)));
-		} catch (JsonProcessingException e1) {
-			// TODO Auto-generated catch block
-			System.out.println(">>>>>>>>");
-			e1.printStackTrace();
-		}
+//		ObjectMapper mapper = new ObjectMapper();
+//		try {
+//			System.out.println(">>>>>>>>>>"+mapper.writeValueAsString(users.get(0)));
+//		} catch (JsonProcessingException e1) {
+//			// TODO Auto-generated catch block
+//			System.out.println(">>>>>>>>");
+//			e1.printStackTrace();
+//		}
 		if (users.size() < 1) {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		} else if (users.size() > 1) {
 			throw new HttpClientErrorException(HttpStatus.CONFLICT);
 		} else {
 			org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(users.get(0).getUsername(),
-					users.get(0).getPassword(), mapRolesToAuthorities(users.get(0).getRole()));
-			try {
-				System.out.println("@@@@@@"+mapper.writeValueAsString(userDetails));
-			} catch (JsonProcessingException e) {
-				System.out.println("Exception@@@@@@");
-				e.printStackTrace();
-			}
+					users.get(0).getPassword(), mapRolesToAuthorities(users.get(0).getRoleDetails()));
+//			try {
+//				System.out.println("@@@@@@"+mapper.writeValueAsString(userDetails));
+//			} catch (JsonProcessingException e) {
+//				System.out.println("Exception@@@@@@");
+//				e.printStackTrace();
+//			}
 			return userDetails;
 		}
 	}

@@ -9,7 +9,7 @@ public class PostItemDetailsDTO {
 	Long postId;
 	Integer sequenceId;
 	String sourceLink;
-	BasicContentTypeDetailsDTO contentType;
+	ContentTypeBasicDetailsDTO contentType;
 	Boolean active;
 	Long createdOn;
 	Long lastUpdatedOn;
