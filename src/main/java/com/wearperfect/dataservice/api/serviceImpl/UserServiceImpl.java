@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService{
 			return null;
 		}
 		userDetails.setTotalPosts(postRepository.countByCreatedBy(userId));
-		userDetails.setTotalFollowers(followRepository.countByFollowedBy(userId));
-		userDetails.setTotalFollowing(followRepository.countByUserId(userId));
+		userDetails.setTotalFollowers(followRepository.countByUserId(userId));
+		userDetails.setTotalFollowing(followRepository.countByFollowedBy(userId));
 		return userDetails;
 	}
 
