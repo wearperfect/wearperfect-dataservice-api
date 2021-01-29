@@ -16,10 +16,14 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wearperfect.dataservice.api.dto.AddressDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.entities.Address;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.AddressMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.repositories.AddressRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
@@ -40,7 +44,13 @@ public class UserServiceImpl implements UserService{
 	FollowRepository followRepository;
 	
 	@Autowired
+	AddressRepository addressRepository;
+	
+	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired
+	AddressMapper addressMapper;
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -115,6 +125,12 @@ public class UserServiceImpl implements UserService{
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@Override
+	public List<AddressDTO> getAllUserAddresses(Long userId) {
+		List<Address> addresses = addressRepository.findByUserId(userId);
+		return addresses.stream().map(address->addressMapper.mapAddressToAddressDto(address)).collect(Collectors.toList());
 	}
 
 }

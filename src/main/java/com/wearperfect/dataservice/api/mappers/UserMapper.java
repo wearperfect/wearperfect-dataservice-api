@@ -27,5 +27,5 @@ public interface UserMapper {
 	@Mapping(source = "genderDetails", target = "gender")
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
-	UserDetailsDTO mapUserToUserDetailsDto(User user);	
+	UserDetailsDTO mapUserToUserDetailsDto(User user);
 }

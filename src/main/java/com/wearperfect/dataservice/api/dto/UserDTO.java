@@ -16,7 +16,8 @@ public class UserDTO {
 	private String bio;
 	private Integer genderId;
 	private Long homeAddressId;
-	private Long DeliveryAddressId;
+	private Long currentAddressId;
+	private Long deliveryAddressId;
 	private Long businessAddressId;
 	private Long createdOn;
 	private Long lastUpdatedOn;

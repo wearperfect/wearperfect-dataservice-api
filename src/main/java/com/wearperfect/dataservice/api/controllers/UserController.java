@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wearperfect.dataservice.api.dto.AddressDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.User;
@@ -42,5 +43,11 @@ public class UserController {
 	@ResponseBody
 	public UserDetailsDTO getUserById(@PathVariable(name = "userId") Long userId) {
 		return userService.getUserDetailsById(userId);
+	}
+	
+	@GetMapping(value = "/users/{userId}/addresses", produces={"application/json","application/xml"})
+	@ResponseBody
+	public List<AddressDTO> getAllUserAddresses(@PathVariable(name = "userId") Long userId) {
+		return userService.getAllUserAddresses(userId);
 	}
 }

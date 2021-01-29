@@ -58,9 +58,12 @@ public class User {
 
 	@Column(name = "home_address_id")
 	private Long homeAddressId;
+	
+	@Column(name = "current_address_id")
+	private Long currentAddressId;
 
 	@Column(name = "delivery_address_id")
-	private Long DeliveryAddressId;
+	private Long deliveryAddressId;
 
 	@Column(name = "business_address_id")
 	private Long businessAddressId;
@@ -74,11 +77,15 @@ public class User {
 	@Column(name = "active")
 	private Boolean active;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Role.class)
 	@JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Role roleDetails;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, targetEntity = Gender.class)
 	@JoinColumn(name = "gender_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Gender genderDetails;
+	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
+	@JoinColumn(name = "home_address_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Address addressDetails;
 }

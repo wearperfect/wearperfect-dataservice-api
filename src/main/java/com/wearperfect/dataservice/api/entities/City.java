@@ -13,32 +13,33 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "genders")
-public class Gender {
+@Table(name = "cities")
+public class City {
 
-	@Column(name="id")
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
 	
-	@Column(name="name")
+	@Column(name = "name")
 	String name;
 	
-	@Column(name="short_name")
-	String shortName;
+	@Column(name = "state_id")
+	Long stateId;
 	
-	@Column(name="created_by")
+	@Column(name = "created_by")
 	Long createdBy;
-	
-	@Column(name="created_on")
+
+	@Column(name = "created_on")
 	Date createdOn;
-	
-	@Column(name="last_updated_by")
+
+	@Column(name = "last_updated_by")
 	Long lastUpdatedBy;
-	
-	@Column(name="last_updated_on")
+
+	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
 	
-	@Column(name="active")
+	@Column(name = "active")
 	Boolean active;
+
 }

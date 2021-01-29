@@ -19,7 +19,8 @@ public class UserDetailsDTO {
 	private Boolean active;
 	
 	private Long homeAddressId;
-	private Long DeliveryAddressId;
+	private Long currentAddressId;
+	private Long deliveryAddressId;
 	private Long businessAddressId;
 	
 	private Long totalFollowers;

@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "genders")
-public class Gender {
+@Table(name = "gender_categories")
+public class GenderCategory {
 
 	@Column(name="id")
 	@Id
@@ -26,6 +26,9 @@ public class Gender {
 	
 	@Column(name="short_name")
 	String shortName;
+	
+	@Column(name="genderId")
+	Integer genderId;
 	
 	@Column(name="created_by")
 	Long createdBy;
