@@ -11,6 +11,6 @@ public interface FollowService {
 
 	List<UserBasicDetailsDTO> getUserFollowers(Long userId);
 
-	List<UserBasicDetailsDTO> getUserFollowing(Long userId);
+	List<UserBasicDetailsDTO> getUserFollowings(Long userId);
 
 }

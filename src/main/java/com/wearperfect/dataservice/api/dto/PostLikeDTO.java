@@ -12,4 +12,6 @@ public class PostLikeDTO {
 	Long likedBy;
 	
 	Long likedOn;
+	
+	UserBasicDetailsDTO likedByUserDetails;
 }

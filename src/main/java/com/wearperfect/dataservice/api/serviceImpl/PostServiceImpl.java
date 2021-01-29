@@ -72,31 +72,13 @@ public class PostServiceImpl implements PostService {
 	PostLikeRepository postLikeRepository;
 
 	@Autowired
-	PostSaveRepository postSaveRepository;
-
-	@Autowired
-	PostCommentRepository postCommentRepository;
-
-	@Autowired
 	MasterRepository masterRepository;
-
-	@Autowired
-	EntityManagerFactory emf;
 	
 	@Autowired
 	UserMapper userMapper;
 
 	@Autowired
 	PostMapper postMapper;
-
-	@Autowired
-	PostLikeMapper postLikeMapper;
-
-	@Autowired
-	PostSaveMapper postSaveMapper;
-
-	@Autowired
-	PostCommentMapper postCommentMapper;
 
 	@Override
 	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
@@ -204,103 +186,6 @@ public class PostServiceImpl implements PostService {
 	public void deletePost(Long userId, Long postId) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public PostLikeDTO likePost(Long userId, Long postId) {
-
-		Optional<PostLike> existingPostLike = Optional
-				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
-
-		if (existingPostLike.isPresent()) {
-			return postLikeMapper.mapPostLikeToPostLikeDto(existingPostLike.get());
-		}
-
-		PostLike like = new PostLike();
-		like.setPostId(postId);
-		like.setLikedBy(userId);
-		like.setLikedOn(new Date());
-		PostLike postLike = postLikeRepository.save(like);
-		return postLikeMapper.mapPostLikeToPostLikeDto(postLike);
-	}
-
-	@Override
-	public Long unLikePost(Long userId, Long postId) {
-		Optional<PostLike> existingPostLike = Optional
-				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
-
-		if (existingPostLike.isPresent()) {
-			postLikeRepository.deleteByPostIdAndLikedBy(postId, userId);
-		}
-		return postId;
-	}
-
-	@Override
-	public PostSaveDTO savePost(Long userId, Long postId) {
-
-		Optional<PostSave> existingPostSave = Optional
-				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
-
-		if (existingPostSave.isPresent()) {
-			return postSaveMapper.mapPostSaveToPostSaveDto(existingPostSave.get());
-		}
-
-		PostSave save = new PostSave();
-		save.setPostId(postId);
-		save.setSavedBy(userId);
-		save.setSavedOn(new Date());
-		PostSave postSave = postSaveRepository.save(save);
-		return postSaveMapper.mapPostSaveToPostSaveDto(postSave);
-	}
-
-	@Override
-	public Long unSavePost(Long userId, Long postId) {
-
-		Optional<PostSave> existingPostSave = Optional
-				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
-
-		if (existingPostSave.isPresent()) {
-			postSaveRepository.deleteByPostIdAndSavedBy(postId, userId);
-		}
-		return postId;
-	}
-
-	@Override
-	public List<PostCommentDetailsDTO> getComments(Long userId, Long postId) {
-		List<PostComment> postComments = postCommentRepository.findByPostId(postId, PageRequest.of(0, 15, Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
-		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public PostCommentDetailsDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto) {
-		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
-		postComment.setPostId(postId);
-		postComment.setCommentedBy(userId);
-		postComment.setCommentedOn(new Date());
-		postComment.setActive(true);
-		postCommentRepository.save(postComment);
-		PostCommentDetailsDTO savedCommentDto = postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
-		UserBasicDetailsDTO userDetails = userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get());
-		savedCommentDto.setCommentedBy(userDetails);
-		return savedCommentDto;
-	}
-
-	@Override
-	public PostCommentDetailsDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto) {
-		PostComment postComment = postCommentMapper.mapPostCommentDtoToPostComment(postCommentDto);
-		postComment.setLastUpdatedOn(new Date());
-		postCommentRepository.save(postComment);
-		return postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
-	}
-
-	@Override
-	public Long deletePostComment(Long userId, Long postId, Long commentId) {
-		Optional<PostComment> postComment = Optional.ofNullable(postCommentRepository.findByIdAndPostIdAndCommentedBy(commentId, postId, userId));
-		if(postComment.isPresent()) {
-			postCommentRepository.deleteById(postComment.get().getId());
-		}
-		return postId;
 	}
 
 	@Override

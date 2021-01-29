@@ -26,11 +26,11 @@ public class FollowController {
 		return followService.getUserFollowers(userId);
 	}
 	
-	@GetMapping(value = "/users/{userId}/following")
+	@GetMapping(value = "/users/{userId}/followings")
 	@ResponseBody
 	public List<UserBasicDetailsDTO> getUserFollowing(@PathVariable(name = "userId") Long followedBy,
 			@PathVariable(name = "userId") Long userId) {
-		return followService.getUserFollowing(userId);
+		return followService.getUserFollowings(userId);
 	}
 	
 	@PostMapping(value = "/users/{followedBy}/follows/{userId}")

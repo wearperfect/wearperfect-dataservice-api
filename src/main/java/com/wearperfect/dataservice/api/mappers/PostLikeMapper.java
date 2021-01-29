@@ -7,7 +7,7 @@ import org.mapstruct.ReportingPolicy;
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
 import com.wearperfect.dataservice.api.entities.PostLike;
 
-@Mapper(uses = { UtilityMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = { UserMapper.class, UtilityMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostLikeMapper {
 
 	@Mapping(source = "likedOn", target = "likedOn", qualifiedByName = "dateToTimeConverter")

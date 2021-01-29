@@ -40,21 +40,16 @@ public class PostController {
 		return postService.getPostsByUserId(userId);
 	}
 
-	@PostMapping(path = "/users/{userId}/posts")
-	PostDetailsDTO createPost(Authentication authentication ,@PathVariable(name = "userId", required = true) Long userId,
-			@RequestBody PostDTO postDto) {
-		return postService.createPost(postDto, userId, authentication.getName());
-	}
-	
-	@PostMapping(path = "/masters")
-	Master createMaster(@RequestBody Master master) {
-		return postService.createMaster(master);
-	}
-
 	@GetMapping(path = "/users/{userId}/posts/{postId}")
 	PostDetailsDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.getPostByUserIdAndPostId(userId, postId);
+	}
+
+	@PostMapping(path = "/users/{userId}/posts")
+	PostDetailsDTO createPost(Authentication authentication,
+			@PathVariable(name = "userId", required = true) Long userId, @RequestBody PostDTO postDto) {
+		return postService.createPost(postDto, userId, authentication.getName());
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")
@@ -63,58 +58,9 @@ public class PostController {
 		return null;
 	}
 
-	/**
-	 * Post Action APIs begin here
-	 **/
-	@PostMapping(path = "/users/{userId}/posts/{postId}/like")
-	PostLikeDTO likePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postService.likePost(userId, postId);
-	}
-	
-	@DeleteMapping(path = "/users/{userId}/posts/{postId}/like")
-	Long unLikePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postService.unLikePost(userId, postId);
+	@PostMapping(path = "/masters")
+	Master createMaster(@RequestBody Master master) {
+		return postService.createMaster(master);
 	}
 
-	@PostMapping(path = "/users/{userId}/posts/{postId}/save")
-	PostSaveDTO savePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postService.savePost(userId, postId);
-	}
-	
-	@DeleteMapping(path = "/users/{userId}/posts/{postId}/save")
-	Long unSavePost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postService.unSavePost(userId, postId);
-	}
-	
-	@GetMapping(path = "/users/{userId}/posts/{postId}/comments")
-	List<PostCommentDetailsDTO> getPostComments(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postService.getComments(userId, postId);
-	}
-
-	@PostMapping(path = "/users/{userId}/posts/{postId}/comments")
-	PostCommentDetailsDTO commentPost(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId,
-			@RequestBody PostCommentDTO postCommentDto) {
-		return postService.commentPost(userId, postId, postCommentDto);
-	}
-
-	@PutMapping(path = "/users/{userId}/posts/{postId}/comments/{commentId}")
-	PostCommentDetailsDTO editPostComment(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId,
-			@PathVariable(name = "commentId", required = true) Long commentId,
-			@RequestBody PostCommentDTO postCommentDto) {
-		return postService.editPostComment(userId, postId, commentId, postCommentDto);
-	}
-
-	@DeleteMapping(path = "/users/{userId}/posts/{postId}/comments/{commentId}")
-	Long deletePostComment(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId,
-			@PathVariable(name = "commentId", required = true) Long commentId) {
-		return postService.deletePostComment(userId, postId, commentId);
-	}
 }

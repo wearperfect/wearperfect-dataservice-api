@@ -2,11 +2,15 @@ package com.wearperfect.dataservice.api.entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -29,5 +33,9 @@ public class PostLike {
 	
 	@Column(name="liked_on")
 	Date likedOn;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+	@JoinColumn(name="liked_by", referencedColumnName = "id", insertable = false, updatable = false)
+	User likedByUserDetails;
 	
 }

@@ -65,7 +65,7 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public List<UserBasicDetailsDTO> getUserFollowing(Long userId) {
+	public List<UserBasicDetailsDTO> getUserFollowings(Long userId) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Object> cq = builder.createQuery();
 		Root<Follow> root = cq.from(Follow.class);

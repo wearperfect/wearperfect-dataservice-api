@@ -19,5 +19,4 @@ public interface UserService {
 
 	UserDTO authenticateUser(User user);
 	
-	List<AddressDTO> getAllUserAddresses(Long userId);
 }

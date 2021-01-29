@@ -12,35 +12,16 @@ import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.PostItem;
 
 public interface PostService {
-	
+
 	List<PostDetailsDTO> getPostsByUserId(Long userId);
-	
+
 	PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId);
-	
+
 	PostDetailsDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername);
-	
+
 	PostDetailsDTO createPostItems(List<PostItem> postItems, Long postId, Long userId);
-	
+
 	void deletePost(Long userId, Long postId);
-	
-	/**
-	 * Post Action APIs begin here
-	 **/
-	PostLikeDTO likePost(Long userId, Long postId);
-	
-	Long unLikePost(Long userId, Long postId);
-	
-	PostSaveDTO savePost(Long userId, Long postId);
-	
-	Long unSavePost(Long userId, Long postId);
-	
-	List<PostCommentDetailsDTO> getComments(Long userId, Long postId);
-	
-	PostCommentDetailsDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto);
-	
-	PostCommentDetailsDTO editPostComment(Long userId, Long postId, Long commentId, PostCommentDTO postCommentDto);
-	
-	Long deletePostComment(Long userId, Long postId, Long commentId);
 
 	Master createMaster(Master master);
 }

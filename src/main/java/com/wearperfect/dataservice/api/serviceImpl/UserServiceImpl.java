@@ -44,13 +44,7 @@ public class UserServiceImpl implements UserService{
 	FollowRepository followRepository;
 	
 	@Autowired
-	AddressRepository addressRepository;
-	
-	@Autowired
 	UserMapper userMapper;
-	
-	@Autowired
-	AddressMapper addressMapper;
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -125,12 +119,6 @@ public class UserServiceImpl implements UserService{
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
-	}
-
-	@Override
-	public List<AddressDTO> getAllUserAddresses(Long userId) {
-		List<Address> addresses = addressRepository.findByUserId(userId);
-		return addresses.stream().map(address->addressMapper.mapAddressToAddressDto(address)).collect(Collectors.toList());
 	}
 
 }
