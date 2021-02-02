@@ -23,8 +23,8 @@ public class Follow {
 	@Column(name = "user_id")
 	Long userId;
 
-	@Column(name = "followed_by")
-	Long followedBy;
+	@Column(name = "following_by")
+	Long followingBy;
 
 	@Column(name = "active")
 	Boolean active;
@@ -41,5 +41,5 @@ public class Follow {
 //	
 //	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
 //	@JoinColumn(name = "followed_by", referencedColumnName = "id", insertable = false, updatable = false)
-//	User followedByUserDetails;
+//	User followingByUserDetails;
 }

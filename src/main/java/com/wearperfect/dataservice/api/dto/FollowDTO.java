@@ -9,7 +9,7 @@ public class FollowDTO {
 
 	Long userId;
 
-	Long followedBy;
+	Long followingBy;
 
 	Boolean active;
 

@@ -1,25 +1,22 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.FollowDTO;
-import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserFollowUpDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
-import com.wearperfect.dataservice.api.entities.Follow_;
-import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.FollowMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
@@ -46,52 +43,128 @@ public class FollowServiceImpl implements FollowService {
 	EntityManager em;
 
 	@Override
-	public List<UserBasicDetailsDTO> getUserFollowers(Long userId) {
-		CriteriaBuilder builder = em.getCriteriaBuilder();
-		CriteriaQuery<Object> cq = builder.createQuery();
-		Root<Follow> root = cq.from(Follow.class);
+	public List<UserFollowUpDetailsDTO> getUserFollowers(Long userId) {
 
-		cq.select(root.get(Follow_.followedBy)).where(builder.equal(root.get(Follow_.userId), userId));
+		List<Follow> follows = followRepository.findByUserIdOrFollowingBy(userId, userId);
 
-		List<Object> resultList = em.createQuery(cq).getResultList();
+		List<Follow> followersList = new LinkedList<>();
+		List<Follow> followingsList = new LinkedList<>();
+		List<Long> followersIdList = new LinkedList<>();
+		List<Long> followingsIdList = new LinkedList<>();
 
-		List<Long> followersIdList = resultList.stream().map(obj -> (Long) obj).collect(Collectors.toList());
+		follows.stream().forEach(follow -> {
+			if (follow.getUserId() == userId) {
+				followersList.add(follow);
+				followersIdList.add(follow.getFollowingBy());
+			} else if (follow.getFollowingBy() == userId) {
+				followingsList.add(follow);
+				followingsIdList.add(follow.getUserId());
+			}
+		});
 
-		System.out.println("followersIdList>>>>" + followersIdList.size());
+		List<UserFollowUpDetailsDTO> followers = userRepository.findByIdIn(followersIdList).stream()
+				.map(follow -> userMapper.mapUserToUserFollowUpDetailsDto(follow)).collect(Collectors.toList());
 
-		List<User> followers = userRepository.findByIdIn(followersIdList);
-		return followers.stream().map(follower -> userMapper.mapUserToUserBasicDetailsDto(follower))
-				.collect(Collectors.toList());
+		followers.stream().forEach(follower -> {
+			follower.setRequestedUserId(userId);
+			follower.setFollowed(true);
+			follower.setFollowing(false);
+			followingsIdList.forEach(followingId -> {
+				if (follower.getUserId() == followingId) {
+					follower.setFollowing(true);
+				}
+			});
+		});
+
+		return followers;
 	}
 
 	@Override
-	public List<UserBasicDetailsDTO> getUserFollowings(Long userId) {
-		CriteriaBuilder builder = em.getCriteriaBuilder();
-		CriteriaQuery<Object> cq = builder.createQuery();
-		Root<Follow> root = cq.from(Follow.class);
+	public List<UserFollowUpDetailsDTO> getUserFollowings(Long userId) {
+		List<Follow> follows = followRepository.findByUserIdOrFollowingBy(userId, userId);
 
-		cq.select(root.get(Follow_.userId)).where(builder.equal(root.get(Follow_.followedBy), userId));
+		List<Follow> followersList = new LinkedList<>();
+		List<Follow> followingsList = new LinkedList<>();
+		List<Long> followersIdList = new LinkedList<>();
+		List<Long> followingsIdList = new LinkedList<>();
 
-		List<Object> resultList = em.createQuery(cq).getResultList();
+		follows.stream().forEach(follow -> {
+			if (follow.getUserId() == userId) {
+				followersList.add(follow);
+				followersIdList.add(follow.getFollowingBy());
+			} else if (follow.getFollowingBy() == userId) {
+				followingsList.add(follow);
+				followingsIdList.add(follow.getUserId());
+			}
+		});
+		
+		List<UserFollowUpDetailsDTO> followings = userRepository.findByIdIn(followingsIdList).stream()
+				.map(follow -> userMapper.mapUserToUserFollowUpDetailsDto(follow)).collect(Collectors.toList());
 
-		List<Long> followersIdList = resultList.stream().map(obj -> (Long) obj).collect(Collectors.toList());
+		followings.stream().forEach(following -> {
+			following.setRequestedUserId(userId);
+			following.setFollowing(true);
+			following.setFollowed(false);
+			followersIdList.forEach(followerId -> {
+				if (following.getUserId() == followerId) {
+					following.setFollowed(true);
+				}
+			});
+		});
 
-		System.out.println("followersIdList>>>>" + followersIdList.size());
-
-		List<User> followers = userRepository.findByIdIn(followersIdList);
-		return followers.stream().map(follower -> userMapper.mapUserToUserBasicDetailsDto(follower))
-				.collect(Collectors.toList());
+		return followings;
 	}
 
 	@Override
-	public FollowDTO followUser(Long followedBy, Long userId) {
+	public FollowDTO followUser(Long followingBy, Long userId) {
 		Follow follow = new Follow();
 		follow.setUserId(userId);
-		follow.setFollowedBy(followedBy);
+		follow.setFollowingBy(followingBy);
 		follow.setActive(true);
 		follow.setCreatedOn(new Date());
 		followRepository.save(follow);
+		
+//		UserFollowUpDetailsDTO userFollowUpDetails = userMapper.mapUserToUserFollowUpDetailsDto(userRepository.findById(userId).get());
+//		userFollowUpDetails.setRequestedUserId(followingBy);
+//		userFollowUpDetails.setFollowing(true);
+//		
+//		Optional<Follow> following = Optional.ofNullable(followRepository.findByUserIdAndFollowingBy(followingBy, userId));
+//		if(following.isPresent()) {
+//			userFollowUpDetails.setFollowed(true);
+//		}else {
+//			userFollowUpDetails.setFollowed(false);
+//		}
 		return followMapper.mapFollowToFollowDto(follow);
 	}
+
+	@Override
+	public FollowDTO unFollowUser(Long followingBy, Long userId) {
+		Optional<Follow> follow = Optional.ofNullable(followRepository.findByUserIdAndFollowingBy(userId, followingBy));
+		if(follow.isPresent()) {
+			followRepository.deleteByUserIdAndFollowingBy(userId, followingBy);
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+		return followMapper.mapFollowToFollowDto(follow.get());
+	}
+
+//	@Override
+//	public List<UserFollowUpDetailsDTO> getUserFollowings(Long userId) {
+//		CriteriaBuilder builder = em.getCriteriaBuilder();
+//		CriteriaQuery<Object> cq = builder.createQuery();
+//		Root<Follow> root = cq.from(Follow.class);
+//
+//		cq.select(root.get(Follow_.userId)).where(builder.equal(root.get(Follow_.followingBy), userId));
+//
+//		List<Object> resultList = em.createQuery(cq).getResultList();
+//
+//		List<Long> followersIdList = resultList.stream().map(obj -> (Long) obj).collect(Collectors.toList());
+//
+//		System.out.println("followersIdList>>>>" + followersIdList.size());
+//
+//		List<User> followers = userRepository.findByIdIn(followersIdList);
+//		return followers.stream().map(follower -> userMapper.mapUserToUserBasicDetailsDto(follower))
+//				.collect(Collectors.toList());
+//	}
 
 }

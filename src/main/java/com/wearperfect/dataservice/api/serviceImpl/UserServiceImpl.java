@@ -16,14 +16,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wearperfect.dataservice.api.dto.AddressDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
-import com.wearperfect.dataservice.api.entities.Address;
 import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.AddressMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.AddressRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
@@ -66,7 +62,7 @@ public class UserServiceImpl implements UserService{
 		}
 		userDetails.setTotalPosts(postRepository.countByCreatedBy(userId));
 		userDetails.setTotalFollowers(followRepository.countByUserId(userId));
-		userDetails.setTotalFollowing(followRepository.countByFollowedBy(userId));
+		userDetails.setTotalFollowing(followRepository.countByFollowingBy(userId));
 		return userDetails;
 	}
 

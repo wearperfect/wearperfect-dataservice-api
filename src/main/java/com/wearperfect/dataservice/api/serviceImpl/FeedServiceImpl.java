@@ -106,7 +106,7 @@ public class FeedServiceImpl implements FeedService {
 				post.setFollowing(true);
 			} else {
 				Optional<Follow> follow = Optional
-						.ofNullable(followRepository.findByUserIdAndFollowedBy(post.getCreatedBy().getId(), userId));
+						.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy().getId(), userId));
 				System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
 				if (follow.isPresent()) {
 					post.setFollowing(true);
