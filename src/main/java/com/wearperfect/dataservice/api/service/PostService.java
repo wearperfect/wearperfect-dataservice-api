@@ -2,18 +2,20 @@ package com.wearperfect.dataservice.api.service;
 
 import java.util.List;
 
-import com.wearperfect.dataservice.api.dto.PostCommentDTO;
-import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostLikeDTO;
-import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.PostItem;
 
 public interface PostService {
 
 	List<PostDetailsDTO> getPostsByUserId(Long userId);
+
+	List<PostDetailsDTO> getLikedPostsByUserId(Long userId);
+
+	List<PostDetailsDTO> getSavedPostsByUserId(Long userId);
+
+	List<PostDetailsDTO> getTaggedPostsByUserId(Long userId);
 
 	PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId);
 

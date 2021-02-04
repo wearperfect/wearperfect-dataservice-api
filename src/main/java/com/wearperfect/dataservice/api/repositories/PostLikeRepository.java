@@ -16,6 +16,8 @@ public interface PostLikeRepository extends JpaRepository<PostLike, Long>, JpaSp
 	Long countByPostId(Long postId);
 
 	List<PostLike> findByPostId(Long postId, Pageable page);
+	
+	List<PostLike> findByLikedBy(Long likedBy, Pageable page);
 
 	PostLike findByPostIdAndLikedBy(Long postId, Long likedBy);
 	

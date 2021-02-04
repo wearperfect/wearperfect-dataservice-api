@@ -2,17 +2,16 @@ package com.wearperfect.dataservice.api.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.Post;
+import com.wearperfect.dataservice.api.entities.Work;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post>{
+public interface WorkRepository extends JpaRepository<Work, Long>, JpaSpecificationExecutor<Work> {
 	
-	Long countByCreatedBy(Long userId);
+	List<Work> findByWorkedBy(Long workedBy, Pageable page);
 	
-	List<Post> findByIdIn(List<Long> postIdList);
 }
-

@@ -27,4 +27,9 @@ public class AddressController {
 	public List<AddressDTO> getAllUserAddresses(@PathVariable(name = "userId") Long userId) {
 		return addressService.getAllUserAddresses(userId);
 	}
+	
+	@GetMapping(value = "/users/{userId}/basicinfo/contact/addresses")
+	public List<AddressDTO> getUserAddresses(@PathVariable(name = "userId") Long userId) {
+		return addressService.getUserBasicInfoContactAddresses(userId);
+	}
 }

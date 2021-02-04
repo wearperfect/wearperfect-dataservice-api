@@ -52,6 +52,9 @@ public class User {
 
 	@Column(name = "bio")
 	private String bio;
+	
+	@Column(name = "website")
+	private String website;
 
 	@Column(name = "gender_id")
 	private Integer gender_id;
@@ -87,5 +90,17 @@ public class User {
 	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
 	@JoinColumn(name = "home_address_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private Address addressDetails;
+	private Address homeAddressDetails;
+	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
+	@JoinColumn(name = "current_address_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Address currentAddressDetails;
+	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
+	@JoinColumn(name = "delivery_address_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Address deliveryAddressDetails;
+	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
+	@JoinColumn(name = "business_address_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Address businessAddressDetails;
 }

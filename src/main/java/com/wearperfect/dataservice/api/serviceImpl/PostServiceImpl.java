@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,34 +17,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostCommentDTO;
-import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostLikeDTO;
-import com.wearperfect.dataservice.api.dto.PostSaveDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
-import com.wearperfect.dataservice.api.entities.PostComment;
-import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.PostLike;
+import com.wearperfect.dataservice.api.entities.PostLike_;
 import com.wearperfect.dataservice.api.entities.PostSave;
+import com.wearperfect.dataservice.api.entities.PostSave_;
+import com.wearperfect.dataservice.api.entities.PostUserTag;
+import com.wearperfect.dataservice.api.entities.PostUserTag_;
 import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
-import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
-import com.wearperfect.dataservice.api.mappers.PostSaveMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
-import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
 import com.wearperfect.dataservice.api.repositories.PostItemRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
+import com.wearperfect.dataservice.api.repositories.PostUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
@@ -70,6 +63,12 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	PostLikeRepository postLikeRepository;
+	
+	@Autowired
+	PostSaveRepository postSaveRepository;
+	
+	@Autowired
+	PostUserTagRepository postUserTagRepository;
 
 	@Autowired
 	MasterRepository masterRepository;
@@ -89,6 +88,33 @@ public class PostServiceImpl implements PostService {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 		});
 		return postDetailsList;
+	}
+	
+	@Override
+	public List<PostDetailsDTO> getLikedPostsByUserId(Long userId) {
+		List<PostLike> likedPosts = postLikeRepository.findByLikedBy(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostLike_.LIKED_ON)));
+		List<Long> likedPostIds = likedPosts.stream().map(likedPost->likedPost.getPostId()).collect(Collectors.toList());
+		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		return likedPostsDtoList;
+	}
+
+	@Override
+	public List<PostDetailsDTO> getSavedPostsByUserId(Long userId) {
+		List<PostSave> savedPosts = postSaveRepository.findBySavedBy(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostSave_.SAVED_ON)));
+		List<Long> savedPostsIds = savedPosts.stream().map(savedPost->savedPost.getPostId()).collect(Collectors.toList());
+		List<Post> posts = postRepository.findByIdIn(savedPostsIds);
+		List<PostDetailsDTO> savedPostDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		return savedPostDtoList;
+	}
+
+	@Override
+	public List<PostDetailsDTO> getTaggedPostsByUserId(Long userId) {
+		List<PostUserTag> taggedPosts = postUserTagRepository.findByTaggedUserId(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserTag_.TAGGED_ON)));
+		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost->taggedPost.getPostId()).collect(Collectors.toList());
+		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
+		return likedPostsDtoList;
 	}
 
 	@Override

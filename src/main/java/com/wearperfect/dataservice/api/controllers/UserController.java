@@ -41,7 +41,7 @@ public class UserController {
 	@PutMapping(value = "/users/{userId}")
 	public UserDTO updateUser(@PathVariable(name = "userId") Long userId,
 			@RequestBody(required = true) UserDTO userDto) {
-		User user = userMapper.mapUserDtoToUse(userDto);
+		User user = userMapper.mapUserDtoToUser(userDto);
 		return userService.updateUser(user);
 	}
 }

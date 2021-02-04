@@ -39,6 +39,21 @@ public class PostController {
 	List<PostDetailsDTO> postsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return postService.getPostsByUserId(userId);
 	}
+	
+	@GetMapping(path = "/users/{userId}/posts/liked")
+	List<PostDetailsDTO> likedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+		return postService.getLikedPostsByUserId(userId);
+	}
+	
+	@GetMapping(path = "/users/{userId}/posts/saved")
+	List<PostDetailsDTO> savedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+		return postService.getSavedPostsByUserId(userId);
+	}
+	
+	@GetMapping(path = "/users/{userId}/posts/tagged")
+	List<PostDetailsDTO> taggedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+		return postService.getTaggedPostsByUserId(userId);
+	}
 
 	@GetMapping(path = "/users/{userId}/posts/{postId}")
 	PostDetailsDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,

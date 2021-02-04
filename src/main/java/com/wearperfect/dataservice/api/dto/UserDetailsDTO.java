@@ -12,6 +12,7 @@ public class UserDetailsDTO {
 	private String phone;
 	private String profilePicture;
 	private String bio;
+	private String website;
 	private GenderBasicDetailsDTO gender;
 	private RoleBasicDetailsDTO role;
 	private Long createdOn;
@@ -22,6 +23,11 @@ public class UserDetailsDTO {
 	private Long currentAddressId;
 	private Long deliveryAddressId;
 	private Long businessAddressId;
+	
+	private AddressDetailsDTO homeAddress;
+	private AddressDetailsDTO currentAddress;
+	private AddressDetailsDTO deliveryAddress;
+	private AddressDetailsDTO businessAddress;
 	
 	private Long totalFollowers;
 	private Long totalFollowing;

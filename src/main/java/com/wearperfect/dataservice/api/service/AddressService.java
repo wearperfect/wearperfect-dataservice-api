@@ -8,4 +8,6 @@ public interface AddressService {
 
 	List<AddressDTO> getAllUserAddresses(Long userId);
 
+	List<AddressDTO> getUserBasicInfoContactAddresses(Long userId);
+
 }

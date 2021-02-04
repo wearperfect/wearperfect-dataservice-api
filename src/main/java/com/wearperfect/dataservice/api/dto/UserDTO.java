@@ -14,6 +14,7 @@ public class UserDTO {
 	private String phone;
 	private String profilePicture;
 	private String bio;
+	private String website;
 	private Integer genderId;
 	private Long homeAddressId;
 	private Long currentAddressId;
