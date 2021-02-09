@@ -9,7 +9,7 @@ public class UserSkillDTO {
 	
 	Long userId;
 	
-	Long skillId;
+	Integer skillId;
 	
 	Long createdBy;
 

@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.SkillDTO;
 import com.wearperfect.dataservice.api.entities.Skill;
 
@@ -17,4 +18,6 @@ public interface SkillMapper {
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	Skill mapSkillDtoToSkill(SkillDTO skillDto);
+	
+	SkillBasicDetailsDTO mapSkillToSkillBasicDetailsDto(Skill skill);
 }

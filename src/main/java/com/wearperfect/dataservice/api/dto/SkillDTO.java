@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class SkillDTO {
 
-	Long id;
+	Integer id;
 
 	String name;
 

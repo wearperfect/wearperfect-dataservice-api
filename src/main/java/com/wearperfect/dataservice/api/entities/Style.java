@@ -19,10 +19,10 @@ public class Style {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	Integer id;
 
 	@Column(name = "region_id")
-	Long regionId;
+	Integer regionId;
 	
 	@Column(name = "name")
 	String name;

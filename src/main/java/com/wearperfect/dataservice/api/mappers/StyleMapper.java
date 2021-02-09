@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StyleDTO;
 import com.wearperfect.dataservice.api.entities.Style;
 
@@ -17,4 +18,6 @@ public interface StyleMapper {
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	Style mapStyleDtoToStyle(StyleDTO styleDto);
+	
+	StyleBasicDetailsDTO mapStyleToStyleBasicDetailsDto(Style style);
 }

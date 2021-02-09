@@ -3,11 +3,9 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class StyleDTO {
-
+public class SkillBasicDetailsDTO {
+	
 	Integer id;
-
-	Integer regionId;
 
 	String name;
 
@@ -16,14 +14,6 @@ public class StyleDTO {
 	String thumbnail;
 
 	String sourceLink;
-
-	Long createdBy;
-
-	Long createdOn;
-
-	Long lastUpdatedBy;
-
-	Long lastUpdatedOn;
-
+	
 	Boolean active;
 }

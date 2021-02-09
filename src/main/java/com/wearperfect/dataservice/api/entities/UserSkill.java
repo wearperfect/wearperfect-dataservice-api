@@ -25,7 +25,7 @@ public class UserSkill {
 	Long userId;
 	
 	@Column(name = "skill_id")
-	Long skillId;
+	Integer skillId;
 	
 	@Column(name = "created_by")
 	Long createdBy;
