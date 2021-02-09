@@ -13,25 +13,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "skills")
-public class Skill {
+@Table(name = "user_skills")
+public class UserSkill {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(name = "name")
-	String name;
+	@Column(name = "user_id")
+	Long userId;
 	
-	@Column(name = "desc")
-	String desc;
-	
-	@Column(name = "thumbnail")
-	String thumbnail;
-
-	@Column(name = "source_link")
-	String sourceLink;
+	@Column(name = "skill_id")
+	Long skillId;
 	
 	@Column(name = "created_by")
 	Long createdBy;
