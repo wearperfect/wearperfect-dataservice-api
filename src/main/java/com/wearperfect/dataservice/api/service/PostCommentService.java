@@ -7,7 +7,7 @@ import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 
 public interface PostCommentService {
 
-	List<PostCommentDetailsDTO> getComments(Long userId, Long postId);
+	List<PostCommentDetailsDTO> getComments(Long userId, Long postId, Integer page);
 	
 	PostCommentDetailsDTO commentPost(Long userId, Long postId, PostCommentDTO postCommentDto);
 	

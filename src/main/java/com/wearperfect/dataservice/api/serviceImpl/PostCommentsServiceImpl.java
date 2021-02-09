@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
@@ -41,8 +42,11 @@ public class PostCommentsServiceImpl implements PostCommentService{
 	PostCommentMapper postCommentMapper;
 
 	@Override
-	public List<PostCommentDetailsDTO> getComments(Long userId, Long postId) {
-		List<PostComment> postComments = postCommentRepository.findByPostId(postId, PageRequest.of(0, 15, Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
+	public List<PostCommentDetailsDTO> getComments(Long userId, Long postId, Integer page) {
+		if(null == page || page < 0 ) {
+			page = Pagination.PageNumber.DEFAULT.getValue();
+		}
+		List<PostComment> postComments = postCommentRepository.findByPostId(postId, PageRequest.of(page, Pagination.PageSize.POST_COMMENTS.getValue(), Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
 		return postComments.stream().map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
 				.collect(Collectors.toList());
 	}

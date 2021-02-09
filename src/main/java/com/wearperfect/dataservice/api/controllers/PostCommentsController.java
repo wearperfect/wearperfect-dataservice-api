@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
@@ -23,8 +24,9 @@ public class PostCommentsController {
 
 	@GetMapping(path = "/users/{userId}/posts/{postId}/comments")
 	List<PostCommentDetailsDTO> getPostComments(@PathVariable(name = "userId", required = true) Long userId,
-			@PathVariable(name = "postId", required = true) Long postId) {
-		return postCommentService.getComments(userId, postId);
+			@PathVariable(name = "postId", required = true) Long postId,
+			@RequestParam(name="page", required = false) Integer page) {
+		return postCommentService.getComments(userId, postId, page);
 	}
 
 	@PostMapping(path = "/users/{userId}/posts/{postId}/comments")
