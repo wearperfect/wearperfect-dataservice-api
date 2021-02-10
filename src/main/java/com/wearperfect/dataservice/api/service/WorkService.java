@@ -8,6 +8,8 @@ public interface WorkService {
 
 	List<WorkDTO> getUserWorkList(Long userId);
 
-	List<WorkDTO> addUserWorks(Long userId, List<WorkDTO> workDtos);
+	WorkDTO addUserWork(Long userId, WorkDTO workDto);
+
+	WorkDTO updateUserWork(Long userId, WorkDTO workDto);
 
 }

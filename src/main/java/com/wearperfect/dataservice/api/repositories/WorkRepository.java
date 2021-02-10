@@ -14,4 +14,6 @@ public interface WorkRepository extends JpaRepository<Work, Long>, JpaSpecificat
 	
 	List<Work> findByWorkedBy(Long workedBy, Pageable page);
 	
+	Work findByIdAndWorkedBy(Long id, Long workedBy);
+	
 }

@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import com.wearperfect.dataservice.api.dto.WorkDTO;
 import com.wearperfect.dataservice.api.entities.Work;
@@ -36,18 +38,45 @@ public class WorkServiceImpl implements WorkService{
 	}
 
 	@Override
-	public List<WorkDTO> addUserWorks(Long userId, List<WorkDTO> workDtos) {
+	public WorkDTO addUserWork(Long userId, WorkDTO workDto) {
 		
-		List<Work> works = workDtos.stream().map(workDto->workMapper.mapWorkDtoToWork(workDto)).collect(Collectors.toList());
-		works.forEach(work->{
-			work.setCreatedOn(new Date());
-			work.setCreatedBy(userId);
-			work.setActive(true);
-			work.setWorkedFrom(new Date());
-			work.setWorkingActively(true);
-		});
-		workRepository.saveAll(works);
-		return works.stream().map(work->workMapper.mapWorkToWorkDto(work)).collect(Collectors.toList());
+		Work work = workMapper.mapWorkDtoToWork(workDto);
+		if ((null == work.getWorkedAs() && null == work.getWorkedAsAlt())
+				|| (null == work.getWorkedAt() && null == work.getWorkedAtAlt()) || (null == work.getWorkedFrom())) {
+			throw new HttpStatusCodeException(HttpStatus.BAD_REQUEST) {
+				private static final long serialVersionUID = 1L;
+			};
+		}
+
+		work.setActive(true);
+		work.setCreatedBy(userId);
+		work.setCreatedOn(new Date());
+		work.setLastUpdatedBy(null);
+		work.setLastUpdatedOn(null);
+		workRepository.save(work);
+		return workMapper.mapWorkToWorkDto(work);
+	}
+
+	@Override
+	public WorkDTO updateUserWork(Long userId, WorkDTO workDto) {
+		
+		Work work = workMapper.mapWorkDtoToWork(workDto);
+		if ( (null == workDto.getId()) || (null == work.getWorkedAs() && null == work.getWorkedAsAlt())
+				|| (null == work.getWorkedAt() && null == work.getWorkedAtAlt()) || (null == work.getWorkedFrom())) {
+			throw new HttpStatusCodeException(HttpStatus.BAD_REQUEST) {
+				private static final long serialVersionUID = 1L;
+			};
+		}
+		
+		Work existingWork = workRepository.findByIdAndWorkedBy(work.getId(), userId);
+		
+		work.setActive(true);
+		work.setCreatedBy(existingWork.getCreatedBy());
+		work.setCreatedOn(existingWork.getCreatedOn());
+		work.setLastUpdatedBy(userId);
+		work.setLastUpdatedOn(new Date());
+		workRepository.save(work);
+		return workMapper.mapWorkToWorkDto(work);
 	}
 
 }
