@@ -1,6 +1,8 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -8,7 +10,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Skill;
@@ -44,9 +48,37 @@ public class SkillServiceImpl implements SkillService {
 		List<UserSkill> userSkills = userSkillRepository.findByUserId(userId);
 		List<Integer> userSkillIds = userSkills.stream().map(userSkill -> userSkill.getSkillId())
 				.collect(Collectors.toList());
-		List<Skill> skills = skillRepository.findByIdIn(userSkillIds);
+		List<Skill> skills = skillRepository.findByIdIn(userSkillIds, Sort.by(Direction.ASC, Skill_.NAME));
 		return skills.stream().map(skill -> skillMapper.mapSkillToSkillBasicDetailsDto(skill))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public SkillBasicDetailsDTO saveUserSkill(Long userId, Integer skillId) {
+		UserSkill userSkill = new UserSkill();
+		userSkill.setActive(true);
+		userSkill.setCreatedBy(userId);
+		userSkill.setCreatedOn(new Date());
+		userSkill.setSkillId(skillId);
+		userSkill.setUserId(userId);
+		userSkillRepository.save(userSkill);
+		Optional<Skill> skill = skillRepository.findById(skillId);
+		if(skill.isPresent()) {
+			return skillMapper.mapSkillToSkillBasicDetailsDto(skill.get());
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Skill not found with id "+skillId);
+		}
+	}
+
+	@Override
+	public SkillBasicDetailsDTO deleteUserSkill(Long userId, Integer skillId) {
+		userSkillRepository.deleteByUserIdAndSkillId(userId, skillId);
+		Optional<Skill> skill = skillRepository.findById(skillId);
+		if(skill.isPresent()) {
+			return skillMapper.mapSkillToSkillBasicDetailsDto(skill.get());
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Skill not found with id "+skillId);
+		}
 	}
 
 }

@@ -3,8 +3,10 @@ package com.wearperfect.dataservice.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
@@ -15,14 +17,27 @@ public class SkillController {
 
 	@Autowired
 	SkillService skillService;
-	
+
 	@GetMapping(path = "/skills")
-	List<SkillBasicDetailsDTO> getFeed(){
+	List<SkillBasicDetailsDTO> getSkills() {
 		return skillService.getSkills();
 	}
-	
+
 	@GetMapping(path = "/users/{userId}/skills")
-	List<SkillBasicDetailsDTO> getFeedBUserId(@PathVariable(name = "userId", required = true) Long userId){
+	List<SkillBasicDetailsDTO> getUserSkills(@PathVariable(name = "userId", required = true) Long userId) {
 		return skillService.getUserSkills(userId);
 	}
+
+	@PostMapping(path = "/users/{userId}/skills/{skillId}")
+	SkillBasicDetailsDTO saveUserSkill(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "skillId", required = true) Integer skillId) {
+		return skillService.saveUserSkill(userId, skillId);
+	}
+
+	@DeleteMapping(path = "/users/{userId}/skills/{skillId}")
+	SkillBasicDetailsDTO deleteUserSkill(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "skillId", required = true) Integer skillId){
+		return skillService.deleteUserSkill(userId, skillId);
+	}
+	
 }

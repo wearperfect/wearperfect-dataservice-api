@@ -9,4 +9,8 @@ public interface SkillService {
 	List<SkillBasicDetailsDTO> getSkills();
 
 	List<SkillBasicDetailsDTO> getUserSkills(Long userId);
+
+	SkillBasicDetailsDTO saveUserSkill(Long userId, Integer skillId);
+
+	SkillBasicDetailsDTO deleteUserSkill(Long userId, Integer skillId);
 }

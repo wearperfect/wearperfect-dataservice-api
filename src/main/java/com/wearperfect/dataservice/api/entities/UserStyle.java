@@ -25,7 +25,7 @@ public class UserStyle {
 	Long userId;
 	
 	@Column(name = "style_id")
-	Integer skillId;
+	Integer styleId;
 	
 	@Column(name = "created_by")
 	Long createdBy;

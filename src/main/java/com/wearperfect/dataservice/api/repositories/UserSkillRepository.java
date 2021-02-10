@@ -12,4 +12,6 @@ import com.wearperfect.dataservice.api.entities.UserSkill;
 public interface UserSkillRepository extends JpaRepository<UserSkill, Integer>, JpaSpecificationExecutor<UserSkill>{
 
 	List<UserSkill> findByUserId(Long userId);
+	
+	void deleteByUserIdAndSkillId(Long userId, Integer skillId);
 }

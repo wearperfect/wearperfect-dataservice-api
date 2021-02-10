@@ -12,4 +12,6 @@ import com.wearperfect.dataservice.api.entities.UserStyle;
 public interface UserStyleRepository extends JpaRepository<UserStyle, Integer>, JpaSpecificationExecutor<UserStyle> {
 
 	List<UserStyle> findByUserId(Long userId);
+	
+	void deleteByUserIdAndStyleId(Long userId, Integer styleId);
 }

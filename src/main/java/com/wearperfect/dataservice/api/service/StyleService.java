@@ -10,4 +10,8 @@ public interface StyleService {
 
 	List<StyleBasicDetailsDTO> getUserStyles(Long userId);
 
+	StyleBasicDetailsDTO saveUserStyle(Long userId, Integer styleId);
+
+	StyleBasicDetailsDTO deleteUserStyle(Long userId, Integer styleId);
+
 }
