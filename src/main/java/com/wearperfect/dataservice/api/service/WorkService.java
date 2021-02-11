@@ -12,4 +12,6 @@ public interface WorkService {
 
 	WorkDTO updateUserWork(Long userId, Long workId, WorkDTO workDto);
 
+	WorkDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto);
+
 }

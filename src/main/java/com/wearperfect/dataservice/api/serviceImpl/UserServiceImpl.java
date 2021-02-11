@@ -28,27 +28,27 @@ import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService{
-	
+public class UserServiceImpl implements UserService {
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	PostRepository postRepository;
-	
+
 	@Autowired
 	FollowRepository followRepository;
-	
+
 	@Autowired
 	UserMapper userMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Override
 	public List<UserDTO> getUsers() {
 		List<User> users = userRepository.findAll();
-		return users.stream().map(user->userMapper.mapUserToUserDto(user)).collect(Collectors.toList());
+		return users.stream().map(user -> userMapper.mapUserToUserDto(user)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -69,11 +69,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDTO createUser(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
-		if(null == user.getUsername() || user.getUsername().isEmpty() || null == user.getPassword()) {
+		if (null == user.getUsername() || user.getUsername().isEmpty() || null == user.getPassword()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 		user.setUsername(user.getUsername().toLowerCase());
-		if(null != user.getEmail() && !user.getEmail().isEmpty()) {
+		if (null != user.getEmail() && !user.getEmail().isEmpty()) {
 			user.setEmail(user.getEmail().toLowerCase());
 		}
 		// Validate Email
@@ -81,12 +81,12 @@ public class UserServiceImpl implements UserService{
 		// Validate username
 		// Validate password
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoleId(2); //Default role USER
+		user.setRoleId(2); // Default role USER
 		user.setCreatedOn(new Date());
 		user.setActive(true);
-		
+
 		try {
-			System.out.println(">>>>>>>>>"+objectMapper.writeValueAsString(user));
+			System.out.println(">>>>>>>>>" + objectMapper.writeValueAsString(user));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,23 +98,51 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDTO updateUser(User user) {
 		// TODO Auto-generated method stub
-		if(null == user.getId()) {
+		if (null == user.getId()) {
 			return null;
 		}
-		user.setLastUpdatedOn(new Date());
-		User updatedUser = userRepository.saveAndFlush(user);
-		return userMapper.mapUserToUserDto(updatedUser);
+		//user.setLastUpdatedOn(new Date());
+		//User updatedUser = userRepository.saveAndFlush(user);
+		//return userMapper.mapUserToUserDto(updatedUser);
+		return null;
 	}
 
 	@Override
 	public UserDTO authenticateUser(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
-		List<User> users = userRepository.findAll(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(user.getUsername().toLowerCase()));
-		if(users.size()==1 && passwordEncoder.matches(user.getPassword(), users.get(0).getPassword())) {
+		List<User> users = userRepository.findAll(
+				UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(user.getUsername().toLowerCase()));
+		if (users.size() == 1 && passwordEncoder.matches(user.getPassword(), users.get(0).getPassword())) {
 			return userMapper.mapUserToUserDto(users.get(0));
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto) {
+		
+		User user = userMapper.mapUserDtoToUser(userDto);
+		
+		if(null == user.getId() || userId != user.getId() ||
+				null == user.getUsername() || user.getUsername().length()<=0 || 
+				null == user.getFullname() || user.getFullname().length()<=0) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+		
+		Optional<User> existingUserDetails = userRepository.findById(userId);
+		
+		if(existingUserDetails.isPresent()) {
+			existingUserDetails.get().setUsername(user.getUsername());
+			existingUserDetails.get().setFullname(user.getFullname());
+			existingUserDetails.get().setBio(user.getBio());
+			userRepository.saveAndFlush(existingUserDetails.get());
+			return userMapper.mapUserToUserDto(existingUserDetails.get());
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+		
+		
 	}
 
 }

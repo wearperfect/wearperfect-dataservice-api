@@ -44,4 +44,10 @@ public class UserController {
 		User user = userMapper.mapUserDtoToUser(userDto);
 		return userService.updateUser(user);
 	}
+	
+	@PutMapping(value = "/users/{userId}/profile/basicdetails")
+	public UserDTO updateUserBasicProfileDetails(@PathVariable(name = "userId") Long userId,
+			@RequestBody(required = true) UserDTO userDto) {
+		return userService.updateUserBasicProfileDetails(userId, userDto);
+	}
 }

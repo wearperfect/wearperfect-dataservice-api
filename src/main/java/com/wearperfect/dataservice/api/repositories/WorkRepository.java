@@ -16,4 +16,6 @@ public interface WorkRepository extends JpaRepository<Work, Long>, JpaSpecificat
 	
 	Work findByIdAndWorkedBy(Long id, Long workedBy);
 	
+	void deleteByIdAndWorkedBy(Long id, Long workedBy);
+	
 }

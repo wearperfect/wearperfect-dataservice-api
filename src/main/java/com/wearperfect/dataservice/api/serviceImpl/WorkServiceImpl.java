@@ -51,6 +51,12 @@ public class WorkServiceImpl implements WorkService {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 
+		if(null == work.getWorkedTo()) {
+			work.setWorkingActively(true);
+		}else {
+			work.setWorkingActively(false);
+		}
+		work.setWorkedBy(userId);
 		work.setActive(true);
 		work.setCreatedBy(userId);
 		work.setCreatedOn(new Date());
@@ -75,6 +81,11 @@ public class WorkServiceImpl implements WorkService {
 
 		Work existingWork = workRepository.findByIdAndWorkedBy(work.getId(), userId);
 
+		if(null == work.getWorkedTo()) {
+			work.setWorkingActively(true);
+		}else {
+			work.setWorkingActively(false);
+		}
 		work.setActive(true);
 		work.setCreatedBy(existingWork.getCreatedBy());
 		work.setCreatedOn(existingWork.getCreatedOn());
@@ -82,6 +93,16 @@ public class WorkServiceImpl implements WorkService {
 		work.setLastUpdatedOn(new Date());
 		workRepository.save(work);
 		return workMapper.mapWorkToWorkDto(work);
+	}
+
+	@Override
+	public WorkDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto) {
+		
+		if(workId != workDto.getId() || userId != workDto.getWorkedBy()) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+		workRepository.deleteByIdAndWorkedBy(workId, userId);
+		return workDto;
 	}
 
 }

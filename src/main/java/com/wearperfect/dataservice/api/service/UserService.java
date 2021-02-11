@@ -18,5 +18,7 @@ public interface UserService {
 	UserDTO updateUser(User user);
 
 	UserDTO authenticateUser(User user);
+
+	UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto);
 	
 }
