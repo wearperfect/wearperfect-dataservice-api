@@ -29,8 +29,9 @@ public class WorkController {
 		return workService.addUserWork(userId, workDto);
 	}
 
-	@PutMapping(value = "/users/{userId}/works")
-	WorkDTO updateUserWorks(@PathVariable(name = "userId") Long userId, @RequestBody WorkDTO workDto) {
-		return workService.updateUserWork(userId, workDto);
+	@PutMapping(value = "/users/{userId}/works/{workId}")
+	WorkDTO updateUserWorks(@PathVariable(name = "userId") Long userId, @PathVariable(name = "workId") Long workId,
+			@RequestBody WorkDTO workDto) {
+		return workService.updateUserWork(userId, workId, workDto);
 	}
 }

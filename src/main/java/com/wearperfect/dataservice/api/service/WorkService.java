@@ -10,6 +10,6 @@ public interface WorkService {
 
 	WorkDTO addUserWork(Long userId, WorkDTO workDto);
 
-	WorkDTO updateUserWork(Long userId, WorkDTO workDto);
+	WorkDTO updateUserWork(Long userId, Long workId, WorkDTO workDto);
 
 }
