@@ -1,17 +1,16 @@
 package com.wearperfect.dataservice.api.service;
 
-import java.util.List;
-
+import com.wearperfect.dataservice.api.dto.UserWorksResponseDTO;
 import com.wearperfect.dataservice.api.dto.WorkDTO;
 
 public interface WorkService {
 
-	List<WorkDTO> getUserWorkList(Long userId);
+	UserWorksResponseDTO getUserWorkList(Long userId);
 
-	WorkDTO addUserWork(Long userId, WorkDTO workDto);
+	UserWorksResponseDTO addUserWork(Long userId, WorkDTO workDto);
 
-	WorkDTO updateUserWork(Long userId, Long workId, WorkDTO workDto);
+	UserWorksResponseDTO updateUserWork(Long userId, Long workId, WorkDTO workDto);
 
-	WorkDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto);
+	UserWorksResponseDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto);
 
 }

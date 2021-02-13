@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserSkillsResponseDTO;
 import com.wearperfect.dataservice.api.entities.Skill;
 import com.wearperfect.dataservice.api.entities.Skill_;
 import com.wearperfect.dataservice.api.entities.UserSkill;
@@ -44,17 +46,18 @@ public class SkillServiceImpl implements SkillService {
 	}
 
 	@Override
-	public List<SkillBasicDetailsDTO> getUserSkills(Long userId) {
+	public UserSkillsResponseDTO getUserSkills(Long userId) {
 		List<UserSkill> userSkills = userSkillRepository.findByUserId(userId);
 		List<Integer> userSkillIds = userSkills.stream().map(userSkill -> userSkill.getSkillId())
 				.collect(Collectors.toList());
 		List<Skill> skills = skillRepository.findByIdIn(userSkillIds, Sort.by(Direction.ASC, Skill_.NAME));
-		return skills.stream().map(skill -> skillMapper.mapSkillToSkillBasicDetailsDto(skill))
-				.collect(Collectors.toList());
+		List<SkillBasicDetailsDTO> skillDtoList = skills.stream().map(skill -> skillMapper.mapSkillToSkillBasicDetailsDto(skill))
+		.collect(Collectors.toList());
+		return new UserSkillsResponseDTO(userId, skillDtoList);
 	}
 
 	@Override
-	public SkillBasicDetailsDTO saveUserSkill(Long userId, Integer skillId) {
+	public UserSkillsResponseDTO saveUserSkill(Long userId, Integer skillId) {
 		UserSkill userSkill = new UserSkill();
 		userSkill.setActive(true);
 		userSkill.setCreatedBy(userId);
@@ -63,19 +66,21 @@ public class SkillServiceImpl implements SkillService {
 		userSkill.setUserId(userId);
 		userSkillRepository.save(userSkill);
 		Optional<Skill> skill = skillRepository.findById(skillId);
-		if(skill.isPresent()) {
-			return skillMapper.mapSkillToSkillBasicDetailsDto(skill.get());
-		}else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Skill not found with id "+skillId);
-		}
+		return getUserSkillsResponseDTO(userId, skillId, skill);
 	}
 
 	@Override
-	public SkillBasicDetailsDTO deleteUserSkill(Long userId, Integer skillId) {
+	public UserSkillsResponseDTO deleteUserSkill(Long userId, Integer skillId) {
 		userSkillRepository.deleteByUserIdAndSkillId(userId, skillId);
 		Optional<Skill> skill = skillRepository.findById(skillId);
+		return getUserSkillsResponseDTO(userId, skillId, skill);
+	}
+	
+	UserSkillsResponseDTO getUserSkillsResponseDTO(Long userId, Integer skillId, Optional<Skill> skill) {
+		List<SkillBasicDetailsDTO> skillsDtoList = new ArrayList<>();
+		skillsDtoList.add(skillMapper.mapSkillToSkillBasicDetailsDto(skill.get()));
 		if(skill.isPresent()) {
-			return skillMapper.mapSkillToSkillBasicDetailsDto(skill.get());
+			return new UserSkillsResponseDTO(userId, skillsDtoList);
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Skill not found with id "+skillId);
 		}

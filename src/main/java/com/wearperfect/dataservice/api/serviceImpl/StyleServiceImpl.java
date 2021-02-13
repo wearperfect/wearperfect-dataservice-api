@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserStylesResponseDTO;
 import com.wearperfect.dataservice.api.entities.Style;
 import com.wearperfect.dataservice.api.entities.Style_;
 import com.wearperfect.dataservice.api.entities.UserStyle;
@@ -44,17 +46,18 @@ public class StyleServiceImpl implements StyleService {
 	}
 
 	@Override
-	public List<StyleBasicDetailsDTO> getUserStyles(Long userId) {
+	public UserStylesResponseDTO getUserStyles(Long userId) {
 		List<UserStyle> userStyles = userStyleRepository.findByUserId(userId);
 		List<Integer> userStyleIds = userStyles.stream().map(userStyle -> userStyle.getStyleId())
 				.collect(Collectors.toList());
 		List<Style> styles = styleRepository.findByIdIn(userStyleIds, Sort.by(Direction.ASC, Style_.NAME));
-		return styles.stream().map(style -> styleMapper.mapStyleToStyleBasicDetailsDto(style))
+		List<StyleBasicDetailsDTO> styleDtoList = styles.stream().map(style -> styleMapper.mapStyleToStyleBasicDetailsDto(style))
 				.collect(Collectors.toList());
+		return new UserStylesResponseDTO(userId, styleDtoList);
 	}
 
 	@Override
-	public StyleBasicDetailsDTO saveUserStyle(Long userId, Integer styleId) {
+	public UserStylesResponseDTO saveUserStyle(Long userId, Integer styleId) {
 		UserStyle userStyle = new UserStyle();
 		userStyle.setActive(true);
 		userStyle.setCreatedBy(userId);
@@ -63,19 +66,21 @@ public class StyleServiceImpl implements StyleService {
 		userStyle.setUserId(userId);
 		userStyleRepository.save(userStyle);
 		Optional<Style> style = styleRepository.findById(styleId);
-		if(style.isPresent()) {
-			return styleMapper.mapStyleToStyleBasicDetailsDto(style.get());
-		}else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Style not found with id "+styleId);
-		}
+		return getUserSkillsResponseDTO(userId, styleId, style);
 	}
 
 	@Override
-	public StyleBasicDetailsDTO deleteUserStyle(Long userId, Integer styleId) {
+	public UserStylesResponseDTO deleteUserStyle(Long userId, Integer styleId) {
 		userStyleRepository.deleteByUserIdAndStyleId(userId, styleId);
 		Optional<Style> style = styleRepository.findById(styleId);
+		return getUserSkillsResponseDTO(userId, styleId, style);
+	}
+	
+	UserStylesResponseDTO getUserSkillsResponseDTO(Long userId, Integer styleId, Optional<Style> style) {
+		List<StyleBasicDetailsDTO> stylesDtoList = new ArrayList<>();
 		if(style.isPresent()) {
-			return styleMapper.mapStyleToStyleBasicDetailsDto(style.get());
+			stylesDtoList.add(styleMapper.mapStyleToStyleBasicDetailsDto(style.get()));
+			return new UserStylesResponseDTO(userId, stylesDtoList);
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Style not found with id "+styleId);
 		}

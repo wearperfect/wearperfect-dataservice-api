@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserSkillsResponseDTO;
 import com.wearperfect.dataservice.api.service.SkillService;
 
 @RestController
@@ -24,18 +25,18 @@ public class SkillController {
 	}
 
 	@GetMapping(path = "/users/{userId}/skills")
-	List<SkillBasicDetailsDTO> getUserSkills(@PathVariable(name = "userId", required = true) Long userId) {
+	UserSkillsResponseDTO getUserSkills(@PathVariable(name = "userId", required = true) Long userId) {
 		return skillService.getUserSkills(userId);
 	}
 
 	@PostMapping(path = "/users/{userId}/skills/{skillId}")
-	SkillBasicDetailsDTO saveUserSkill(@PathVariable(name = "userId", required = true) Long userId,
+	UserSkillsResponseDTO saveUserSkill(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "skillId", required = true) Integer skillId) {
 		return skillService.saveUserSkill(userId, skillId);
 	}
 
 	@DeleteMapping(path = "/users/{userId}/skills/{skillId}")
-	SkillBasicDetailsDTO deleteUserSkill(@PathVariable(name = "userId", required = true) Long userId,
+	UserSkillsResponseDTO deleteUserSkill(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "skillId", required = true) Integer skillId){
 		return skillService.deleteUserSkill(userId, skillId);
 	}

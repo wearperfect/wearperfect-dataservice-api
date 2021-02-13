@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.wearperfect.dataservice.api.dto.UserWorksResponseDTO;
 import com.wearperfect.dataservice.api.dto.WorkDTO;
 import com.wearperfect.dataservice.api.entities.Work;
 import com.wearperfect.dataservice.api.entities.Work_;
@@ -32,14 +34,15 @@ public class WorkServiceImpl implements WorkService {
 	WorkMapper workMapper;
 
 	@Override
-	public List<WorkDTO> getUserWorkList(Long userId) {
+	public UserWorksResponseDTO getUserWorkList(Long userId) {
 		List<Work> works = workRepository.findByWorkedBy(userId,
 				PageRequest.of(0, 50, Sort.by(Direction.DESC, Work_.WORKED_FROM)));
-		return works.stream().map(work -> workMapper.mapWorkToWorkDto(work)).collect(Collectors.toList());
+		List<WorkDTO> workDtoList = works.stream().map(work -> workMapper.mapWorkToWorkDto(work)).collect(Collectors.toList());
+		return new UserWorksResponseDTO(userId, workDtoList);
 	}
 
 	@Override
-	public WorkDTO addUserWork(Long userId, WorkDTO workDto) {
+	public UserWorksResponseDTO addUserWork(Long userId, WorkDTO workDto) {
 
 		Work work = workMapper.mapWorkDtoToWork(workDto);
 		if ((null != workDto.getId())
@@ -63,11 +66,11 @@ public class WorkServiceImpl implements WorkService {
 		work.setLastUpdatedBy(null);
 		work.setLastUpdatedOn(null);
 		workRepository.save(work);
-		return workMapper.mapWorkToWorkDto(work);
+		return getUserWorksResponseDTO(userId, workMapper.mapWorkToWorkDto(work));
 	}
 
 	@Override
-	public WorkDTO updateUserWork(Long userId, Long workId, WorkDTO workDto) {
+	public UserWorksResponseDTO updateUserWork(Long userId, Long workId, WorkDTO workDto) {
 
 		Work work = workMapper.mapWorkDtoToWork(workDto);
 		if ((null == workDto.getId()) || workId != work.getId()
@@ -92,17 +95,23 @@ public class WorkServiceImpl implements WorkService {
 		work.setLastUpdatedBy(userId);
 		work.setLastUpdatedOn(new Date());
 		workRepository.save(work);
-		return workMapper.mapWorkToWorkDto(work);
+		return getUserWorksResponseDTO(userId, workMapper.mapWorkToWorkDto(existingWork));
 	}
 
 	@Override
-	public WorkDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto) {
+	public UserWorksResponseDTO deleteUserWork(Long userId, Long workId, WorkDTO workDto) {
 		
 		if(workId != workDto.getId() || userId != workDto.getWorkedBy()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 		workRepository.deleteByIdAndWorkedBy(workId, userId);
-		return workDto;
+		return getUserWorksResponseDTO(userId, workDto);
+	}
+	
+	UserWorksResponseDTO getUserWorksResponseDTO(Long userId, WorkDTO workDto) {
+		List<WorkDTO> workDtoList = new ArrayList<>();
+		workDtoList.add(workDto);
+		return new UserWorksResponseDTO(userId, workDtoList);
 	}
 
 }

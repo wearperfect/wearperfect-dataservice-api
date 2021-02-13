@@ -3,14 +3,15 @@ package com.wearperfect.dataservice.api.service;
 import java.util.List;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserSkillsResponseDTO;
 
 public interface SkillService {
 
 	List<SkillBasicDetailsDTO> getSkills();
 
-	List<SkillBasicDetailsDTO> getUserSkills(Long userId);
+	UserSkillsResponseDTO getUserSkills(Long userId);
 
-	SkillBasicDetailsDTO saveUserSkill(Long userId, Integer skillId);
+	UserSkillsResponseDTO saveUserSkill(Long userId, Integer skillId);
 
-	SkillBasicDetailsDTO deleteUserSkill(Long userId, Integer skillId);
+	UserSkillsResponseDTO deleteUserSkill(Long userId, Integer skillId);
 }

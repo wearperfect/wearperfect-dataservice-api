@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserStylesResponseDTO;
 import com.wearperfect.dataservice.api.service.StyleService;
 
 @RestController
@@ -24,18 +25,18 @@ public class StyleController {
 	}
 	
 	@GetMapping(path = "/users/{userId}/styles")
-	List<StyleBasicDetailsDTO> getUserStyles(@PathVariable(name = "userId", required = true) Long userId){
+	UserStylesResponseDTO getUserStyles(@PathVariable(name = "userId", required = true) Long userId){
 		return styleService.getUserStyles(userId);
 	}
 	
 	@PostMapping(path = "/users/{userId}/styles/{styleId}")
-	StyleBasicDetailsDTO saveUserStyle(@PathVariable(name = "userId", required = true) Long userId,
+	UserStylesResponseDTO saveUserStyle(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "styleId", required = true) Integer styleId){
 		return styleService.saveUserStyle(userId, styleId);
 	}
 	
 	@DeleteMapping(path = "/users/{userId}/styles/{styleId}")
-	StyleBasicDetailsDTO deleteUserStyle(@PathVariable(name = "userId", required = true) Long userId,
+	UserStylesResponseDTO deleteUserStyle(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "styleId", required = true) Integer styleId){
 		return styleService.deleteUserStyle(userId, styleId);
 	}
