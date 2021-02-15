@@ -28,10 +28,14 @@ public class UserController {
 	public List<UserDTO> getUsers() {
 		return userService.getUsers();
 	}
-
 	@GetMapping(value = "/users/{userId}")
 	public UserDetailsDTO getUserById(@PathVariable(name = "userId") Long userId) {
 		return userService.getUserDetailsById(userId);
+	}
+	
+	@GetMapping(value = "/users/u/{username}")
+	public UserDetailsDTO getUserByUsername(@PathVariable(name = "username") String username) {
+		return userService.getUserDetailsByUsername(username);
 	}
 
 	@PutMapping(value = "/users/{userId}")

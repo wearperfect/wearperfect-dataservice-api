@@ -145,4 +145,19 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public UserDetailsDTO getUserDetailsByUsername(String username) {
+		Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username));
+		UserDetailsDTO userDetails;
+		if (user.isPresent()) {
+			userDetails = userMapper.mapUserToUserDetailsDto(user.get());
+		} else {
+			return null;
+		}
+		userDetails.setTotalPosts(postRepository.countByCreatedBy(user.get().getId()));
+		userDetails.setTotalFollowers(followRepository.countByUserId(user.get().getId()));
+		userDetails.setTotalFollowing(followRepository.countByFollowingBy(user.get().getId()));
+		return userDetails;
+	}
+
 }

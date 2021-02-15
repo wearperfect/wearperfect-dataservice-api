@@ -11,4 +11,6 @@ import com.wearperfect.dataservice.api.entities.User;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User>{
 
 	 List<User> findByIdIn(List<Long> users);
+	 
+	 User findByUsername(String username);
 }
