@@ -19,8 +19,8 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
-import com.wearperfect.dataservice.api.entities.Master;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.PostLike;
@@ -63,16 +63,16 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	PostLikeRepository postLikeRepository;
-	
+
 	@Autowired
 	PostSaveRepository postSaveRepository;
-	
+
 	@Autowired
 	PostUserTagRepository postUserTagRepository;
 
 	@Autowired
 	MasterRepository masterRepository;
-	
+
 	@Autowired
 	UserMapper userMapper;
 
@@ -80,54 +80,65 @@ public class PostServiceImpl implements PostService {
 	PostMapper postMapper;
 
 	@Override
-	public List<PostDetailsDTO> getPostsByUserId(Long userId) {
+	public UserPostsResponseDTO getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
-		List<PostDetailsDTO> postDetailsList = posts.stream()
-				.map(post -> postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		postDetailsList.forEach(post -> {
+		List<PostDetailsDTO> userPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+				.collect(Collectors.toList());
+		userPostsDtoList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 		});
-		return postDetailsList;
-	}
-	
-	@Override
-	public List<PostDetailsDTO> getLikedPostsByUserId(Long userId) {
-		List<PostLike> likedPosts = postLikeRepository.findByLikedBy(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostLike_.LIKED_ON)));
-		List<Long> likedPostIds = likedPosts.stream().map(likedPost->likedPost.getPostId()).collect(Collectors.toList());
-		List<Post> posts = postRepository.findByIdIn(likedPostIds);
-		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		return likedPostsDtoList;
+		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
 
 	@Override
-	public List<PostDetailsDTO> getSavedPostsByUserId(Long userId) {
-		List<PostSave> savedPosts = postSaveRepository.findBySavedBy(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostSave_.SAVED_ON)));
-		List<Long> savedPostsIds = savedPosts.stream().map(savedPost->savedPost.getPostId()).collect(Collectors.toList());
+	public UserPostsResponseDTO getLikedPostsByUserId(Long userId) {
+		List<PostLike> likedPosts = postLikeRepository.findByLikedBy(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostLike_.LIKED_ON)));
+		List<Long> likedPostIds = likedPosts.stream().map(likedPost -> likedPost.getPostId())
+				.collect(Collectors.toList());
+		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+				.collect(Collectors.toList());
+		return new UserPostsResponseDTO(userId, likedPostsDtoList);
+	}
+
+	@Override
+	public UserPostsResponseDTO getSavedPostsByUserId(Long userId) {
+		List<PostSave> savedPosts = postSaveRepository.findBySavedBy(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostSave_.SAVED_ON)));
+		List<Long> savedPostsIds = savedPosts.stream().map(savedPost -> savedPost.getPostId())
+				.collect(Collectors.toList());
 		List<Post> posts = postRepository.findByIdIn(savedPostsIds);
-		List<PostDetailsDTO> savedPostDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		return savedPostDtoList;
+		List<PostDetailsDTO> savedPostDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+				.collect(Collectors.toList());
+		return new UserPostsResponseDTO(userId, savedPostDtoList);
 	}
 
 	@Override
-	public List<PostDetailsDTO> getTaggedPostsByUserId(Long userId) {
-		List<PostUserTag> taggedPosts = postUserTagRepository.findByTaggedUserId(userId, PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserTag_.TAGGED_ON)));
-		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost->taggedPost.getPostId()).collect(Collectors.toList());
+	public UserPostsResponseDTO getTaggedPostsByUserId(Long userId) {
+		List<PostUserTag> taggedPosts = postUserTagRepository.findByTaggedUserId(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserTag_.TAGGED_ON)));
+		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
+				.collect(Collectors.toList());
 		List<Post> posts = postRepository.findByIdIn(likedPostIds);
-		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post->postMapper.mapPostToPostDetailsDto(post)).collect(Collectors.toList());
-		return likedPostsDtoList;
+		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+				.collect(Collectors.toList());
+		return new UserPostsResponseDTO(userId, likedPostsDtoList);
 	}
 
 	@Override
-	public PostDetailsDTO getPostByUserIdAndPostId(Long userId, Long postId) {
+	public UserPostsResponseDTO getPostByUserIdAndPostId(Long userId, Long postId) {
 		Optional<Post> post = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
 		PostDetailsDTO postDetails = postMapper.mapPostToPostDetailsDto(post.get());
 		postDetails.setTotalLikes(postLikeRepository.countByPostId(post.get().getId()));
-		return postDetails;
+		List<PostDetailsDTO> userPostsDtoList = new ArrayList<>();
+		userPostsDtoList.add(postDetails);
+		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
 
 	@Override
-	public PostDetailsDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername) {
+	public UserPostsResponseDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername) {
 
 		Post post = postMapper.mapPostDtoToPost(postDto);
 
@@ -185,7 +196,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDetailsDTO createPostItems(List<PostItem> postItems, Long postId, Long userId) {
+	public UserPostsResponseDTO createPostItems(List<PostItem> postItems, Long postId, Long userId) {
 		postItems.forEach(postItem -> {
 			postItem.setSequenceId(postItems.indexOf(postItem));
 			postItem.setPostId(postId);
@@ -209,21 +220,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void deletePost(Long userId, Long postId) {
+	public UserPostsResponseDTO deletePost(Long userId, Long postId) {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
-	@Override
-	public Master createMaster(Master master) {
-		// TODO Auto-generated method stub
-		master.setActive(true);
-		master.setCreatedOn(new Date());
-		master.getSlaves().forEach(slave -> {
-			slave.setActive(true);
-			slave.setCreatedOn(new Date());
-			slave.setMaster(master);
-		});
-		return masterRepository.save(master);
-	}
 }

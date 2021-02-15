@@ -1,10 +1,7 @@
 package com.wearperfect.dataservice.api.service;
 
-import java.util.List;
-
 import com.wearperfect.dataservice.api.dto.FollowDTO;
-import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserFollowUpDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserFollowsResponseDTO;
 
 public interface FollowService {
 
@@ -12,8 +9,8 @@ public interface FollowService {
 	
 	FollowDTO unFollowUser(Long followingBy, Long userId);
 
-	List<UserFollowUpDetailsDTO> getUserFollowers(Long userId);
+	UserFollowsResponseDTO getUserFollowers(Long userId);
 
-	List<UserFollowUpDetailsDTO> getUserFollowings(Long userId);
+	UserFollowsResponseDTO getUserFollowings(Long userId);
 
 }

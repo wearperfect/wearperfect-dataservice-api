@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.FollowDTO;
-import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserFollowUpDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserFollowsResponseDTO;
 import com.wearperfect.dataservice.api.service.FollowService;
 
 @RestController
@@ -23,13 +20,13 @@ public class FollowController {
 	
 	@GetMapping(value = "/users/{userId}/followers")
 	@ResponseBody
-	public List<UserFollowUpDetailsDTO> getUserFollowers(@PathVariable(name = "userId") Long userId) {
+	public UserFollowsResponseDTO getUserFollowers(@PathVariable(name = "userId") Long userId) {
 		return followService.getUserFollowers(userId);
 	}
 	
 	@GetMapping(value = "/users/{userId}/followings")
 	@ResponseBody
-	public List<UserFollowUpDetailsDTO> getUserFollowing(@PathVariable(name = "userId") Long userId) {
+	public UserFollowsResponseDTO getUserFollowing(@PathVariable(name = "userId") Long userId) {
 		return followService.getUserFollowings(userId);
 	}
 	

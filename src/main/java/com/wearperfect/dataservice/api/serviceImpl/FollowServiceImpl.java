@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.FollowDTO;
 import com.wearperfect.dataservice.api.dto.UserFollowUpDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserFollowsResponseDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.mappers.FollowMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
@@ -43,7 +44,7 @@ public class FollowServiceImpl implements FollowService {
 	EntityManager em;
 
 	@Override
-	public List<UserFollowUpDetailsDTO> getUserFollowers(Long userId) {
+	public UserFollowsResponseDTO getUserFollowers(Long userId) {
 
 		List<Follow> follows = followRepository.findByUserIdOrFollowingBy(userId, userId);
 
@@ -76,11 +77,11 @@ public class FollowServiceImpl implements FollowService {
 			});
 		});
 
-		return followers;
+		return new UserFollowsResponseDTO(userId, followers, null);
 	}
 
 	@Override
-	public List<UserFollowUpDetailsDTO> getUserFollowings(Long userId) {
+	public UserFollowsResponseDTO getUserFollowings(Long userId) {
 		List<Follow> follows = followRepository.findByUserIdOrFollowingBy(userId, userId);
 
 		List<Follow> followersList = new LinkedList<>();
@@ -112,7 +113,7 @@ public class FollowServiceImpl implements FollowService {
 			});
 		});
 
-		return followings;
+		return new UserFollowsResponseDTO(userId, null, followings);
 	}
 
 	@Override
