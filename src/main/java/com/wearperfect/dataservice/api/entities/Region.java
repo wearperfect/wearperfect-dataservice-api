@@ -16,26 +16,26 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "styles")
-public class Style {
+@Table(name="regions")
+public class Region {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
-
-	@Column(name = "region_id")
-	Integer regionId;
 	
 	@Column(name = "name")
 	String name;
+	
+	@Column(name = "short_name")
+	String shortName;
 	
 	@Column(name = "desc")
 	String desc;
 	
 	@Column(name = "thumbnail")
 	String thumbnail;
-
+	
 	@Column(name = "source_link")
 	String sourceLink;
 	
@@ -44,16 +44,16 @@ public class Style {
 
 	@Column(name = "created_on")
 	Date createdOn;
-	
+
 	@Column(name = "last_updated_by")
 	Long lastUpdatedBy;
 
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
-
+	
 	@Column(name = "active")
 	Boolean active;
 	
-	@OneToMany(mappedBy = "style", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterStylePreference.class)
-	List<SavedFilterStylePreference> savedFilterStylePreferences;
+	@OneToMany(mappedBy = "region", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterRegionPreference.class)
+	List<SavedFilterRegionPreference> savedFilterRegionPreferences;
 }

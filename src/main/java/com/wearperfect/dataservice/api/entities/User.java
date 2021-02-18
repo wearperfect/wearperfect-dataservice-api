@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -102,4 +104,7 @@ public class User {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
 	@JoinColumn(name = "business_address_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Address businessAddressDetails;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterUserPreference.class)
+	List<SavedFilterUserPreference> savedFilterUserPreferences;
 }

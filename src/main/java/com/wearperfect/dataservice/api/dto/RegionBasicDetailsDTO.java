@@ -3,21 +3,19 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class GenderDTO {
+public class RegionBasicDetailsDTO {
 
 	Integer id;
-	
+
 	String name;
-	
+
 	String shortName;
-	
-	Long createdBy;
-	
-	Long createdOn;
-	
-	Long lastUpdatedBy;
-	
-	Long lastUpdatedOn;
-	
+
+	String desc;
+
+	String thumbnail;
+
+	String sourceLink;
+
 	Boolean active;
 }
