@@ -12,4 +12,6 @@ import com.wearperfect.dataservice.api.entities.SavedFilter;
 public interface SavedFilterRepository extends JpaRepository<SavedFilter, Long>, JpaSpecificationExecutor<SavedFilter>{
 
 	List<SavedFilter> findByUserId(Long userId);
+	
+	SavedFilter findByIdAndUserId(Long id, Long userId);
 }

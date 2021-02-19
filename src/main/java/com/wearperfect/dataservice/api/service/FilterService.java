@@ -14,4 +14,10 @@ public interface FilterService {
 
 	SavedFilterDetailsDTO addUserSavedFilters(Long userId, SavedFilterDTO savedFilterDto);
 
+	SavedFilterDTO updateUserPreferenceFilter(Long userId, Long filterId, SavedFilterDTO savedFilterDto);
+
+	SavedFilterDTO deleteUserPreferenceFilter(Long userId, Long filterId);
+
+	SavedFilterDetailsDTO getUserSavedFilterByIdAndUserId(Long id, Long userId);
+
 }

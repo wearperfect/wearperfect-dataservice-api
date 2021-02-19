@@ -2,6 +2,7 @@ package com.wearperfect.dataservice.api.serviceImpl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -47,61 +48,63 @@ public class FilterServiceImpl implements FilterService {
 
 	@Autowired
 	SavedFilterRepository savedFilterRepository;
-	
+
 	@Autowired
 	CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	ColorRepository colorRepository;
-	
+
 	@Autowired
 	GenderCategoryRepository genderCategoryRepository;
-	
+
 	@Autowired
 	RegionRepository regionRepository;
-	
+
 	@Autowired
 	StyleRepository styleRepository;
 
 	@Autowired
 	SavedFilterMapper savedFilterMapper;
-	
+
 	@Autowired
 	CategoryMapper categoryMapper;
-	
+
 	@Autowired
 	ColorMapper colorMapper;
-	
+
 	@Autowired
-	GenderCategoryMapper  genderCategoryMapper;
-	
+	GenderCategoryMapper genderCategoryMapper;
+
 	@Autowired
 	RegionMapper regionMapper;
-	
+
 	@Autowired
 	StyleMapper styleMapper;
-	
+
 	@Autowired
 	StyleService styleService;
-	
 
 	@Override
 	public FiltersResponseDTO getFilters() {
-		
-		List<CategoryBasicDetailsDTO>  categories = categoryRepository.findAll(Sort.by(Direction.ASC, Category_.NAME))
-				.stream().map(category->categoryMapper.mapCategoryToCategoryBasicDetailsDTO(category)).collect(Collectors.toList());
-		
-		List<ColorBasicDetailsDTO> colors = colorRepository.findAll(Sort.by(Direction.ASC, Color_.NAME))
-				.stream().map(color->colorMapper.mapColorToColorBasicDetailsDto(color)).collect(Collectors.toList());
-		
-		List<GenderCategoryBasicDetailsDTO> genderCategories = genderCategoryRepository.findAll(Sort.by(Direction.ASC, GenderCategory_.ID))
-				.stream().map(genderCategory->genderCategoryMapper.mapGenderCategoryToGenderCategoryBasicDetailsDto(genderCategory)).collect(Collectors.toList());
-		
-		List<RegionBasicDetailsDTO> regions = regionRepository.findAll(Sort.by(Direction.ASC, Region_.NAME))
-				.stream().map(region->regionMapper.mapRegionToRegionBasicDetailsDto(region)).collect(Collectors.toList());
-		
+
+		List<CategoryBasicDetailsDTO> categories = categoryRepository.findAll(Sort.by(Direction.ASC, Category_.NAME))
+				.stream().map(category -> categoryMapper.mapCategoryToCategoryBasicDetailsDTO(category))
+				.collect(Collectors.toList());
+
+		List<ColorBasicDetailsDTO> colors = colorRepository.findAll(Sort.by(Direction.ASC, Color_.NAME)).stream()
+				.map(color -> colorMapper.mapColorToColorBasicDetailsDto(color)).collect(Collectors.toList());
+
+		List<GenderCategoryBasicDetailsDTO> genderCategories = genderCategoryRepository
+				.findAll(Sort.by(Direction.ASC, GenderCategory_.ID)).stream().map(genderCategory -> genderCategoryMapper
+						.mapGenderCategoryToGenderCategoryBasicDetailsDto(genderCategory))
+				.collect(Collectors.toList());
+
+		List<RegionBasicDetailsDTO> regions = regionRepository.findAll(Sort.by(Direction.ASC, Region_.NAME)).stream()
+				.map(region -> regionMapper.mapRegionToRegionBasicDetailsDto(region)).collect(Collectors.toList());
+
 		List<StyleBasicDetailsDTO> styles = styleService.getStyles();
-		
+
 		return new FiltersResponseDTO(categories, colors, genderCategories, regions, styles);
 	}
 
@@ -113,14 +116,20 @@ public class FilterServiceImpl implements FilterService {
 				.collect(Collectors.toList());
 		return savedFilterDetailsDtoList;
 	}
+	
+	@Override
+	public SavedFilterDetailsDTO getUserSavedFilterByIdAndUserId(Long id, Long userId) {
+		SavedFilter savedFilter = savedFilterRepository.findByIdAndUserId(id, userId);
+		return savedFilterMapper.mapSavedFilterToSavedFilterDetailsDto(savedFilter);
+	}
 
 	@Override
 	public SavedFilterDetailsDTO addUserSavedFilters(Long userId, SavedFilterDTO savedFilterDto) {
-		if(userId != savedFilterDto.getUserId()) {
+		if (userId != savedFilterDto.getUserId()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
-		if(null == savedFilterDto.getTitle() || savedFilterDto.getTitle().trim().length()<=0 ||
-				null == savedFilterDto.getDescription() || savedFilterDto.getDescription().trim().length()<=0) {
+		if (null == savedFilterDto.getTitle() || savedFilterDto.getTitle().trim().length() <= 0
+				|| null == savedFilterDto.getDescription() || savedFilterDto.getDescription().trim().length() <= 0) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 		SavedFilter filter = savedFilterMapper.mapSavedFilterDtoToSavedFilter(savedFilterDto);
@@ -129,7 +138,37 @@ public class FilterServiceImpl implements FilterService {
 		filter.setCreatedOn(new Date());
 		filter.setUserId(userId);
 		savedFilterRepository.save(filter);
+		//return getUserSavedFilterByIdAndUserId(filter.getId(), filter.getUserId());
 		return savedFilterMapper.mapSavedFilterToSavedFilterDetailsDto(filter);
+	}
+
+	@Override
+	public SavedFilterDTO updateUserPreferenceFilter(Long userId, Long filterId, SavedFilterDTO savedFilterDto) {
+		if (null == savedFilterDto.getId() || null == savedFilterDto.getTitle()
+				|| savedFilterDto.getTitle().trim().length() <= 0 || null == savedFilterDto.getDescription()
+				|| savedFilterDto.getDescription().trim().length() <= 0) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+		Optional<SavedFilter> savedFilter = savedFilterRepository.findById(filterId);
+		if (savedFilter.isPresent()) {
+			savedFilter.get().setTitle(savedFilterDto.getTitle());
+			savedFilter.get().setDescription(savedFilterDto.getDescription());
+			savedFilterRepository.save(savedFilter.get());
+			return savedFilterMapper.mapSavedFilterToSavedFilterDto(savedFilter.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public SavedFilterDTO deleteUserPreferenceFilter(Long userId, Long filterId) {
+		Optional<SavedFilter> savedFilter = savedFilterRepository.findById(filterId);
+		if (savedFilter.isPresent()) {
+			savedFilterRepository.deleteById(filterId);
+			return savedFilterMapper.mapSavedFilterToSavedFilterDto(savedFilter.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
 	}
 
 }
