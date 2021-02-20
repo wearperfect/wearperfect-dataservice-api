@@ -48,6 +48,6 @@ public class Category {
 	@Column(name = "active")
 	Boolean active;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterCategoryPreference.class)
-	List<SavedFilterCategoryPreference> savedFilterCategoryPreferences;
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterCategory.class)
+	List<PreferenceFilterCategory> preferenceFilterCategories;
 }

@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.RegionDTO;
 import com.wearperfect.dataservice.api.entities.Region;
+import com.wearperfect.dataservice.api.entities.Region_;
 import com.wearperfect.dataservice.api.mappers.RegionMapper;
 import com.wearperfect.dataservice.api.repositories.RegionRepository;
 import com.wearperfect.dataservice.api.service.RegionService;
@@ -29,7 +32,7 @@ public class RegionServiceImpl implements RegionService{
 
 	@Override
 	public List<RegionDTO> getAllRegions() {
-		List<Region> regions = regionRepository.findAll();
+		List<Region> regions = regionRepository.findAll(Sort.by(Direction.ASC, Region_.NAME));
 		return regions.stream().map(region->regionMapper.mapRegionToRegionDto(region)).collect(Collectors.toList());
 	}
 

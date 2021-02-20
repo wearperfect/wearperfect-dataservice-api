@@ -48,6 +48,6 @@ public class GenderCategory {
 	@Column(name="active")
 	Boolean active;
 	
-	@OneToMany(mappedBy = "genderCategory", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterGenderCategoryPreference.class)
-	List<SavedFilterGenderCategoryPreference> savedFilterGenderCategoryPreferences;
+	@OneToMany(mappedBy = "genderCategory", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterGenderCategory.class)
+	List<PreferenceFilterGenderCategory> preferenceFilterGenderCategories;
 }

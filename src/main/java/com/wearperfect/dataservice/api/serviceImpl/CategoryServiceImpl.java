@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.CategoryDTO;
 import com.wearperfect.dataservice.api.entities.Category;
+import com.wearperfect.dataservice.api.entities.Category_;
 import com.wearperfect.dataservice.api.mappers.CategoryMapper;
 import com.wearperfect.dataservice.api.repositories.CategoryRepository;
 import com.wearperfect.dataservice.api.service.CategoryService;
@@ -29,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 	@Override
 	public List<CategoryDTO> getAllCategories() {
-		List<Category> categories = categoryRepository.findAll();
+		List<Category> categories = categoryRepository.findAll(Sort.by(Direction.ASC, Category_.NAME));
 		return categories.stream().map(category->categoryMapper.mapCategorytoCategoryDto(category)).collect(Collectors.toList());
 	}
 

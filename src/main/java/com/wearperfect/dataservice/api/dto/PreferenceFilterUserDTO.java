@@ -3,11 +3,11 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class SavedFilterUserPreferenceDTO {
+public class PreferenceFilterUserDTO {
 
 	Long id;
 
-	Long savedFilterId;
+	Long preferenceFilterId;
 
 	Long userId;
 

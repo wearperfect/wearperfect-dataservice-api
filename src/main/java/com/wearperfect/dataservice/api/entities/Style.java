@@ -54,6 +54,6 @@ public class Style {
 	@Column(name = "active")
 	Boolean active;
 	
-	@OneToMany(mappedBy = "style", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterStylePreference.class)
-	List<SavedFilterStylePreference> savedFilterStylePreferences;
+	@OneToMany(mappedBy = "style", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterStyle.class)
+	List<PreferenceFilterStyle> preferenceFilterStyles;
 }

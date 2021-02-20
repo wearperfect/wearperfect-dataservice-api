@@ -48,6 +48,6 @@ public class Color {
 	@Column(name = "active")
 	Boolean active;
 	
-	@OneToMany(mappedBy = "color", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterColorPreference.class)
-	List<SavedFilterColorPreference> savedFilterColorPreferences;
+	@OneToMany(mappedBy = "color", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterColor.class)
+	List<PreferenceFilterColor> preferenceFilterColors;
 }

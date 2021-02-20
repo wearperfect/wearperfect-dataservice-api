@@ -16,16 +16,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "saved_filter_gender_category_preferences")
-public class SavedFilterGenderCategoryPreference {
+@Table(name = "preference_filter_gender_categories")
+public class PreferenceFilterGenderCategory {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(name = "saved_filter_id")
-	Long savedFilterId;
+	@Column(name = "preference_filter_id")
+	Long preferenceFilterId;
 	
 	@Column(name = "gender_category_id")
 	Integer genderCategoryId;
@@ -39,9 +39,9 @@ public class SavedFilterGenderCategoryPreference {
 	@Column(name = "active")
 	Boolean active;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = SavedFilter.class)
-	@JoinColumn(name="saved_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
-	SavedFilter savedFilter;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PreferenceFilter.class)
+	@JoinColumn(name="preference_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
+	PreferenceFilter preferenceFilter;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
 	@JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)

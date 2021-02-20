@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.SavedFilterRegionPreference;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterUser;
 
 @Repository
-public interface SavedFilterRegionPreferenceRepository extends JpaRepository<SavedFilterRegionPreference, Long>, JpaSpecificationExecutor<SavedFilterRegionPreference>{
+public interface PreferenceFilterUserRepository extends JpaRepository<PreferenceFilterUser, Long>, JpaSpecificationExecutor<PreferenceFilterUser>{
 
 }

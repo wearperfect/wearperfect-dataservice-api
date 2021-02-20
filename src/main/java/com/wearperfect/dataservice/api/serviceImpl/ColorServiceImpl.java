@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.ColorDTO;
 import com.wearperfect.dataservice.api.entities.Color;
+import com.wearperfect.dataservice.api.entities.Color_;
 import com.wearperfect.dataservice.api.mappers.ColorMapper;
 import com.wearperfect.dataservice.api.repositories.ColorRepository;
 import com.wearperfect.dataservice.api.service.ColorService;
@@ -29,7 +32,7 @@ public class ColorServiceImpl implements ColorService{
 
 	@Override
 	public List<ColorDTO> getAllColors() {
-		List<Color> colors = colorRepository.findAll();
+		List<Color> colors = colorRepository.findAll(Sort.by(Direction.ASC, Color_.NAME));
 		return colors.stream().map(color->colorMapper.mapColorToColorDto(color)).collect(Collectors.toList());
 	}
 

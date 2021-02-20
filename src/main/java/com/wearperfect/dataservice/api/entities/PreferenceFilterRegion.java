@@ -16,16 +16,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "saved_filter_region_preferences")
-public class SavedFilterRegionPreference {
+@Table(name = "preference_filter_regions")
+public class PreferenceFilterRegion {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(name = "saved_filter_id")
-	Long savedFilterId;
+	@Column(name = "preference_filter_id")
+	Long preferenceFilterId;
 	
 	@Column(name = "region_id")
 	Long regionId;
@@ -39,9 +39,9 @@ public class SavedFilterRegionPreference {
 	@Column(name = "active")
 	Boolean active;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = SavedFilter.class)
-	@JoinColumn(name="saved_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
-	SavedFilter savedFilter;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PreferenceFilter.class)
+	@JoinColumn(name="preference_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
+	PreferenceFilter preferenceFilter;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Region.class)
 	@JoinColumn(name="region_id", referencedColumnName = "id", insertable = false, updatable = false)

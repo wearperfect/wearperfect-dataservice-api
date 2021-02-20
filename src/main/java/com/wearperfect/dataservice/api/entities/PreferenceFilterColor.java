@@ -16,19 +16,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "saved_filter_style_preferences")
-public class SavedFilterStylePreference {
+@Table(name = "preference_filter_colors")
+public class PreferenceFilterColor {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(name = "saved_filter_id")
-	Long savedFilterId;
+	@Column(name = "preference_filter_id")
+	Long preferenceFilterId;
 	
-	@Column(name = "style_id")
-	Integer styleId;
+	@Column(name = "color_id")
+	Integer colorId;
 
 	@Column(name = "created_on")
 	Date createdOn;
@@ -39,11 +39,11 @@ public class SavedFilterStylePreference {
 	@Column(name = "active")
 	Boolean active;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = SavedFilter.class)
-	@JoinColumn(name="saved_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
-	SavedFilter savedFilter;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PreferenceFilter.class)
+	@JoinColumn(name="preference_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
+	PreferenceFilter preferenceFilter;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Style.class)
-	@JoinColumn(name="style_id", referencedColumnName = "id", insertable = false, updatable = false)
-	Style style;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Color.class)
+	@JoinColumn(name="color_id", referencedColumnName = "id", insertable = false, updatable = false)
+	Color color;
 }

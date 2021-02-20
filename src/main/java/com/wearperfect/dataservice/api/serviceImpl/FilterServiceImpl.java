@@ -1,8 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -10,34 +8,28 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.CategoryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ColorBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.FiltersResponseDTO;
 import com.wearperfect.dataservice.api.dto.GenderCategoryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.RegionBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.SavedFilterDTO;
-import com.wearperfect.dataservice.api.dto.SavedFilterDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Category_;
 import com.wearperfect.dataservice.api.entities.Color_;
 import com.wearperfect.dataservice.api.entities.GenderCategory_;
 import com.wearperfect.dataservice.api.entities.Region_;
-import com.wearperfect.dataservice.api.entities.SavedFilter;
 import com.wearperfect.dataservice.api.mappers.CategoryMapper;
 import com.wearperfect.dataservice.api.mappers.ColorMapper;
 import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterMapper;
 import com.wearperfect.dataservice.api.mappers.RegionMapper;
-import com.wearperfect.dataservice.api.mappers.SavedFilterMapper;
 import com.wearperfect.dataservice.api.mappers.StyleMapper;
 import com.wearperfect.dataservice.api.repositories.CategoryRepository;
 import com.wearperfect.dataservice.api.repositories.ColorRepository;
 import com.wearperfect.dataservice.api.repositories.GenderCategoryRepository;
 import com.wearperfect.dataservice.api.repositories.RegionRepository;
-import com.wearperfect.dataservice.api.repositories.SavedFilterRepository;
 import com.wearperfect.dataservice.api.repositories.StyleRepository;
 import com.wearperfect.dataservice.api.service.FilterService;
 import com.wearperfect.dataservice.api.service.StyleService;
@@ -45,9 +37,6 @@ import com.wearperfect.dataservice.api.service.StyleService;
 @Service
 @Transactional
 public class FilterServiceImpl implements FilterService {
-
-	@Autowired
-	SavedFilterRepository savedFilterRepository;
 
 	@Autowired
 	CategoryRepository categoryRepository;
@@ -65,7 +54,7 @@ public class FilterServiceImpl implements FilterService {
 	StyleRepository styleRepository;
 
 	@Autowired
-	SavedFilterMapper savedFilterMapper;
+	PreferenceFilterMapper preferenceFilterMapper;
 
 	@Autowired
 	CategoryMapper categoryMapper;
@@ -106,69 +95,6 @@ public class FilterServiceImpl implements FilterService {
 		List<StyleBasicDetailsDTO> styles = styleService.getStyles();
 
 		return new FiltersResponseDTO(categories, colors, genderCategories, regions, styles);
-	}
-
-	@Override
-	public List<SavedFilterDetailsDTO> getUserSavedFilters(Long userId) {
-		List<SavedFilter> savedFilters = savedFilterRepository.findByUserId(userId);
-		List<SavedFilterDetailsDTO> savedFilterDetailsDtoList = savedFilters.stream()
-				.map(savedFilter -> savedFilterMapper.mapSavedFilterToSavedFilterDetailsDto(savedFilter))
-				.collect(Collectors.toList());
-		return savedFilterDetailsDtoList;
-	}
-	
-	@Override
-	public SavedFilterDetailsDTO getUserSavedFilterByIdAndUserId(Long id, Long userId) {
-		SavedFilter savedFilter = savedFilterRepository.findByIdAndUserId(id, userId);
-		return savedFilterMapper.mapSavedFilterToSavedFilterDetailsDto(savedFilter);
-	}
-
-	@Override
-	public SavedFilterDetailsDTO addUserSavedFilters(Long userId, SavedFilterDTO savedFilterDto) {
-		if (userId != savedFilterDto.getUserId()) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-		}
-		if (null == savedFilterDto.getTitle() || savedFilterDto.getTitle().trim().length() <= 0
-				|| null == savedFilterDto.getDescription() || savedFilterDto.getDescription().trim().length() <= 0) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-		}
-		SavedFilter filter = savedFilterMapper.mapSavedFilterDtoToSavedFilter(savedFilterDto);
-		filter.setActive(true);
-		filter.setCreatedBy(userId);
-		filter.setCreatedOn(new Date());
-		filter.setUserId(userId);
-		savedFilterRepository.save(filter);
-		//return getUserSavedFilterByIdAndUserId(filter.getId(), filter.getUserId());
-		return savedFilterMapper.mapSavedFilterToSavedFilterDetailsDto(filter);
-	}
-
-	@Override
-	public SavedFilterDTO updateUserPreferenceFilter(Long userId, Long filterId, SavedFilterDTO savedFilterDto) {
-		if (null == savedFilterDto.getId() || null == savedFilterDto.getTitle()
-				|| savedFilterDto.getTitle().trim().length() <= 0 || null == savedFilterDto.getDescription()
-				|| savedFilterDto.getDescription().trim().length() <= 0) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-		}
-		Optional<SavedFilter> savedFilter = savedFilterRepository.findById(filterId);
-		if (savedFilter.isPresent()) {
-			savedFilter.get().setTitle(savedFilterDto.getTitle());
-			savedFilter.get().setDescription(savedFilterDto.getDescription());
-			savedFilterRepository.save(savedFilter.get());
-			return savedFilterMapper.mapSavedFilterToSavedFilterDto(savedFilter.get());
-		} else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-		}
-	}
-
-	@Override
-	public SavedFilterDTO deleteUserPreferenceFilter(Long userId, Long filterId) {
-		Optional<SavedFilter> savedFilter = savedFilterRepository.findById(filterId);
-		if (savedFilter.isPresent()) {
-			savedFilterRepository.deleteById(filterId);
-			return savedFilterMapper.mapSavedFilterToSavedFilterDto(savedFilter.get());
-		} else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-		}
 	}
 
 }

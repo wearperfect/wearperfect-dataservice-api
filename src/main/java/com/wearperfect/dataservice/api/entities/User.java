@@ -105,6 +105,6 @@ public class User {
 	@JoinColumn(name = "business_address_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Address businessAddressDetails;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterUserPreference.class)
-	List<SavedFilterUserPreference> savedFilterUserPreferences;
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterUser.class)
+	List<PreferenceFilterUser> preferenceFilterUsers;
 }

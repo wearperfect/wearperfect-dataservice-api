@@ -16,19 +16,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "saved_filter_category_preferences")
-public class SavedFilterCategoryPreference {
+@Table(name = "preference_filter_users")
+public class PreferenceFilterUser {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(name = "saved_filter_id")
-	Long savedFilterId;
+	@Column(name = "preference_filter_id")
+	Long preferenceFilterId;
 	
-	@Column(name = "category_id")
-	Integer categoryId;
+	@Column(name = "user_id")
+	Long userId;
 
 	@Column(name = "created_on")
 	Date createdOn;
@@ -39,11 +39,11 @@ public class SavedFilterCategoryPreference {
 	@Column(name = "active")
 	Boolean active;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = SavedFilter.class)
-	@JoinColumn(name="saved_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
-	SavedFilter savedFilter;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PreferenceFilter.class)
+	@JoinColumn(name="preference_filter_id", referencedColumnName = "id", insertable = false, updatable = false)
+	PreferenceFilter preferenceFilter;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Category.class)
-	@JoinColumn(name="category_id", referencedColumnName = "id", insertable = false, updatable = false)
-	Category category;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+	@JoinColumn(name="user_id", referencedColumnName = "id", insertable = false, updatable = false)
+	User user;
 }

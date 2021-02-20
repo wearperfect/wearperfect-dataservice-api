@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,6 +17,8 @@ import com.wearperfect.dataservice.api.dto.GenderCategoryDTO;
 import com.wearperfect.dataservice.api.dto.GenderDTO;
 import com.wearperfect.dataservice.api.entities.Gender;
 import com.wearperfect.dataservice.api.entities.GenderCategory;
+import com.wearperfect.dataservice.api.entities.GenderCategory_;
+import com.wearperfect.dataservice.api.entities.Gender_;
 import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
 import com.wearperfect.dataservice.api.mappers.GenderMapper;
 import com.wearperfect.dataservice.api.repositories.GenderCategoryRepository;
@@ -39,7 +43,7 @@ public class GenderServiceImpl implements GenderService {
 
 	@Override
 	public List<GenderDTO> getAllgenders() {
-		List<Gender> genders = genderRepository.findAll();
+		List<Gender> genders = genderRepository.findAll(Sort.by(Direction.DESC, Gender_.NAME));
 		return genders.stream().map(gender -> genderMapper.mapGenderToGenderDto(gender)).collect(Collectors.toList());
 	}
 
@@ -73,7 +77,7 @@ public class GenderServiceImpl implements GenderService {
 
 	@Override
 	public List<GenderCategoryDTO> getAllGenderCategories() {
-		List<GenderCategory> genderCategories = genderCategoryRepository.findAll();
+		List<GenderCategory> genderCategories = genderCategoryRepository.findAll(Sort.by(Direction.ASC, GenderCategory_.ID));
 		return genderCategories.stream()
 				.map(genderCategory -> genderCategoryMapper.mapGenderCategoryToGenderCategoryDto(genderCategory))
 				.collect(Collectors.toList());

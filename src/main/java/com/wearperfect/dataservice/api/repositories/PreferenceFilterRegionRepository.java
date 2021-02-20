@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.SavedFilterColorPreference;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterRegion;
 
 @Repository
-public interface SavedFilterColorPreferenceRepository extends JpaRepository<SavedFilterColorPreference, Long>, JpaSpecificationExecutor<SavedFilterColorPreference>{
+public interface PreferenceFilterRegionRepository extends JpaRepository<PreferenceFilterRegion, Long>, JpaSpecificationExecutor<PreferenceFilterRegion>{
 
 }

@@ -54,6 +54,6 @@ public class Region {
 	@Column(name = "active")
 	Boolean active;
 	
-	@OneToMany(mappedBy = "region", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = SavedFilterRegionPreference.class)
-	List<SavedFilterRegionPreference> savedFilterRegionPreferences;
+	@OneToMany(mappedBy = "region", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterRegion.class)
+	List<PreferenceFilterRegion> preferenceFilterRegions;
 }

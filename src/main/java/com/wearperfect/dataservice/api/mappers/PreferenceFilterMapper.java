@@ -4,29 +4,29 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import com.wearperfect.dataservice.api.dto.SavedFilterDTO;
-import com.wearperfect.dataservice.api.dto.SavedFilterDetailsDTO;
-import com.wearperfect.dataservice.api.entities.SavedFilter;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterDetailsDTO;
+import com.wearperfect.dataservice.api.entities.PreferenceFilter;
 
-@Mapper(uses = { SavedFilterCategoryPreferenceMapper.class, SavedFilterColorPreferenceMapper.class,
-		SavedFilterGenderCategoryPreferenceMapper.class, SavedFilterRegionPreferenceMapper.class,
-		SavedFilterStylePreferenceMapper.class, SavedFilterUserPreferenceMapper.class,
+@Mapper(uses = { PreferenceFilterCategoryMapper.class, PreferenceFilterColorMapper.class,
+		PreferenceFilterGenderCategoryMapper.class, PreferenceFilterRegionMapper.class,
+		PreferenceFilterStyleMapper.class, PreferenceFilterUserMapper.class,
 		UtilityMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface SavedFilterMapper {
+public interface PreferenceFilterMapper {
 	
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
-	SavedFilterDTO mapSavedFilterToSavedFilterDto(SavedFilter savedFilter);
+	PreferenceFilterDTO mapSavedFilterToSavedFilterDto(PreferenceFilter preferenceFilter);
 	
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
-	SavedFilter mapSavedFilterDtoToSavedFilter(SavedFilterDTO savedFilterDto);
+	PreferenceFilter mapSavedFilterDtoToSavedFilter(PreferenceFilterDTO savedFilterDto);
 
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
-	SavedFilterDetailsDTO mapSavedFilterToSavedFilterDetailsDto(SavedFilter savedFilter);
+	PreferenceFilterDetailsDTO mapSavedFilterToSavedFilterDetailsDto(PreferenceFilter preferenceFilter);
 	
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
-	SavedFilter mapSavedFilterDetailsDtoToSavedFilter(SavedFilterDetailsDTO savedFilterDetailsDto);
+	PreferenceFilter mapSavedFilterDetailsDtoToSavedFilter(PreferenceFilterDetailsDTO savedFilterDetailsDto);
 }

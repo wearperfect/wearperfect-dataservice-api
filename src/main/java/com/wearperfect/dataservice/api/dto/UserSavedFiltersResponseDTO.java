@@ -11,5 +11,5 @@ public class UserSavedFiltersResponseDTO {
 	
 	Long userId;
 	
-	List<SavedFilterDetailsDTO> savedFilters;
+	List<PreferenceFilterDetailsDTO> savedFilters;
 }
