@@ -9,7 +9,7 @@ public class PreferenceFilterRegionDTO {
 
 	Long preferenceFilterId;
 
-	Long regionId;
+	Integer regionId;
 
 	RegionBasicDetailsDTO region;
 

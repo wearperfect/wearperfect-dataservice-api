@@ -13,19 +13,41 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PreferenceFilterCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterColorDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterGenderCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterRegionDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterStyleDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterUserDTO;
 import com.wearperfect.dataservice.api.entities.PreferenceFilter;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterCategory;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterColor;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterGenderCategory;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterRegion;
+import com.wearperfect.dataservice.api.entities.PreferenceFilterStyle;
 import com.wearperfect.dataservice.api.mappers.CategoryMapper;
 import com.wearperfect.dataservice.api.mappers.ColorMapper;
 import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterCategoryMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterColorMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterGenderCategoryMapper;
 import com.wearperfect.dataservice.api.mappers.PreferenceFilterMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterRegionMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterStyleMapper;
+import com.wearperfect.dataservice.api.mappers.PreferenceFilterUserMapper;
 import com.wearperfect.dataservice.api.mappers.RegionMapper;
 import com.wearperfect.dataservice.api.mappers.StyleMapper;
 import com.wearperfect.dataservice.api.repositories.CategoryRepository;
 import com.wearperfect.dataservice.api.repositories.ColorRepository;
 import com.wearperfect.dataservice.api.repositories.GenderCategoryRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterCategoryRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterColorRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterGenderCategoryRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterRegionRepository;
 import com.wearperfect.dataservice.api.repositories.PreferenceFilterRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterStyleRepository;
+import com.wearperfect.dataservice.api.repositories.PreferenceFilterUserRepository;
 import com.wearperfect.dataservice.api.repositories.RegionRepository;
 import com.wearperfect.dataservice.api.repositories.StyleRepository;
 import com.wearperfect.dataservice.api.service.PreferenceFilterService;
@@ -73,6 +95,42 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 	@Autowired
 	StyleService styleService;
 
+	@Autowired
+	PreferenceFilterCategoryRepository preferenceFilterCategoryRepository;
+
+	@Autowired
+	PreferenceFilterCategoryMapper preferenceFilterCategoryMapper;
+
+	@Autowired
+	PreferenceFilterColorRepository preferenceFilterColorRepository;
+
+	@Autowired
+	PreferenceFilterColorMapper preferenceFilterColorMapper;
+
+	@Autowired
+	PreferenceFilterGenderCategoryRepository preferenceFilterGenderCategoryRepository;
+
+	@Autowired
+	PreferenceFilterGenderCategoryMapper preferenceFilterGenderCategoryMapper;
+
+	@Autowired
+	PreferenceFilterRegionRepository preferenceFilterRegionRepository;
+
+	@Autowired
+	PreferenceFilterRegionMapper preferenceFilterRegionMapper;
+
+	@Autowired
+	PreferenceFilterStyleRepository preferenceFilterStyleRepository;
+
+	@Autowired
+	PreferenceFilterStyleMapper preferenceFilterStyleMapper;
+
+	@Autowired
+	PreferenceFilterUserRepository preferenceFilterUserRepository;
+
+	@Autowired
+	PreferenceFilterUserMapper preferenceFilterUserMapper;
+
 	@Override
 	public List<PreferenceFilterDetailsDTO> getUserSavedFilters(Long userId) {
 		List<PreferenceFilter> preferenceFilters = preferenceFilterRepository.findByUserId(userId);
@@ -108,7 +166,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 	}
 
 	@Override
-	public PreferenceFilterDTO updateUserPreferenceFilter(Long userId, Long filterId, PreferenceFilterDTO savedFilterDto) {
+	public PreferenceFilterDTO updateUserPreferenceFilter(Long userId, Long filterId,
+			PreferenceFilterDTO savedFilterDto) {
 		if (null == savedFilterDto.getId() || null == savedFilterDto.getTitle()
 				|| savedFilterDto.getTitle().trim().length() <= 0 || null == savedFilterDto.getDescription()
 				|| savedFilterDto.getDescription().trim().length() <= 0) {
@@ -137,76 +196,140 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 	}
 
 	@Override
-	public PreferenceFilterCategoryDTO addCategoryToPreferenceFilter(Long userId, Long filterId, Long categoryId) {
+	public PreferenceFilterCategoryDTO addCategoryToPreferenceFilter(Long userId, Long filterId, Integer categoryId) {
+		PreferenceFilterCategory preferenceFilterCategory = new PreferenceFilterCategory();
+		preferenceFilterCategory.setActive(true);
+		preferenceFilterCategory.setCategoryId(categoryId);
+		preferenceFilterCategory.setCreatedOn(new Date());
+		preferenceFilterCategory.setPreferenceFilterId(filterId);
+		preferenceFilterCategoryRepository.save(preferenceFilterCategory);
+		return preferenceFilterCategoryMapper
+				.mapPreferenceFilterCategoryToPreferenceFilterCategoryDto(preferenceFilterCategory);
+	}
+
+	@Override
+	public PreferenceFilterCategoryDTO deleteCategoryFromPreferenceFilter(Long userId, Long filterId,
+			Integer categoryId) {
+		Optional<PreferenceFilterCategory> preferenceFilterCategory = preferenceFilterCategoryRepository
+				.findByPreferenceFilterIdAndCategoryId(filterId, categoryId);
+		if (preferenceFilterCategory.isPresent()) {
+			preferenceFilterCategoryRepository.deleteById(preferenceFilterCategory.get().getId());
+			return preferenceFilterCategoryMapper
+					.mapPreferenceFilterCategoryToPreferenceFilterCategoryDto(preferenceFilterCategory.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public PreferenceFilterColorDTO addColorToPreferenceFilter(Long userId, Long filterId, Integer colorId) {
+		PreferenceFilterColor preferenceFilterColor = new PreferenceFilterColor();
+		preferenceFilterColor.setActive(true);
+		preferenceFilterColor.setColorId(colorId);
+		preferenceFilterColor.setCreatedOn(new Date());
+		preferenceFilterColor.setPreferenceFilterId(filterId);
+		preferenceFilterColorRepository.save(preferenceFilterColor);
+		return preferenceFilterColorMapper.mapPreferenceFilterColorToPreferenceFilterColorDto(preferenceFilterColor);
+	}
+
+	@Override
+	public PreferenceFilterColorDTO deleteColorFromPreferenceFilter(Long userId, Long filterId, Integer colorId) {
+		Optional<PreferenceFilterColor> preferenceFilterColor = preferenceFilterColorRepository
+				.findByPreferenceFilterIdAndColorId(filterId, colorId);
+		if (preferenceFilterColor.isPresent()) {
+			preferenceFilterColorRepository.deleteById(preferenceFilterColor.get().getId());
+			return preferenceFilterColorMapper
+					.mapPreferenceFilterColorToPreferenceFilterColorDto(preferenceFilterColor.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public PreferenceFilterGenderCategoryDTO addGenderCategoryToPreferenceFilter(Long userId, Long filterId,
+			Integer genderCategoryId) {
+		PreferenceFilterGenderCategory preferenceFilterGenderCategory = new PreferenceFilterGenderCategory();
+		preferenceFilterGenderCategory.setActive(true);
+		preferenceFilterGenderCategory.setCreatedOn(new Date());
+		preferenceFilterGenderCategory.setGenderCategoryId(genderCategoryId);
+		preferenceFilterGenderCategory.setPreferenceFilterId(filterId);
+		preferenceFilterGenderCategoryRepository.save(preferenceFilterGenderCategory);
+		return preferenceFilterGenderCategoryMapper
+				.mapPreferenceFilterGenderCategoryToPreferenceFilterGenderCategoryDto(preferenceFilterGenderCategory);
+	}
+
+	@Override
+	public PreferenceFilterGenderCategoryDTO deleteGenderCategoryFromPreferenceFilter(Long userId, Long filterId,
+			Integer genderCategoryId) {
+		Optional<PreferenceFilterGenderCategory> preferenceFilterGenderCategory = preferenceFilterGenderCategoryRepository
+				.findByPreferenceFilterIdAndGenderCategoryId(filterId, genderCategoryId);
+		if (preferenceFilterGenderCategory.isPresent()) {
+			preferenceFilterGenderCategoryRepository.deleteById(preferenceFilterGenderCategory.get().getId());
+			return preferenceFilterGenderCategoryMapper
+					.mapPreferenceFilterGenderCategoryToPreferenceFilterGenderCategoryDto(
+							preferenceFilterGenderCategory.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public PreferenceFilterRegionDTO addRegionToPreferenceFilter(Long userId, Long filterId, Integer regionId) {
+		PreferenceFilterRegion preferenceFilterRegion = new PreferenceFilterRegion();
+		preferenceFilterRegion.setActive(true);
+		preferenceFilterRegion.setCreatedOn(new Date());
+		preferenceFilterRegion.setRegionId(regionId);
+		preferenceFilterRegion.setPreferenceFilterId(filterId);
+		preferenceFilterRegionRepository.save(preferenceFilterRegion);
+		return preferenceFilterRegionMapper
+				.mapPreferenceFilterRegionToPreferenceFilterRegionDto(preferenceFilterRegion);
+	}
+
+	@Override
+	public PreferenceFilterRegionDTO deleteRegionFromPreferenceFilter(Long userId, Long filterId, Integer regionId) {
+		Optional<PreferenceFilterRegion> preferenceFilterRegion = preferenceFilterRegionRepository
+				.findByPreferenceFilterIdAndRegionId(filterId, regionId);
+		if (preferenceFilterRegion.isPresent()) {
+			preferenceFilterRegionRepository.deleteById(preferenceFilterRegion.get().getId());
+			return preferenceFilterRegionMapper
+					.mapPreferenceFilterRegionToPreferenceFilterRegionDto(preferenceFilterRegion.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public PreferenceFilterStyleDTO addStyleToPreferenceFilter(Long userId, Long filterId, Integer styleId) {
+		PreferenceFilterStyle preferenceFilterStyle = new PreferenceFilterStyle();
+		preferenceFilterStyle.setActive(true);
+		preferenceFilterStyle.setCreatedOn(new Date());
+		preferenceFilterStyle.setStyleId(styleId);
+		preferenceFilterStyle.setPreferenceFilterId(filterId);
+		preferenceFilterStyleRepository.save(preferenceFilterStyle);
+		return preferenceFilterStyleMapper.mapPreferenceFilterStyleToPreferenceFilterStyleDto(preferenceFilterStyle);
+	}
+
+	@Override
+	public PreferenceFilterStyleDTO deleteStyleFromPreferenceFilter(Long userId, Long filterId, Integer styleId) {
+		Optional<PreferenceFilterStyle> preferenceFilterStyle = preferenceFilterStyleRepository
+				.findByPreferenceFilterIdAndStyleId(filterId, styleId);
+		if (preferenceFilterStyle.isPresent()) {
+			preferenceFilterStyleRepository.deleteById(preferenceFilterStyle.get().getId());
+			return preferenceFilterStyleMapper
+					.mapPreferenceFilterStyleToPreferenceFilterStyleDto(preferenceFilterStyle.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public PreferenceFilterUserDTO addUserToPreferenceFilter(Long userId, Long filterId, Long preferredUserId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PreferenceFilterCategoryDTO deleteCategoryFromPreferenceFilter(Long userId, Long filterId, Long categoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO addColorToPreferenceFilter(Long userId, Long filterId, Long colorId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO deleteColorFromPreferenceFilter(Long userId, Long filterId, Long colorId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO addGenderCategoryToPreferenceFilter(Long userId, Long filterId,
-			Long genderCategoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO deleteGenderCategoryFromPreferenceFilter(Long userId, Long filterId,
-			Long genderCategoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO addRegionToPreferenceFilter(Long userId, Long filterId, Long regionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO deleteRegionFromPreferenceFilter(Long userId, Long filterId, Long regionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO addStyleToPreferenceFilter(Long userId, Long filterId, Long styleId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO deleteStyleFromPreferenceFilter(Long userId, Long filterId, Long styleId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO addUserToPreferenceFilter(Long userId, Long filterId, Long preferredUserId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PreferenceFilterCategoryDTO deleteUserFromPreferenceFilter(Long userId, Long filterId,
-			Long preferredUserId) {
+	public PreferenceFilterUserDTO deleteUserFromPreferenceFilter(Long userId, Long filterId, Long preferredUserId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

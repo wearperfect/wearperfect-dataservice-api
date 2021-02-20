@@ -3,7 +3,12 @@ package com.wearperfect.dataservice.api.service;
 import java.util.List;
 
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterGenderCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterRegionDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterStyleDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterUserDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterColorDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDTO;
 
 public interface PreferenceFilterService {
@@ -18,29 +23,30 @@ public interface PreferenceFilterService {
 
 	PreferenceFilterDetailsDTO getUserSavedFilterByIdAndUserId(Long id, Long userId);
 
-	PreferenceFilterCategoryDTO addCategoryToPreferenceFilter(Long userId, Long filterId, Long categoryId);
+	PreferenceFilterCategoryDTO addCategoryToPreferenceFilter(Long userId, Long filterId, Integer categoryId);
 
-	PreferenceFilterCategoryDTO deleteCategoryFromPreferenceFilter(Long userId, Long filterId, Long categoryId);
+	PreferenceFilterCategoryDTO deleteCategoryFromPreferenceFilter(Long userId, Long filterId, Integer categoryId);
 
-	PreferenceFilterCategoryDTO addColorToPreferenceFilter(Long userId, Long filterId, Long colorId);
+	PreferenceFilterColorDTO addColorToPreferenceFilter(Long userId, Long filterId, Integer colorId);
 
-	PreferenceFilterCategoryDTO deleteColorFromPreferenceFilter(Long userId, Long filterId, Long colorId);
+	PreferenceFilterColorDTO deleteColorFromPreferenceFilter(Long userId, Long filterId, Integer colorId);
 
-	PreferenceFilterCategoryDTO addGenderCategoryToPreferenceFilter(Long userId, Long filterId, Long genderCategoryId);
+	PreferenceFilterGenderCategoryDTO addGenderCategoryToPreferenceFilter(Long userId, Long filterId,
+			Integer genderCategoryId);
 
-	PreferenceFilterCategoryDTO deleteGenderCategoryFromPreferenceFilter(Long userId, Long filterId,
-			Long genderCategoryId);
+	PreferenceFilterGenderCategoryDTO deleteGenderCategoryFromPreferenceFilter(Long userId, Long filterId,
+			Integer genderCategoryId);
 
-	PreferenceFilterCategoryDTO addRegionToPreferenceFilter(Long userId, Long filterId, Long regionId);
+	PreferenceFilterRegionDTO addRegionToPreferenceFilter(Long userId, Long filterId, Integer regionId);
 
-	PreferenceFilterCategoryDTO deleteRegionFromPreferenceFilter(Long userId, Long filterId, Long regionId);
+	PreferenceFilterRegionDTO deleteRegionFromPreferenceFilter(Long userId, Long filterId, Integer regionId);
 
-	PreferenceFilterCategoryDTO addStyleToPreferenceFilter(Long userId, Long filterId, Long styleId);
+	PreferenceFilterStyleDTO addStyleToPreferenceFilter(Long userId, Long filterId, Integer styleId);
 
-	PreferenceFilterCategoryDTO deleteStyleFromPreferenceFilter(Long userId, Long filterId, Long styleId);
+	PreferenceFilterStyleDTO deleteStyleFromPreferenceFilter(Long userId, Long filterId, Integer styleId);
 
-	PreferenceFilterCategoryDTO addUserToPreferenceFilter(Long userId, Long filterId, Long preferredUserId);
+	PreferenceFilterUserDTO addUserToPreferenceFilter(Long userId, Long filterId, Long preferredUserId);
 
-	PreferenceFilterCategoryDTO deleteUserFromPreferenceFilter(Long userId, Long filterId, Long preferredUserId);
+	PreferenceFilterUserDTO deleteUserFromPreferenceFilter(Long userId, Long filterId, Long preferredUserId);
 
 }

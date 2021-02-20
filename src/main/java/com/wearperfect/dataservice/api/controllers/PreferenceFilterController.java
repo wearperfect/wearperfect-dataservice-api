@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.PreferenceFilterCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterColorDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterGenderCategoryDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterRegionDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterStyleDTO;
+import com.wearperfect.dataservice.api.dto.PreferenceFilterUserDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterDTO;
 import com.wearperfect.dataservice.api.service.PreferenceFilterService;
 
@@ -54,82 +59,82 @@ public class PreferenceFilterController {
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/categories/{categoryId}")
 	PreferenceFilterCategoryDTO addCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "categoryId") Long categoryId) {
+			@PathVariable(name = "categoryId") Integer categoryId) {
 		return preferenceFilterService.addCategoryToPreferenceFilter(userId, filterId, categoryId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/categories/{categoryId}")
 	PreferenceFilterCategoryDTO deleteCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "categoryId") Long categoryId) {
+			@PathVariable(name = "categoryId") Integer categoryId) {
 		return preferenceFilterService.deleteCategoryFromPreferenceFilter(userId, filterId, categoryId);
 	}
 	
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/colors/{colorId}")
-	PreferenceFilterCategoryDTO addColorToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterColorDTO addColorToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "colorId") Long colorId) {
+			@PathVariable(name = "colorId") Integer colorId) {
 		return preferenceFilterService.addColorToPreferenceFilter(userId, filterId, colorId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/colors/{colorId}")
-	PreferenceFilterCategoryDTO deleteColorToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterColorDTO deleteColorToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "colorId") Long colorId) {
+			@PathVariable(name = "colorId") Integer colorId) {
 		return preferenceFilterService.deleteColorFromPreferenceFilter(userId, filterId, colorId);
 	}
 	
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/genders/categories/{genderCategoryId}")
-	PreferenceFilterCategoryDTO addGenderCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterGenderCategoryDTO addGenderCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "genderCategoryId") Long genderCategoryId) {
+			@PathVariable(name = "genderCategoryId") Integer genderCategoryId) {
 		return preferenceFilterService.addGenderCategoryToPreferenceFilter(userId, filterId, genderCategoryId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/genders/categories/{genderCategoryId}")
-	PreferenceFilterCategoryDTO deleteGenderCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterGenderCategoryDTO deleteGenderCategoryToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "genderCategoryId") Long genderCategoryId) {
+			@PathVariable(name = "genderCategoryId") Integer genderCategoryId) {
 		return preferenceFilterService.deleteGenderCategoryFromPreferenceFilter(userId, filterId, genderCategoryId);
 	}
 	
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/regions/{regionId}")
-	PreferenceFilterCategoryDTO addRegionToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterRegionDTO addRegionToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "regionId") Long regionId) {
+			@PathVariable(name = "regionId") Integer regionId) {
 		return preferenceFilterService.addRegionToPreferenceFilter(userId, filterId, regionId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/regions/{regionId}")
-	PreferenceFilterCategoryDTO deleteRegionFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterRegionDTO deleteRegionFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "regionId") Long regionId) {
+			@PathVariable(name = "regionId") Integer regionId) {
 		return preferenceFilterService.deleteRegionFromPreferenceFilter(userId, filterId, regionId);
 	}
 	
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/styles/{styleId}")
-	PreferenceFilterCategoryDTO addStyleToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterStyleDTO addStyleToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "styleId") Long styleId) {
+			@PathVariable(name = "styleId") Integer styleId) {
 		return preferenceFilterService.addStyleToPreferenceFilter(userId, filterId, styleId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/styles/{styleId}")
-	PreferenceFilterCategoryDTO deleteStyleFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterStyleDTO deleteStyleFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
-			@PathVariable(name = "styleId") Long styleId) {
+			@PathVariable(name = "styleId") Integer styleId) {
 		return preferenceFilterService.deleteStyleFromPreferenceFilter(userId, filterId, styleId);
 	}
 	
 	@PostMapping(value = "/users/{userId}/preferences/filters/{filterId}/users/{preferredUserId}")
-	PreferenceFilterCategoryDTO addUserToPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterUserDTO addUserToPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
 			@PathVariable(name = "preferredUserId") Long preferredUserId) {
 		return preferenceFilterService.addUserToPreferenceFilter(userId, filterId, preferredUserId);
 	}
 	
 	@DeleteMapping(value = "/users/{userId}/preferences/filters/{filterId}/users/{preferredUserId}")
-	PreferenceFilterCategoryDTO deleteUserFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
+	PreferenceFilterUserDTO deleteUserFromPreferenceFilter(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "filterId") Long filterId,
 			@PathVariable(name = "preferredUserId") Long preferredUserId) {
 		return preferenceFilterService.deleteUserFromPreferenceFilter(userId, filterId, preferredUserId);

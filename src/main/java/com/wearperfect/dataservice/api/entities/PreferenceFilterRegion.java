@@ -28,7 +28,7 @@ public class PreferenceFilterRegion {
 	Long preferenceFilterId;
 	
 	@Column(name = "region_id")
-	Long regionId;
+	Integer regionId;
 
 	@Column(name = "created_on")
 	Date createdOn;
