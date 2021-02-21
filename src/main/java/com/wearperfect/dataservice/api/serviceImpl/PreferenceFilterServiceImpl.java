@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PreferenceFilterCategoryDTO;
@@ -20,12 +21,17 @@ import com.wearperfect.dataservice.api.dto.PreferenceFilterGenderCategoryDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterRegionDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterStyleDTO;
 import com.wearperfect.dataservice.api.dto.PreferenceFilterUserDTO;
+import com.wearperfect.dataservice.api.entities.Category;
+import com.wearperfect.dataservice.api.entities.Color;
+import com.wearperfect.dataservice.api.entities.GenderCategory;
 import com.wearperfect.dataservice.api.entities.PreferenceFilter;
 import com.wearperfect.dataservice.api.entities.PreferenceFilterCategory;
 import com.wearperfect.dataservice.api.entities.PreferenceFilterColor;
 import com.wearperfect.dataservice.api.entities.PreferenceFilterGenderCategory;
 import com.wearperfect.dataservice.api.entities.PreferenceFilterRegion;
 import com.wearperfect.dataservice.api.entities.PreferenceFilterStyle;
+import com.wearperfect.dataservice.api.entities.Region;
+import com.wearperfect.dataservice.api.entities.Style;
 import com.wearperfect.dataservice.api.mappers.CategoryMapper;
 import com.wearperfect.dataservice.api.mappers.ColorMapper;
 import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
@@ -203,6 +209,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		preferenceFilterCategory.setCreatedOn(new Date());
 		preferenceFilterCategory.setPreferenceFilterId(filterId);
 		preferenceFilterCategoryRepository.save(preferenceFilterCategory);
+		Optional<Category> category = categoryRepository.findById(preferenceFilterCategory.getCategoryId());
+		preferenceFilterCategory.setCategory(category.get());
 		return preferenceFilterCategoryMapper
 				.mapPreferenceFilterCategoryToPreferenceFilterCategoryDto(preferenceFilterCategory);
 	}
@@ -229,6 +237,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		preferenceFilterColor.setCreatedOn(new Date());
 		preferenceFilterColor.setPreferenceFilterId(filterId);
 		preferenceFilterColorRepository.save(preferenceFilterColor);
+		Optional<Color> color = colorRepository.findById(preferenceFilterColor.getColorId());
+		preferenceFilterColor.setColor(color.get());
 		return preferenceFilterColorMapper.mapPreferenceFilterColorToPreferenceFilterColorDto(preferenceFilterColor);
 	}
 
@@ -254,6 +264,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		preferenceFilterGenderCategory.setGenderCategoryId(genderCategoryId);
 		preferenceFilterGenderCategory.setPreferenceFilterId(filterId);
 		preferenceFilterGenderCategoryRepository.save(preferenceFilterGenderCategory);
+		Optional<GenderCategory> genderCategory = genderCategoryRepository.findById(preferenceFilterGenderCategory.getGenderCategoryId());
+		preferenceFilterGenderCategory.setGenderCategory(genderCategory.get());
 		return preferenceFilterGenderCategoryMapper
 				.mapPreferenceFilterGenderCategoryToPreferenceFilterGenderCategoryDto(preferenceFilterGenderCategory);
 	}
@@ -281,6 +293,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		preferenceFilterRegion.setRegionId(regionId);
 		preferenceFilterRegion.setPreferenceFilterId(filterId);
 		preferenceFilterRegionRepository.save(preferenceFilterRegion);
+		Optional<Region> region = regionRepository.findById(preferenceFilterRegion.getRegionId());
+		preferenceFilterRegion.setRegion(region.get());
 		return preferenceFilterRegionMapper
 				.mapPreferenceFilterRegionToPreferenceFilterRegionDto(preferenceFilterRegion);
 	}
@@ -306,6 +320,8 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		preferenceFilterStyle.setStyleId(styleId);
 		preferenceFilterStyle.setPreferenceFilterId(filterId);
 		preferenceFilterStyleRepository.save(preferenceFilterStyle);
+		Optional<Style> style = styleRepository.findById(preferenceFilterStyle.getStyleId());
+		preferenceFilterStyle.setStyle(style.get());
 		return preferenceFilterStyleMapper.mapPreferenceFilterStyleToPreferenceFilterStyleDto(preferenceFilterStyle);
 	}
 
