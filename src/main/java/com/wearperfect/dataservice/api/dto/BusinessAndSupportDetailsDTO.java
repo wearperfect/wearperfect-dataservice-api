@@ -3,8 +3,8 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class AddressDetailsDTO {
-
+public class BusinessAndSupportDetailsDTO {
+	
 	Long id;
 
 	Long userId;
@@ -27,9 +27,11 @@ public class AddressDetailsDTO {
 	
 	String geoLocation;
 
-	String phone;
+	String supportPhone;
 	
-	Long lastUsedOn;
+	String supportEmail;
+	
+	String supportLink;
 
 	Boolean active;
 }

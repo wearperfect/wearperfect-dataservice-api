@@ -41,6 +41,9 @@ public class User {
 
 	@Column(name = "fullname")
 	private String fullname;
+	
+	@Column(name = "dob")
+	private Date dob;
 
 	@Column(name = "email")
 	private String email;
@@ -59,6 +62,15 @@ public class User {
 
 	@Column(name = "gender_id")
 	private Integer gender_id;
+	
+	@Column(name = "city_id")
+	private Integer cityId;
+
+	@Column(name = "state_id")
+	private Integer stateId;
+	
+	@Column(name = "country_id")
+	private Integer countryId;
 
 	@Column(name = "home_address_id")
 	private Long homeAddressId;
@@ -69,8 +81,8 @@ public class User {
 	@Column(name = "delivery_address_id")
 	private Long deliveryAddressId;
 
-	@Column(name = "business_address_id")
-	private Long businessAddressId;
+	@Column(name = "business_and_support_id")
+	private Long businessAndSupportId;
 
 	@Column(name = "created_on")
 	private Date createdOn;
@@ -89,6 +101,18 @@ public class User {
 	@JoinColumn(name = "gender_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Gender genderDetails;
 	
+	@OneToOne(fetch = FetchType.LAZY, targetEntity = City.class)
+	@JoinColumn(name = "city_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private City city;
+	
+	@OneToOne(fetch = FetchType.LAZY, targetEntity = State.class)
+	@JoinColumn(name = "state_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private State state;
+	
+	@OneToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
+	@JoinColumn(name = "country_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Country country;
+	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
 	@JoinColumn(name = "home_address_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Address homeAddressDetails;
@@ -101,9 +125,9 @@ public class User {
 	@JoinColumn(name = "delivery_address_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Address deliveryAddressDetails;
 	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Address.class)
-	@JoinColumn(name = "business_address_id", referencedColumnName = "id", insertable = false, updatable = false)
-	private Address businessAddressDetails;
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = BusinessAndSupport.class)
+	@JoinColumn(name = "business_and_support_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private BusinessAndSupport businessAndSupport;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterUser.class)
 	List<PreferenceFilterUser> preferenceFilterUsers;

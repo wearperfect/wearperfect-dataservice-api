@@ -16,8 +16,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "addresses")
-public class Address {
+@Table(name = "business_and_support")
+public class BusinessAndSupport {
 
 	@Id
 	@Column(name = "id")
@@ -54,8 +54,14 @@ public class Address {
 	@Column(name = "geo_location")
 	String geoLocation;
 
-	@Column(name = "phone")
-	String phone;
+	@Column(name = "support_phone")
+	String supportPhone;
+	
+	@Column(name = "support_email")
+	String supportEmail;
+	
+	@Column(name = "support_link")
+	String supportLink;
 	
 	@Column(name = "created_by")
 	Long createdBy;
@@ -68,9 +74,6 @@ public class Address {
 
 	@Column(name = "last_updated_on")
 	Date lastUpdatedOn;
-
-	@Column(name = "last_used_on")
-	Date lastUsedOn;
 
 	@Column(name = "active")
 	Boolean active;

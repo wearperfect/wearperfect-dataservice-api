@@ -30,8 +30,10 @@ public class AddressDTO {
 	CountryBasicDetailsDTO country;
 	
 	Integer countryId;
+	
+	String geoLocation;
 
-	Long phone;
+	String phone;
 	
 	Long createdBy;
 

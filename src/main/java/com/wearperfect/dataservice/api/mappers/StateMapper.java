@@ -2,12 +2,14 @@ package com.wearperfect.dataservice.api.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StateDTO;
+import com.wearperfect.dataservice.api.dto.StateDetailsDTO;
 import com.wearperfect.dataservice.api.entities.State;
 
-@Mapper(uses= {UtilityMapper.class})
+@Mapper(uses= {UtilityMapper.class, CityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StateMapper {
 
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
@@ -19,4 +21,6 @@ public interface StateMapper {
 	State mapStateDtoToState(StateDTO stateDto);
 	
 	StateBasicDetailsDTO mapStateToStateBasicDetailsDto(State state);
+	
+	StateDetailsDTO mapStateToStateDetailsDto(State state);
 }

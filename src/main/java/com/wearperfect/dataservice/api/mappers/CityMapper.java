@@ -2,12 +2,13 @@ package com.wearperfect.dataservice.api.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CityDTO;
 import com.wearperfect.dataservice.api.entities.City;
 
-@Mapper(uses= {UtilityMapper.class})
+@Mapper(uses= {UtilityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CityMapper {
 
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
