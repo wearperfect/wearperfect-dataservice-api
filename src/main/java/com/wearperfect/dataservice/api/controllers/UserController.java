@@ -50,4 +50,10 @@ public class UserController {
 			@RequestBody(required = true) UserDTO userDto) {
 		return userService.updateUserBasicProfileDetails(userId, userDto);
 	}
+	
+	@PutMapping(value = "/users/{userId}/profile/introdetails")
+	public UserDetailsDTO updateUserIntroductionDetails(@PathVariable(name = "userId") Long userId,
+			@RequestBody(required = true) UserDTO userDto) {
+		return userService.updateUserIntroductionDetails(userId, userDto);
+	}
 }

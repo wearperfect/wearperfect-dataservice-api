@@ -101,9 +101,9 @@ public class UserServiceImpl implements UserService {
 		if (null == user.getId()) {
 			return null;
 		}
-		//user.setLastUpdatedOn(new Date());
-		//User updatedUser = userRepository.saveAndFlush(user);
-		//return userMapper.mapUserToUserDto(updatedUser);
+		// user.setLastUpdatedOn(new Date());
+		// User updatedUser = userRepository.saveAndFlush(user);
+		// return userMapper.mapUserToUserDto(updatedUser);
 		return null;
 	}
 
@@ -121,28 +121,31 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto) {
-		
+
 		User user = userMapper.mapUserDtoToUser(userDto);
-		
-		if(null == user.getId() || userId != user.getId() ||
-				null == user.getUsername() || user.getUsername().length()<=0 || 
-				null == user.getFullname() || user.getFullname().length()<=0) {
+
+		if (null == user.getId() || userId != user.getId() || null == user.getUsername()
+				|| user.getUsername().trim().length() <= 0 || null == user.getFullname()
+				|| user.getFullname().trim().length() <= 0) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Optional<User> existingUserDetails = userRepository.findById(userId);
-		
-		if(existingUserDetails.isPresent()) {
+
+		if (existingUserDetails.isPresent()) {
 			existingUserDetails.get().setUsername(user.getUsername());
 			existingUserDetails.get().setFullname(user.getFullname());
 			existingUserDetails.get().setBio(user.getBio());
+			if (null == user.getWebsite() || user.getWebsite().trim().length() <= 0) {
+				user.setWebsite(null);// Validate url
+			}
+			existingUserDetails.get().setLastUpdatedOn(new Date());
 			userRepository.saveAndFlush(existingUserDetails.get());
 			return userMapper.mapUserToUserDto(existingUserDetails.get());
-		}else {
+		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
-		
-		
+
 	}
 
 	@Override
@@ -158,6 +161,29 @@ public class UserServiceImpl implements UserService {
 		userDetails.setTotalFollowers(followRepository.countByUserId(user.get().getId()));
 		userDetails.setTotalFollowing(followRepository.countByFollowingBy(user.get().getId()));
 		return userDetails;
+	}
+
+	@Override
+	public UserDetailsDTO updateUserIntroductionDetails(Long userId, UserDTO userDto) {
+		User user = userMapper.mapUserDtoToUser(userDto);
+
+		if (null == user.getId() || userId != user.getId()) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<User> existingUserDetails = userRepository.findById(userId);
+
+		if (existingUserDetails.isPresent()) {
+			existingUserDetails.get().setDob(user.getDob());
+			existingUserDetails.get().setCityId(user.getCityId());
+			existingUserDetails.get().setStateId(user.getStateId());
+			existingUserDetails.get().setCountryId(user.getCountryId());
+			existingUserDetails.get().setLastUpdatedOn(new Date());
+			userRepository.saveAndFlush(existingUserDetails.get());
+			return userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
 	}
 
 }
