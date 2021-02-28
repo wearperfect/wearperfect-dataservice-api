@@ -31,6 +31,23 @@ server:
   sessionTimeout: 30
   servlet:
     context-path: /wearperfect/api/v1
+# Cloud
+cloud:
+  aws:
+    region:
+      static: ap-south-1
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIAIODLYL6MADXAKH3Q
+      secret-key: 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
+      
+# Application
+application:
+  aws:
+    s3:
+      buckets:
+        posts: wearperfect-posts
 # Security configuration
 security:
   user:
