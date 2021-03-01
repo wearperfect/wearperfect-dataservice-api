@@ -18,6 +18,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     open-in-view: false
     #generate-ddl: false
+# HTTP Config
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
 # Logger configuration
 logging:
   pattern:

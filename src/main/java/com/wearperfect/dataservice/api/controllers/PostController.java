@@ -56,8 +56,8 @@ public class PostController {
 	@PostMapping(path = "/users/{userId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	UserPostsResponseDTO createPost(Authentication authentication,
 			@PathVariable(name = "userId", required = true) Long userId, 
-			@RequestPart PostDTO postDto,
-			@RequestPart(name = "files") MultipartFile[] files) {
+			@RequestPart(name = "files") MultipartFile[] files,
+			@RequestPart(name = "data") PostDTO postDto) {
 		return postService.createPost(postDto, userId, authentication.getName(), files);
 	}
 

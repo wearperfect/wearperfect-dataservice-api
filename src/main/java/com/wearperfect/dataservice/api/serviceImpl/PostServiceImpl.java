@@ -154,6 +154,8 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public UserPostsResponseDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername, MultipartFile[] files) {
 		
+		System.out.println("Files::::::"+files.length);
+		
 		for(int i=0;i<files.length;i++) {
 			String filename=postBy+"_"+System.currentTimeMillis();
 			File postFile = fileService.converMultipartFileToFile(files[i]);
