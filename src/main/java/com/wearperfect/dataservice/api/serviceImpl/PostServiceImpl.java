@@ -1,14 +1,15 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
@@ -211,6 +206,23 @@ public class PostServiceImpl implements PostService {
 			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "_"
 					+ files[i].getOriginalFilename();
 			File postFile = fileService.converMultipartFileToFile(files[i]);
+			
+//			try {
+//		           BufferedImage originalImage = ImageIO.read(postFile);
+//
+//		           originalImage.getScaledInstance(width, height, hints)
+//		            //To save with original ratio uncomment next line and comment the above.
+//		            //originalImage= Scalr.resize(originalImage, 153, 128);
+//		            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		            ImageIO.write(originalImage, "jpg", baos);
+//		            baos.flush();
+//		            byte[] imageInByte = baos.toByteArray();
+//		            baos.close();
+//		            
+//		        } catch (Exception e) {
+//		            
+//		        }
+			
 			amazonS3.putObject(postsS3Bucket, fileName, postFile);
 			postFile.delete();
 			 

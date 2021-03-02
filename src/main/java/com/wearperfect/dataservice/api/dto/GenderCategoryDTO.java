@@ -10,9 +10,7 @@ public class GenderCategoryDTO {
 	String name;
 	
 	String shortName;
-	
-	Integer genderId;
-	
+		
 	Long createdBy;
 	
 	Long createdOn;

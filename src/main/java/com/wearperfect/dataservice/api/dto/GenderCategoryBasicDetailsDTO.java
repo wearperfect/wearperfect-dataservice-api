@@ -11,7 +11,5 @@ public class GenderCategoryBasicDetailsDTO {
 
 	String shortName;
 
-	Integer genderId;
-
 	Boolean active;
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
@@ -67,7 +68,7 @@ public class FeedServiceImpl implements FeedService {
 		postDetailsList.forEach(post -> {
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
-					PageRequest.of(POST_COMMENTS_DEFAULT_PAGE_OFFSET, POST_COMMENTS_DEFAULT_PAGE_SIZE,
+					PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), Pagination.PageSize.DEFAULT.getValue(),
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
 			List<PostCommentDetailsDTO> comments = commentsList.stream()
 					.map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))

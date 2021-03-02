@@ -30,9 +30,6 @@ public class GenderCategory {
 	@Column(name="short_name")
 	String shortName;
 	
-	@Column(name="genderId")
-	Integer genderId;
-	
 	@Column(name="created_by")
 	Long createdBy;
 	
