@@ -2,18 +2,14 @@ package com.wearperfect.dataservice.api.entities;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -35,9 +31,15 @@ public class PostItem {
 
 	@Column(name = "source_link")
 	String sourceLink;
-
+	
+	@Column(name = "file_name")
+	String fileName;
+	
 	@Column(name = "content_type")
 	String contentType;
+
+	@Column(name = "s3_bucket_id")
+	Integer s3BucketId;
 
 	@Column(name = "active")
 	Boolean active;
@@ -52,8 +54,8 @@ public class PostItem {
 	@JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Post postDetails;
 	
-	@ManyToOne(optional = false, targetEntity = ContentType.class)
-	@JoinColumn(name = "content_type", referencedColumnName = "extension", insertable = false, updatable = false)
-	ContentType contentTypeDetails;
+//	@ManyToOne(optional = false, targetEntity = ContentType.class)
+//	@JoinColumn(name = "content_type", referencedColumnName = "extension", insertable = false, updatable = false)
+//	ContentType contentTypeDetails;
 
 }

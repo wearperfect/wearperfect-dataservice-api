@@ -19,7 +19,7 @@ public interface PostItemMapper {
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	PostItem mapPostItemDtoToPostItem(PostItemDTO postItemDto);
 
-	@Mapping(source = "contentTypeDetails", target = "contentType")
+	//@Mapping(source = "contentTypeDetails", target = "contentType")
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
 	PostItemDetailsDTO mapPostItemToPostItemDetailsDTO(PostItem postItem);

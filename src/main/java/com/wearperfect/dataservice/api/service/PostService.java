@@ -20,7 +20,7 @@ public interface PostService {
 
 	UserPostsResponseDTO getPostByUserIdAndPostId(Long userId, Long postId);
 
-	UserPostsResponseDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername, MultipartFile[] files);
+	UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDTO postDto, MultipartFile[] files);
 
 	UserPostsResponseDTO createPostItems(List<PostItem> postItems, Long postId, Long userId);
 

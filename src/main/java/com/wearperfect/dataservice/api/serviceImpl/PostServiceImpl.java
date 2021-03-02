@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -20,7 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
@@ -83,15 +90,18 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	PostMapper postMapper;
-	
+
 	@Autowired
 	FileService fileService;
-	
+
 	@Autowired
 	AmazonS3 amazonS3;
-	
+
 	@Value("${application.aws.s3.buckets.posts}")
 	String postsS3Bucket;
+	
+	@Value("${cloud.aws.region.static}")
+	private String postss3Region;
 
 	@Override
 	public UserPostsResponseDTO getPostsByUserId(Long userId) {
@@ -152,35 +162,83 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public UserPostsResponseDTO createPost(PostDTO postDto, Long postBy, String loggedInUsername, MultipartFile[] files) {
-		
-		System.out.println("Files::::::"+files.length);
-		
-		for(int i=0;i<files.length;i++) {
-			String filename=postBy+"_"+System.currentTimeMillis();
-			File postFile = fileService.converMultipartFileToFile(files[i]);
-			amazonS3.putObject(postsS3Bucket, filename, postFile);
-			postFile.delete();
-		}
-		
-		return null;
+	public UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDTO postDto,
+			MultipartFile[] files) {
 
-//		Post post = postMapper.mapPostDtoToPost(postDto);
-//
-//		Optional<User> loggedInUser = userRepository
-//				.findOne(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(loggedInUsername));
-//
-//		if (!loggedInUser.isPresent() || loggedInUser.get().getId() != postBy) {
-//			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED,
-//					"Requested user and loggedin user are different!");
-//		}
-//
-//		if (null == post.getPostItems() || post.getPostItems().size() <= 0) {
-//			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-//		}
-//		
-//		
-//
+		System.out.println("Files::::::" + files.length);
+
+		Post post = postMapper.mapPostDtoToPost(postDto);
+
+		Optional<User> loggedInUser = userRepository
+				.findOne(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(loggedInUsername));
+
+		if (!loggedInUser.isPresent() || loggedInUser.get().getId() != postBy) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED,
+					"Requested user and loggedin user are different!");
+		}
+
+		if (null == files || files.length <= 0) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "No media content available to create a post.");
+		}
+
+		// TODO
+		post.setPostItems(new ArrayList<>()); // Emptying post items to avoid cascading error
+		post.setActive(true);
+		post.setCreatedBy(postBy);
+		post.setCreatedOn(new Date());
+		try {
+			postRepository.save(post);
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving the post.");
+		}
+
+		List<PostItem> postItems = new ArrayList<>();
+
+		// Set the presigned URL to expire after one hour.
+//		java.util.Date expiration = new java.util.Date();
+//		long expTimeMillis = expiration.getTime();
+//		expTimeMillis += 1000 * 60 * 60;
+//		expiration.setTime(expTimeMillis);
+
+		for (int i = 0; i < files.length; i++) {
+			PostItem postItem = new PostItem();
+			postItem.setPostId(post.getId());
+			postItem.setSequenceId(i + 1);
+			postItem.setCreatedOn(new Date());
+			postItem.setContentType(files[i].getContentType());
+			postItem.setActive(true);
+			
+			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "_"
+					+ files[i].getOriginalFilename();
+			File postFile = fileService.converMultipartFileToFile(files[i]);
+			amazonS3.putObject(postsS3Bucket, fileName, postFile);
+			postFile.delete();
+			 
+			postItem.setS3BucketId(1);
+			postItem.setFileName(fileName);
+			postItem.setSourceLink("https://"+postsS3Bucket+".s3."+postss3Region+".amazonaws.com/"+fileName);
+			postItems.add(postItem);
+			
+//			GeneratePresignedUrlRequest generatePresignedUrlRequest =
+//          new GeneratePresignedUrlRequest(postsS3Bucket, fileName)
+//                  .withMethod(HttpMethod.GET)
+//                  .withExpiration(expiration);
+//	 		URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+
+//			Optional<ContentType> contentType = contentTypeRepository
+//			.findOne(ContentTypeDetailsSpecification.contentTypeExtensionPredicate(postItem.getContentType()));
+//			if (!contentType.isPresent()) {
+//				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Content type not supported");
+//			}
+		}
+
+		try {
+			postItemRepository.saveAll(postItems);
+			post.setPostItems(postItems);
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
+		}
+
 //		List<PostItem> postItems = post.getPostItems();
 //		// TODO
 //		post.setPostItems(new ArrayList<>()); // Emptying post items to avoid cascading error
@@ -218,8 +276,8 @@ public class PostServiceImpl implements PostService {
 //		} catch (Exception e) {
 //			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
 //		}
-//
-//		return getPostByUserIdAndPostId(postBy, post.getId());
+
+		return getPostByUserIdAndPostId(postBy, post.getId());
 	}
 
 	@Override

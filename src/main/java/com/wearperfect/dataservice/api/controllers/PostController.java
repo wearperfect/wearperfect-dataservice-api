@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,10 +53,10 @@ public class PostController {
 
 	@PostMapping(path = "/users/{userId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	UserPostsResponseDTO createPost(Authentication authentication,
-			@PathVariable(name = "userId", required = true) Long userId, 
-			@RequestPart(name = "files") MultipartFile[] files,
-			@RequestPart(name = "data") PostDTO postDto) {
-		return postService.createPost(postDto, userId, authentication.getName(), files);
+			@PathVariable(name = "userId", required = true) Long userId,
+			@RequestPart(name = "data") PostDTO postDto,
+			@RequestPart(name = "files") MultipartFile[] files) {
+		return postService.createPost(userId, authentication.getName(), postDto, files);
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")
