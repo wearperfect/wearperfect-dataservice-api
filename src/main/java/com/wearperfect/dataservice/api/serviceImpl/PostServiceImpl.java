@@ -3,6 +3,8 @@ package com.wearperfect.dataservice.api.serviceImpl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -203,28 +205,48 @@ public class PostServiceImpl implements PostService {
 			postItem.setContentType(files[i].getContentType());
 			postItem.setActive(true);
 			
-			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "_"
-					+ files[i].getOriginalFilename();
 			File postFile = fileService.converMultipartFileToFile(files[i]);
-			
-//			try {
-//		           BufferedImage originalImage = ImageIO.read(postFile);
-//
-//		           originalImage.getScaledInstance(width, height, hints)
-//		            //To save with original ratio uncomment next line and comment the above.
-//		            //originalImage= Scalr.resize(originalImage, 153, 128);
-//		            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		            ImageIO.write(originalImage, "jpg", baos);
-//		            baos.flush();
-//		            byte[] imageInByte = baos.toByteArray();
-//		            baos.close();
-//		            
-//		        } catch (Exception e) {
-//		            
-//		        }
-			
+			System.out.println("::::::::::::::::::::::::::::::::::::"+fileService.getFileExtension(files[i].getOriginalFilename()));
+			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "."
+					+ fileService.getFileExtension(files[i].getOriginalFilename());
 			amazonS3.putObject(postsS3Bucket, fileName, postFile);
-			postFile.delete();
+			try {
+				BufferedImage originalImage = ImageIO.read(postFile);
+				BufferedImage scaledImage = fileService.resizeImageByPercent(originalImage, 0.50);
+				
+				File scaledImageFile = new File(fileName);
+				if(scaledImageFile.createNewFile()) {
+					// File is created.
+				}				
+			    ImageIO.write(scaledImage, fileService.getFileExtension(files[i].getOriginalFilename()), scaledImageFile);
+				amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
+//				if(scaledImageFile.exists()) {
+//					scaledImageFile.delete();
+//				}
+				
+		   
+				// Graphics2D
+//				BufferedImage outputImage = new BufferedImage(new Double(bufferedImage.getWidth()*0.5).intValue(), new Double(bufferedImage.getHeight()*0.5).intValue(),
+//						bufferedImage.getType());
+//				
+//				Graphics2D g2d = outputImage.createGraphics();
+//		        g2d.drawImage(bufferedImage, 0, 0, new Double(bufferedImage.getWidth()*0.5).intValue(), new Double(bufferedImage.getHeight()*0.5).intValue(),  null);
+//		        g2d.dispose();
+//		        File scaledImageFile = new File(fileName);
+//		        if(scaledImageFile.createNewFile()) {
+//					// File is created.				
+//		        }
+//				ImageIO.write(fileService.convertToBufferedImage(outputImage), fileName, scaledImageFile);
+//				amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
+				
+				
+		        
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				postFile.delete();
+			}
 			 
 			postItem.setS3BucketId(1);
 			postItem.setFileName(fileName);
