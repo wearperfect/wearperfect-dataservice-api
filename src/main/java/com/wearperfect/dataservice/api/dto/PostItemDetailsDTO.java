@@ -10,6 +10,7 @@ public class PostItemDetailsDTO {
 	Integer sequenceId;
 	String sourceLink;
 	//ContentTypeBasicDetailsDTO contentType;
+	Float aspectRatio;
 	Boolean active;
 	Long createdOn;
 	Long lastUpdatedOn;

@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
@@ -47,8 +49,9 @@ public class UserController {
 	
 	@PutMapping(value = "/users/{userId}/profile/basicdetails")
 	public UserDTO updateUserBasicProfileDetails(@PathVariable(name = "userId") Long userId,
-			@RequestBody(required = true) UserDTO userDto) {
-		return userService.updateUserBasicProfileDetails(userId, userDto);
+			@RequestPart(name = "data", required = true) UserDTO userDto,
+			@RequestPart(name = "files", required = false) MultipartFile profilePicture) {
+		return userService.updateUserBasicProfileDetails(userId, userDto, profilePicture);
 	}
 	
 	@PutMapping(value = "/users/{userId}/profile/introdetails")

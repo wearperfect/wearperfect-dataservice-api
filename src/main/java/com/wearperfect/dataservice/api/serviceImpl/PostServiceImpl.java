@@ -1,9 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +92,7 @@ public class PostServiceImpl implements PostService {
 
 	@Value("${application.aws.s3.buckets.posts}")
 	String postsS3Bucket;
-	
+
 	@Value("${cloud.aws.region.static}")
 	private String postss3Region;
 
@@ -162,8 +158,6 @@ public class PostServiceImpl implements PostService {
 	public UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDTO postDto,
 			MultipartFile[] files) {
 
-		System.out.println("Files::::::" + files.length);
-
 		Post post = postMapper.mapPostDtoToPost(postDto);
 
 		Optional<User> loggedInUser = userRepository
@@ -191,12 +185,6 @@ public class PostServiceImpl implements PostService {
 
 		List<PostItem> postItems = new ArrayList<>();
 
-		// Set the presigned URL to expire after one hour.
-//		java.util.Date expiration = new java.util.Date();
-//		long expTimeMillis = expiration.getTime();
-//		expTimeMillis += 1000 * 60 * 60;
-//		expiration.setTime(expTimeMillis);
-
 		for (int i = 0; i < files.length; i++) {
 			PostItem postItem = new PostItem();
 			postItem.setPostId(post.getId());
@@ -204,66 +192,32 @@ public class PostServiceImpl implements PostService {
 			postItem.setCreatedOn(new Date());
 			postItem.setContentType(files[i].getContentType());
 			postItem.setActive(true);
-			
+
 			File postFile = fileService.converMultipartFileToFile(files[i]);
-			System.out.println("::::::::::::::::::::::::::::::::::::"+fileService.getFileExtension(files[i].getOriginalFilename()));
 			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "."
 					+ fileService.getFileExtension(files[i].getOriginalFilename());
-			amazonS3.putObject(postsS3Bucket, fileName, postFile);
 			try {
-				BufferedImage originalImage = ImageIO.read(postFile);
-				BufferedImage scaledImage = fileService.resizeImageByPercent(originalImage, 0.50);
-				
-				File scaledImageFile = new File(fileName);
-				if(scaledImageFile.createNewFile()) {
-					// File is created.
-				}				
-			    ImageIO.write(scaledImage, fileService.getFileExtension(files[i].getOriginalFilename()), scaledImageFile);
-				amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
-//				if(scaledImageFile.exists()) {
-//					scaledImageFile.delete();
-//				}
-				
-		   
-				// Graphics2D
-//				BufferedImage outputImage = new BufferedImage(new Double(bufferedImage.getWidth()*0.5).intValue(), new Double(bufferedImage.getHeight()*0.5).intValue(),
-//						bufferedImage.getType());
-//				
-//				Graphics2D g2d = outputImage.createGraphics();
-//		        g2d.drawImage(bufferedImage, 0, 0, new Double(bufferedImage.getWidth()*0.5).intValue(), new Double(bufferedImage.getHeight()*0.5).intValue(),  null);
-//		        g2d.dispose();
-//		        File scaledImageFile = new File(fileName);
-//		        if(scaledImageFile.createNewFile()) {
-//					// File is created.				
-//		        }
-//				ImageIO.write(fileService.convertToBufferedImage(outputImage), fileName, scaledImageFile);
-//				amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
-				
-				
-		        
+				postItem.setAspectRatio(fileService.getFileAspectRaio(postFile));
+				if(files[i].getSize()>1000000) {
+					File scaledImageFile = fileService.resizeImageByPercent(postFile, fileName, 0.50);
+					amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
+					if (scaledImageFile.exists()) {
+						scaledImageFile.delete();
+					}
+				}else {
+					amazonS3.putObject(postsS3Bucket, fileName, postFile);
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				postFile.delete();
 			}
-			 
+
 			postItem.setS3BucketId(1);
 			postItem.setFileName(fileName);
-			postItem.setSourceLink("https://"+postsS3Bucket+".s3."+postss3Region+".amazonaws.com/"+fileName);
+			postItem.setSourceLink("https://" + postsS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
 			postItems.add(postItem);
-			
-//			GeneratePresignedUrlRequest generatePresignedUrlRequest =
-//          new GeneratePresignedUrlRequest(postsS3Bucket, fileName)
-//                  .withMethod(HttpMethod.GET)
-//                  .withExpiration(expiration);
-//	 		URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-
-//			Optional<ContentType> contentType = contentTypeRepository
-//			.findOne(ContentTypeDetailsSpecification.contentTypeExtensionPredicate(postItem.getContentType()));
-//			if (!contentType.isPresent()) {
-//				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Content type not supported");
-//			}
 		}
 
 		try {
@@ -272,44 +226,6 @@ public class PostServiceImpl implements PostService {
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
 		}
-
-//		List<PostItem> postItems = post.getPostItems();
-//		// TODO
-//		post.setPostItems(new ArrayList<>()); // Emptying post items to avoid cascading error
-//		post.setActive(true);
-//		post.setCreatedBy(postBy);
-//		post.setCreatedOn(new Date());
-//		try {
-//			postRepository.save(post);
-//		} catch (Exception e) {
-//			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving the post.");
-//		}
-//
-//		List<String> postItemExtensionsList = new LinkedList<>();
-//		postItems.forEach(postItem -> {
-//			postItemExtensionsList.add(postItem.getContentType());
-//		});
-//
-//		int index = 0;
-//		postItems.forEach(postItem -> {
-//			postItem.setSequenceId(index + 1);
-//			postItem.setPostId(post.getId());
-//			postItem.setActive(true);
-//			postItem.setCreatedOn(new Date());
-//			Optional<ContentType> contentType = contentTypeRepository
-//					.findOne(ContentTypeDetailsSpecification.contentTypeExtensionPredicate(postItem.getContentType()));
-//			if (!contentType.isPresent()) {
-//				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Content type not supported");
-//			}
-//			postItem.setContentType(postItem.getContentType());
-//		});
-//
-//		try {
-//			postItemRepository.saveAll(postItems);
-//			post.setPostItems(postItems);
-//		} catch (Exception e) {
-//			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
-//		}
 
 		return getPostByUserIdAndPostId(postBy, post.getId());
 	}

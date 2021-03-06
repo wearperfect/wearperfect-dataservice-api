@@ -1,3 +1,4 @@
+
 # Spring Boot configuration
 spring:
   servlet:
@@ -53,6 +54,7 @@ application:
     s3:
       buckets:
         posts: wearperfect-posts
+        profile-pictures: wearperfect-profile-pictures
 # Security configuration
 security:
   user:

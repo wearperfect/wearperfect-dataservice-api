@@ -37,6 +37,9 @@ public class PostItem {
 	
 	@Column(name = "content_type")
 	String contentType;
+	
+	@Column(name = "aspect_ratio")
+	Float aspectRatio;
 
 	@Column(name = "s3_bucket_id")
 	Integer s3BucketId;

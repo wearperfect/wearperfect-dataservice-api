@@ -1,5 +1,7 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -8,12 +10,15 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.UserDTO;
@@ -23,6 +28,7 @@ import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.UserService;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
@@ -44,6 +50,18 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ObjectMapper objectMapper;
+
+	@Autowired
+	FileService fileService;
+
+	@Autowired
+	AmazonS3 amazonS3;
+
+	@Value("${application.aws.s3.buckets.profile-pictures}")
+	String profilePicturesS3Bucket;
+
+	@Value("${cloud.aws.region.static}")
+	private String postss3Region;
 
 	@Override
 	public List<UserDTO> getUsers() {
@@ -120,7 +138,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto) {
+	public UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture) {
 
 		User user = userMapper.mapUserDtoToUser(userDto);
 
@@ -140,6 +158,32 @@ public class UserServiceImpl implements UserService {
 				user.setWebsite(null);// Validate url
 			}
 			existingUserDetails.get().setLastUpdatedOn(new Date());
+
+			if (null != profilePicture) {
+				File profilePictureFile = fileService.converMultipartFileToFile(profilePicture);
+				String fileName = userId + "." + fileService.getFileExtension(profilePicture.getOriginalFilename());
+				try {
+					if (profilePicture.getSize() > 1000000) {
+						try {
+							File scaledImageFile = fileService.resizeImageByPercent(profilePictureFile, fileName, 0.75);
+							amazonS3.putObject(profilePicturesS3Bucket, fileName, scaledImageFile);
+							if (scaledImageFile.exists()) {
+								scaledImageFile.delete();
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else {
+						amazonS3.putObject(profilePicturesS3Bucket, fileName, profilePictureFile);
+					}
+				} finally {
+					profilePictureFile.delete();
+				}
+				existingUserDetails.get().setProfilePicture(
+						"https://" + profilePicturesS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
+			}
+
 			userRepository.saveAndFlush(existingUserDetails.get());
 			return userMapper.mapUserToUserDto(existingUserDetails.get());
 		} else {
