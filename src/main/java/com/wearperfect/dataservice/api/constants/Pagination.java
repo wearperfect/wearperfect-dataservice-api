@@ -22,7 +22,8 @@ public interface Pagination {
 		DEFAULT(15),
 		USERS(50),
 		POSTS(15),
-		POST_COMMENTS(5);
+		POST_COMMENTS(5),
+		BUSINESS_AND_SUPPORT(10);
 
 		private final Integer value;
 

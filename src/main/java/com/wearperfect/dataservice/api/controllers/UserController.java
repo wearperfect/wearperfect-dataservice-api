@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
+import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.User;
@@ -58,5 +60,11 @@ public class UserController {
 	public UserDetailsDTO updateUserIntroductionDetails(@PathVariable(name = "userId") Long userId,
 			@RequestBody(required = true) UserDTO userDto) {
 		return userService.updateUserIntroductionDetails(userId, userDto);
+	}
+	
+	@PutMapping(value = "/users/{userId}/profile/businessdetails")
+	public BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(@PathVariable(name = "userId") Long userId,
+			@RequestBody(required = true) BusinessAndSupportDTO businessAndSupportDto) {
+		return userService.updateUserBusinessAndSupportDetails(userId, businessAndSupportDto);
 	}
 }

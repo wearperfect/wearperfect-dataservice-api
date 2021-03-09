@@ -21,10 +21,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
+import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.repositories.BusinessAndSupportRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
@@ -50,6 +55,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ObjectMapper objectMapper;
+	
+	@Autowired
+	BusinessAndSupportRepository businessAndSupportRepository;
+	
+	@Autowired
+	BusinessAndSupportMapper businessAndSupportMapper;
 
 	@Autowired
 	FileService fileService;
@@ -155,7 +166,9 @@ public class UserServiceImpl implements UserService {
 			existingUserDetails.get().setFullname(user.getFullname());
 			existingUserDetails.get().setBio(user.getBio());
 			if (null == user.getWebsite() || user.getWebsite().trim().length() <= 0) {
-				user.setWebsite(null);// Validate url
+				existingUserDetails.get().setWebsite(null);// Validate url
+			}else {
+				existingUserDetails.get().setWebsite(user.getWebsite());
 			}
 			existingUserDetails.get().setLastUpdatedOn(new Date());
 
@@ -229,5 +242,19 @@ public class UserServiceImpl implements UserService {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@Override
+	public BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(Long userId,
+			BusinessAndSupportDTO businessAndSupportDto) {
+		BusinessAndSupport businessAndSupport = businessAndSupportMapper.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
+		if(null == businessAndSupport.getId()) {
+			
+		}else {
+			
+		}
+		businessAndSupportRepository.save(businessAndSupport);
+		return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(businessAndSupport);
+	}
+
 
 }
