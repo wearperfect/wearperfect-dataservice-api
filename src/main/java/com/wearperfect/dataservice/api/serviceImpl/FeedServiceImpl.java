@@ -56,10 +56,6 @@ public class FeedServiceImpl implements FeedService {
 	@Autowired
 	PostCommentMapper postCommentMapper;
 
-	final int POST_COMMENTS_DEFAULT_PAGE_OFFSET = 0;
-
-	final int POST_COMMENTS_DEFAULT_PAGE_SIZE = 2;
-
 	@Override
 	public List<PostDetailsDTO> getFeed() {
 		List<Post> posts = postRepository.findAll();
@@ -117,7 +113,7 @@ public class FeedServiceImpl implements FeedService {
 			}
 			post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
-					PageRequest.of(POST_COMMENTS_DEFAULT_PAGE_OFFSET, POST_COMMENTS_DEFAULT_PAGE_SIZE,
+					PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), Pagination.PageSize.POST_COMMENTS.getValue(),
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
 			List<PostCommentDetailsDTO> comments = commentsList.stream()
 					.map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))

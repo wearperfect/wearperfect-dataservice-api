@@ -21,11 +21,16 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.entities.ContentType;
+import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
+import com.wearperfect.dataservice.api.entities.PostComment;
+import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostItem;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostLike_;
@@ -34,10 +39,13 @@ import com.wearperfect.dataservice.api.entities.PostSave_;
 import com.wearperfect.dataservice.api.entities.PostUserTag;
 import com.wearperfect.dataservice.api.entities.PostUserTag_;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
+import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
+import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
 import com.wearperfect.dataservice.api.repositories.PostItemRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
@@ -74,9 +82,18 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	PostUserTagRepository postUserTagRepository;
+	
+	@Autowired
+	PostCommentRepository postCommentRepository;
+	
+	@Autowired
+	PostCommentMapper postCommentMapper;
 
 	@Autowired
 	MasterRepository masterRepository;
+	
+	@Autowired
+	FollowRepository followRepository;
 
 	@Autowired
 	UserMapper userMapper;
@@ -145,12 +162,50 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getPostByUserIdAndPostId(Long userId, Long postId) {
-		Optional<Post> post = postRepository
+		Optional<Post> eixistingPost = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
-		PostDetailsDTO postDetails = postMapper.mapPostToPostDetailsDto(post.get());
-		postDetails.setTotalLikes(postLikeRepository.countByPostId(post.get().getId()));
+		PostDetailsDTO post = postMapper.mapPostToPostDetailsDto(eixistingPost.get());
+		
+		post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
+		//
+		Optional<PostLike> like = Optional
+				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(post.getId(), userId));
+		if (like.isPresent() && like.get().getLikedBy() == userId) {
+			post.setLiked(true);
+		} else {
+			post.setLiked(false);
+		}
+		//
+		Optional<PostSave> save = Optional
+				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
+		if (save.isPresent() && save.get().getSavedBy() == userId) {
+			post.setSaved(true);
+		} else {
+			post.setSaved(false);
+		}
+		//
+		if (post.getCreatedBy().getId() == userId) {
+			post.setFollowing(true);
+		} else {
+			Optional<Follow> follow = Optional
+					.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy().getId(), userId));
+			if (follow.isPresent()) {
+				post.setFollowing(true);
+			} else {
+				post.setFollowing(false);
+			}
+		}
+		post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
+		final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
+				PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), Pagination.PageSize.POST_COMMENTS.getValue(),
+						Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
+		List<PostCommentDetailsDTO> comments = commentsList.stream()
+				.map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
+				.collect(Collectors.toList());
+		post.setComments(comments);
+		
 		List<PostDetailsDTO> userPostsDtoList = new ArrayList<>();
-		userPostsDtoList.add(postDetails);
+		userPostsDtoList.add(post);
 		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
 

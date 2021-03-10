@@ -23,17 +23,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
+import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.CountryBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entities.Country;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.BusinessAndSupportRepository;
+import com.wearperfect.dataservice.api.repositories.CountryRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.service.CityService;
+import com.wearperfect.dataservice.api.service.CountryService;
 import com.wearperfect.dataservice.api.service.FileService;
+import com.wearperfect.dataservice.api.service.StateService;
 import com.wearperfect.dataservice.api.service.UserService;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
@@ -55,6 +63,15 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ObjectMapper objectMapper;
+	
+	@Autowired
+	CountryService countryService;
+	
+	@Autowired
+	StateService stateService;
+	
+	@Autowired
+	CityService cityService;
 	
 	@Autowired
 	BusinessAndSupportRepository businessAndSupportRepository;
@@ -237,7 +254,26 @@ public class UserServiceImpl implements UserService {
 			existingUserDetails.get().setCountryId(user.getCountryId());
 			existingUserDetails.get().setLastUpdatedOn(new Date());
 			userRepository.saveAndFlush(existingUserDetails.get());
-			return userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
+			UserDetailsDTO updatedUserDto = userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
+			if(null != userDto.getCityId()) {
+				CityBasicDetailsDTO city = cityService.getCityDetailsByCityId(userDto.getCityId()); 
+				updatedUserDto.setCity(city);
+			}else {
+				updatedUserDto.setCity(null);
+			}
+			if(null != userDto.getStateId()) {
+				StateBasicDetailsDTO state = stateService.getStateDetailsByStateId(userDto.getStateId()); 
+				updatedUserDto.setState(state);
+			}else {
+				updatedUserDto.setState(null);
+			}
+			if(null != userDto.getCountryId()) {
+				CountryBasicDetailsDTO country = countryService.getCountryDetailsByCountryId(userDto.getCountryId()); 
+				updatedUserDto.setCountry(country);
+			}else {
+				updatedUserDto.setCountry(null);
+			}
+			return updatedUserDto;
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}

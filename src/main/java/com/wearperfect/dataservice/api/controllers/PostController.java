@@ -26,27 +26,27 @@ public class PostController {
 	PostMapper postMapper;
 
 	@GetMapping(path = "/users/{userId}/posts")
-	UserPostsResponseDTO postsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+	UserPostsResponseDTO getPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return postService.getPostsByUserId(userId);
 	}
 
 	@GetMapping(path = "/users/{userId}/posts/liked")
-	UserPostsResponseDTO likedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+	UserPostsResponseDTO getLikedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return postService.getLikedPostsByUserId(userId);
 	}
 
 	@GetMapping(path = "/users/{userId}/posts/saved")
-	UserPostsResponseDTO savedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+	UserPostsResponseDTO getSavedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return postService.getSavedPostsByUserId(userId);
 	}
 
 	@GetMapping(path = "/users/{userId}/posts/tagged")
-	UserPostsResponseDTO taggedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+	UserPostsResponseDTO getTaggedPostsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return postService.getTaggedPostsByUserId(userId);
 	}
 
 	@GetMapping(path = "/users/{userId}/posts/{postId}")
-	UserPostsResponseDTO postByUserId(@PathVariable(name = "userId", required = true) Long userId,
+	UserPostsResponseDTO getPostByUserIdAndPostId(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postService.getPostByUserIdAndPostId(userId, postId);
 	}

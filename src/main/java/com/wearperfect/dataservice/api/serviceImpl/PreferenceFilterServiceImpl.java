@@ -156,8 +156,7 @@ public class PreferenceFilterServiceImpl implements PreferenceFilterService {
 		if (userId != savedFilterDto.getUserId()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
-		if (null == savedFilterDto.getTitle() || savedFilterDto.getTitle().trim().length() <= 0
-				|| null == savedFilterDto.getDescription() || savedFilterDto.getDescription().trim().length() <= 0) {
+		if (null == savedFilterDto.getTitle() || savedFilterDto.getTitle().trim().length() <= 0) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 		PreferenceFilter filter = preferenceFilterMapper.mapSavedFilterDtoToSavedFilter(savedFilterDto);
