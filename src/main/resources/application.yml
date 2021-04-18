@@ -13,7 +13,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wearperfect
     username: root
-    password: Test!234
+    password: Test!23
 # JPA properties
   jpa:
     hibernate:
@@ -30,7 +30,7 @@ logging:
     console: "%d %-5level %logger : %msg%n"
   level:
     org.springframework.transaction.interceptor: TRACE
-    org.hibernate: DEBUG
+    #org.hibernate: DEBUG
 # Server configuration
 server:
   port: 8080

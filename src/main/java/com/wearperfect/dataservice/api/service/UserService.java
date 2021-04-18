@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
+import com.wearperfect.dataservice.api.dto.AuthenticationResponse;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
@@ -22,7 +24,7 @@ public interface UserService {
 
 	UserDTO updateUser(User user);
 
-	UserDTO authenticateUser(User user);
+	AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest);
 
 	UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture);
 

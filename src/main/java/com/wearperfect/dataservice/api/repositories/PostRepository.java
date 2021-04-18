@@ -13,6 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 	
 	Long countByCreatedBy(Long userId);
 	
+	List<Post> findByCreatedBy(Long userId);
+	
 	List<Post> findByIdIn(List<Long> postIdList);
 }
 

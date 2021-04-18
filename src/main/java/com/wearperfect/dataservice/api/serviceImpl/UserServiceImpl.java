@@ -12,6 +12,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
+import com.wearperfect.dataservice.api.dto.AuthenticationResponse;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
@@ -38,6 +46,9 @@ import com.wearperfect.dataservice.api.repositories.CountryRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
+import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
 import com.wearperfect.dataservice.api.service.CityService;
 import com.wearperfect.dataservice.api.service.CountryService;
 import com.wearperfect.dataservice.api.service.FileService;
@@ -48,6 +59,15 @@ import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	CustomUserDetailsService customUserDetailsService;
+
+	@Autowired
+	JwtUtiilService jwtUtiilService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -63,19 +83,19 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	CountryService countryService;
-	
+
 	@Autowired
 	StateService stateService;
-	
+
 	@Autowired
 	CityService cityService;
-	
+
 	@Autowired
 	BusinessAndSupportRepository businessAndSupportRepository;
-	
+
 	@Autowired
 	BusinessAndSupportMapper businessAndSupportMapper;
 
@@ -154,15 +174,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO authenticateUser(User user) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
-		List<User> users = userRepository.findAll(
-				UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(user.getUsername().toLowerCase()));
-		if (users.size() == 1 && passwordEncoder.matches(user.getPassword(), users.get(0).getPassword())) {
-			return userMapper.mapUserToUserDto(users.get(0));
-		} else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+	public AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) {
+		//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
+		try {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+		}catch(BadCredentialsException exception) {
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid credentials");
 		}
+		
+		final CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		return new AuthenticationResponse(userDetails.getUserId(), jwtUtiilService.generateToken(userDetails));
 	}
 
 	@Override
@@ -184,7 +205,7 @@ public class UserServiceImpl implements UserService {
 			existingUserDetails.get().setBio(user.getBio());
 			if (null == user.getWebsite() || user.getWebsite().trim().length() <= 0) {
 				existingUserDetails.get().setWebsite(null);// Validate url
-			}else {
+			} else {
 				existingUserDetails.get().setWebsite(user.getWebsite());
 			}
 			existingUserDetails.get().setLastUpdatedOn(new Date());
@@ -255,22 +276,22 @@ public class UserServiceImpl implements UserService {
 			existingUserDetails.get().setLastUpdatedOn(new Date());
 			userRepository.saveAndFlush(existingUserDetails.get());
 			UserDetailsDTO updatedUserDto = userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
-			if(null != userDto.getCityId()) {
-				CityBasicDetailsDTO city = cityService.getCityDetailsByCityId(userDto.getCityId()); 
+			if (null != userDto.getCityId()) {
+				CityBasicDetailsDTO city = cityService.getCityDetailsByCityId(userDto.getCityId());
 				updatedUserDto.setCity(city);
-			}else {
+			} else {
 				updatedUserDto.setCity(null);
 			}
-			if(null != userDto.getStateId()) {
-				StateBasicDetailsDTO state = stateService.getStateDetailsByStateId(userDto.getStateId()); 
+			if (null != userDto.getStateId()) {
+				StateBasicDetailsDTO state = stateService.getStateDetailsByStateId(userDto.getStateId());
 				updatedUserDto.setState(state);
-			}else {
+			} else {
 				updatedUserDto.setState(null);
 			}
-			if(null != userDto.getCountryId()) {
-				CountryBasicDetailsDTO country = countryService.getCountryDetailsByCountryId(userDto.getCountryId()); 
+			if (null != userDto.getCountryId()) {
+				CountryBasicDetailsDTO country = countryService.getCountryDetailsByCountryId(userDto.getCountryId());
 				updatedUserDto.setCountry(country);
-			}else {
+			} else {
 				updatedUserDto.setCountry(null);
 			}
 			return updatedUserDto;
@@ -282,15 +303,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(Long userId,
 			BusinessAndSupportDTO businessAndSupportDto) {
-		BusinessAndSupport businessAndSupport = businessAndSupportMapper.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
-		if(null == businessAndSupport.getId()) {
-			
-		}else {
-			
+		BusinessAndSupport businessAndSupport = businessAndSupportMapper
+				.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
+		if (null == businessAndSupport.getId()) {
+
+		} else {
+
 		}
 		businessAndSupportRepository.save(businessAndSupport);
 		return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(businessAndSupport);
 	}
-
 
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -184,11 +185,12 @@ public class PostServiceImpl implements PostService {
 			post.setSaved(false);
 		}
 		//
-		if (post.getCreatedBy().getId() == userId) {
+		if (eixistingPost.get().getCreatedBy() == userId) {
 			post.setFollowing(true);
 		} else {
 			Optional<Follow> follow = Optional
-					.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy().getId(), userId));
+					.ofNullable(followRepository.findByUserIdAndFollowingBy(eixistingPost.get().getCreatedBy(), userId));
+			System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
 			if (follow.isPresent()) {
 				post.setFollowing(true);
 			} else {
@@ -249,19 +251,23 @@ public class PostServiceImpl implements PostService {
 			postItem.setActive(true);
 
 			File postFile = fileService.converMultipartFileToFile(files[i]);
+			String fileType = fileService.getFileExtension(files[i].getOriginalFilename());
 			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "."
-					+ fileService.getFileExtension(files[i].getOriginalFilename());
+					+ fileType;
 			try {
-				postItem.setAspectRatio(fileService.getFileAspectRaio(postFile));
-				if(files[i].getSize()>1000000) {
-					File scaledImageFile = fileService.resizeImageByPercent(postFile, fileName, 0.50);
-					amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
-					if (scaledImageFile.exists()) {
-						scaledImageFile.delete();
+				if (!fileType.toLowerCase().equals("mp4")) {
+					postItem.setAspectRatio(fileService.getFileAspectRaio(postFile));
+					if (files[i].getSize() > 1000000) {
+						File scaledImageFile = fileService.resizeImageByPercent(postFile, fileName, 0.50);
+						amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
+						if (scaledImageFile.exists()) {
+							scaledImageFile.delete();
+						}
 					}
 				}else {
-					amazonS3.putObject(postsS3Bucket, fileName, postFile);
+					postItem.setAspectRatio(new Float(100));
 				}
+				amazonS3.putObject(postsS3Bucket, fileName, postFile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
