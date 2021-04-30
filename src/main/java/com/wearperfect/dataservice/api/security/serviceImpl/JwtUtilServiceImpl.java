@@ -39,11 +39,11 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	@Override
 	public Boolean validateToken(String token, CustomUserDetails userDetails) {
 		final Long userId = Long.valueOf(extractUserId(token));
-		return (userId == userDetails.getUserId());
+		return (userId.equals(userDetails.getUserId()));
 	}
 
 	private String createToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().addClaims(claims).setSubject(subject).setIssuedAt(new Date())
+		return Jwts.builder().addClaims(claims).setSubject(subject).setIssuedAt(new Date()).setExpiration(new Date(3000, 01, 01))
 				.signWith(SignatureAlgorithm.HS512, new Base64Codec().encode(SECRET_KEY)).compact();
 	}
 	

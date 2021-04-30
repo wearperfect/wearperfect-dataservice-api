@@ -15,9 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.stereotype.Service;
@@ -37,12 +34,10 @@ import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
-import com.wearperfect.dataservice.api.entities.Country;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.BusinessAndSupportRepository;
-import com.wearperfect.dataservice.api.repositories.CountryRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
@@ -54,7 +49,6 @@ import com.wearperfect.dataservice.api.service.CountryService;
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.StateService;
 import com.wearperfect.dataservice.api.service.UserService;
-import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
 @Service
 @Transactional
@@ -191,7 +185,7 @@ public class UserServiceImpl implements UserService {
 
 		User user = userMapper.mapUserDtoToUser(userDto);
 
-		if (null == user.getId() || userId != user.getId() || null == user.getUsername()
+		if (null == user.getId() || !userId.equals(user.getId()) || null == user.getUsername()
 				|| user.getUsername().trim().length() <= 0 || null == user.getFullname()
 				|| user.getFullname().trim().length() <= 0) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
@@ -262,7 +256,7 @@ public class UserServiceImpl implements UserService {
 	public UserDetailsDTO updateUserIntroductionDetails(Long userId, UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUser(userDto);
 
-		if (null == user.getId() || userId != user.getId()) {
+		if (null == user.getId() || !userId.equals(user.getId())) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
 

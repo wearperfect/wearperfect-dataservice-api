@@ -8,4 +8,6 @@ import lombok.Data;
 public class SearchResponseDTO {
 
 	List<UserDTO> users;
+	
+	List<HashTagSearchDTO> hashTags;
 }

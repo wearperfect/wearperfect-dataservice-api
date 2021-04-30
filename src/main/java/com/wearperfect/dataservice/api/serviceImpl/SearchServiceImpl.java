@@ -7,10 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wearperfect.dataservice.api.dto.HashTagSearchDTO;
 import com.wearperfect.dataservice.api.dto.SearchResponseDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
+import com.wearperfect.dataservice.api.entities.HashTag;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.HashTagMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.repositories.HashTagRepository;
+import com.wearperfect.dataservice.api.repositories.PostHashTagRepository;
+import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.SearchService;
 
@@ -22,9 +28,18 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired
+	HashTagRepository hashTagRepository;
+	
+	@Autowired
+	HashTagMapper hashTagMapper;
+	
+	@Autowired
+	PostHashTagRepository postHashTagRepository;
 
 	@Override
-	public SearchResponseDTO search(String query) {
+	public SearchResponseDTO search(String realm, String query) {
 
 		SearchResponseDTO searchResponse = new SearchResponseDTO();
 
@@ -43,19 +58,18 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 			System.out.println(firstLetter + "-----" + searchContentQuery);
-			if (firstLetter.equalsIgnoreCase("@")) {
+			if (firstLetter.equalsIgnoreCase("@") || realm.equalsIgnoreCase("accounts")) {
 				List<User> users = userRepository.findByUsernameLike(searchContentQuery);
 				List<UserDTO> userDtoList = users.stream().map(user -> userMapper.mapUserToUserDto(user))
 						.collect(Collectors.toList());
 				searchResponse.setUsers(userDtoList);
-			} else if (firstLetter.equalsIgnoreCase("#")) {
-
-			} else {
-				List<User> users = userRepository.findByUsernameLikeAndFullnameLike(searchContentQuery,
-						searchContentQuery);
-				List<UserDTO> userDtoList = users.stream().map(user -> userMapper.mapUserToUserDto(user))
-						.collect(Collectors.toList());
-				searchResponse.setUsers(userDtoList);
+			} else if (firstLetter.equalsIgnoreCase("#") || realm.equalsIgnoreCase("tags")) {
+				List<HashTag> hashTags = hashTagRepository.findByTagLike(searchContentQuery);
+				List<HashTagSearchDTO> searchedHashTagDtoList = hashTags.stream().map(hashTag->hashTagMapper.mapHashTagToHashTagSearchDto(hashTag)).collect(Collectors.toList());
+				searchedHashTagDtoList.forEach(searchedHashTagDto->{
+					searchedHashTagDto.setTotalPostsTagged(postHashTagRepository.countByHashTagId(searchedHashTagDto.getId()));
+				});
+				searchResponse.setHashTags(searchedHashTagDtoList);
 			}
 		} else {
 			searchResponse.setUsers(new LinkedList<>());

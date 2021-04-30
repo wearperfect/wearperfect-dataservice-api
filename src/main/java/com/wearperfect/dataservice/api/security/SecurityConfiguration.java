@@ -46,7 +46,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(
 				"/signin/**", 
-				"/signup/**")
+				"/signup/**",
+				"/feed/**",
+				"/explore/**",
+				"/filters/**")
 			.permitAll()
 			.anyRequest()
 			.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -15,7 +15,8 @@ public class SearchController {
 	SearchService searchService;
 	
 	@GetMapping(path = "/search")
-	SearchResponseDTO search(@RequestParam(name = "query", required = true) String query) {
-		return searchService.search(query);
+	SearchResponseDTO search(@RequestParam(name = "realm", required = true) String realm,
+			@RequestParam(name = "query", required = true) String query) {
+		return searchService.search(realm, query);
 	}
 }
