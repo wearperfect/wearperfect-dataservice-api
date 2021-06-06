@@ -8,7 +8,7 @@ import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Post;
 
-@Mapper(uses = { UserMapper.class, PostItemMapper.class, PostCommentMapper.class, UtilityMapper.class },
+@Mapper(uses = { UserMapper.class, PostMediaMapper.class, PostCommentMapper.class, UtilityMapper.class },
 		unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMapper {
 	

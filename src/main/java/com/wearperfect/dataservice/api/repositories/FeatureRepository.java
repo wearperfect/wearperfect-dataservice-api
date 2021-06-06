@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.PostItem;
+import com.wearperfect.dataservice.api.entities.Feature;
 
 @Repository
-public interface PostItemRepository extends JpaRepository<PostItem, Long>, JpaSpecificationExecutor<PostItem>{
+public interface FeatureRepository extends JpaRepository<Feature, Integer>, JpaSpecificationExecutor<Feature>{
 
 }

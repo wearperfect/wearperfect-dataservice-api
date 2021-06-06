@@ -3,19 +3,13 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class RoleDTO {
-
+public class FeatureBasicDetailsDTO {
+	
 	Integer id;
-
-	String name;
-
+	
 	String desc;
 	
-	Boolean switchable;
-
+	Integer sequenceId;
+	
 	Boolean active;
-
-	Long createdOn;
-
-	Long lastUpdatedOn;
 }

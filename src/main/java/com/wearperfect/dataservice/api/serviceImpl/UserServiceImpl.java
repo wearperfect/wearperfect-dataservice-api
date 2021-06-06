@@ -30,16 +30,20 @@ import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CountryBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entities.Role;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
+import com.wearperfect.dataservice.api.mappers.RoleMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.BusinessAndSupportRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
+import com.wearperfect.dataservice.api.repositories.RoleRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
 import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
@@ -56,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 
@@ -95,6 +99,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	FileService fileService;
+	
+	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
+	RoleMapper roleMapper;
 
 	@Autowired
 	AmazonS3 amazonS3;
@@ -105,9 +115,20 @@ public class UserServiceImpl implements UserService {
 	@Value("${cloud.aws.region.static}")
 	private String postss3Region;
 
+	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
+
 	@Override
-	public List<UserDTO> getUsers() {
-		List<User> users = userRepository.findAll();
+	public List<UserDTO> getUsers(String realm) {
+		List<User> users;
+		if(realm.equalsIgnoreCase("BRANDS")) {
+			users = userRepository.findByRoleId(4);
+		}else if (realm.equalsIgnoreCase("DESIGNERS")) {
+			users = userRepository.findByRoleId(3);
+		} else if (realm.equalsIgnoreCase("USERS")) {
+			users = userRepository.findByRoleId(2);
+		} else {
+			users = userRepository.findAll();
+		}
 		return users.stream().map(user -> userMapper.mapUserToUserDto(user)).collect(Collectors.toList());
 	}
 
@@ -128,7 +149,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO createUser(User user) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
 		if (null == user.getUsername() || user.getUsername().isEmpty() || null == user.getPassword()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
@@ -169,14 +189,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) {
-		//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
+		// BCryptPasswordEncoder passwordEncoder = new
+		// BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-		}catch(BadCredentialsException exception) {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+		} catch (BadCredentialsException exception) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid credentials");
 		}
-		
-		final CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+		final CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService
+				.loadUserByUsername(authenticationRequest.getUsername());
 		return new AuthenticationResponse(userDetails.getUserId(), jwtUtiilService.generateToken(userDetails));
 	}
 
@@ -306,6 +329,58 @@ public class UserServiceImpl implements UserService {
 		}
 		businessAndSupportRepository.save(businessAndSupport);
 		return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(businessAndSupport);
+	}
+
+	@Override
+	public UserDTO resetUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent()) {
+			if (passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmNewPassword())) {
+				user.get().setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+			}
+			userRepository.save(user.get());
+			return userMapper.mapUserToUserDto(user.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public UserDTO changeUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent()) {
+			if (passwordEncoder.matches(passwordResetDto.getOldPassword(), user.get().getPassword())) {
+				if (passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmNewPassword())) {
+					user.get().setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+				}
+				userRepository.save(user.get());
+				return userMapper.mapUserToUserDto(user.get());
+			} else {
+				throw new HttpClientErrorException(HttpStatus.EXPECTATION_FAILED, "Please enter correct Old Password.");
+			}
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public UserDetailsDTO changeUserRole(Long userId, Integer roleId) {
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent()) {
+			Optional<Role> role = roleRepository.findById(roleId);
+			if(!role.isPresent()) {
+				throw new HttpClientErrorException(HttpStatus.NOT_ACCEPTABLE, "Invalid role. Please provide valid role.");
+			}
+			if(!roleId.equals(user.get().getRoleId())) {
+				user.get().setRoleId(roleId);
+				userRepository.save(user.get());
+			}
+			UserDetailsDTO userDetails = userMapper.mapUserToUserDetailsDto(user.get());
+			userDetails.setRole(roleMapper.mapRoleToRoleBasicDetailsDto(role.get()));
+			return userDetails;
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
 	}
 
 }

@@ -35,5 +35,5 @@ public class PostDetailsDTO {
 	
 	List<PostCommentDetailsDTO> comments;
 	
-	List<PostItemDetailsDTO> postItems;
+	List<PostMediaDetailsDTO> postMediaList;
 }

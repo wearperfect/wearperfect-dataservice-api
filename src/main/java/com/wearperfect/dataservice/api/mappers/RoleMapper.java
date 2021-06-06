@@ -6,9 +6,10 @@ import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.RoleBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.RoleDTO;
+import com.wearperfect.dataservice.api.dto.RoleDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Role;
 
-@Mapper(uses= {UtilityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses= {UtilityMapper.class, RoleFeatureMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RoleMapper {
 
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
@@ -18,6 +19,8 @@ public interface RoleMapper {
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	Role mapRoleDtoToRole(RoleDTO roleDto);
+	
+	RoleDetailsDTO mapRoleToRoleDetailsDto(Role role);
 	
 	RoleBasicDetailsDTO mapRoleToRoleBasicDetailsDto(Role role);
 }

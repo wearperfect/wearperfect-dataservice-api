@@ -10,6 +10,8 @@ public class RoleBasicDetailsDTO {
 	String name;
 
 	String desc;
+	
+	Boolean switchable;
 
 	Boolean active;
 }

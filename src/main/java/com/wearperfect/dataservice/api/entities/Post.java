@@ -57,7 +57,7 @@ public class Post {
 	@JoinColumn(name = "last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User lastUpdatedByUserDetails;
 
-	@OneToMany(fetch = FetchType.LAZY, targetEntity = PostItem.class, mappedBy = "postDetails", cascade = CascadeType.ALL, orphanRemoval = true)
-	List<PostItem> postItems;
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = PostMedia.class, mappedBy = "postDetails", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<PostMedia> postMediaList;
 
 }

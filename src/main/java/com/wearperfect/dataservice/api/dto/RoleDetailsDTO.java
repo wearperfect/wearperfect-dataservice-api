@@ -1,10 +1,12 @@
 package com.wearperfect.dataservice.api.dto;
 
-import lombok.Data;
+import java.util.List;
+
+import lombok.Data; 
 
 @Data
-public class RoleDTO {
-
+public class RoleDetailsDTO {
+	
 	Integer id;
 
 	String name;
@@ -14,8 +16,7 @@ public class RoleDTO {
 	Boolean switchable;
 
 	Boolean active;
-
-	Long createdOn;
-
-	Long lastUpdatedOn;
+	
+	List<RoleFeatureDetailsDTO> roleFeatures;
+	
 }

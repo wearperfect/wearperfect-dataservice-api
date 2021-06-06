@@ -32,7 +32,7 @@ import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
-import com.wearperfect.dataservice.api.entities.PostItem;
+import com.wearperfect.dataservice.api.entities.PostMedia;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostLike_;
 import com.wearperfect.dataservice.api.entities.PostSave;
@@ -47,7 +47,7 @@ import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.PostItemRepository;
+import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
@@ -70,7 +70,7 @@ public class PostServiceImpl implements PostService {
 	PostRepository postRepository;
 
 	@Autowired
-	PostItemRepository postItemRepository;
+	PostMediaRepository postMediaRepository;
 
 	@Autowired
 	ContentTypeRepository contentTypeRepository;
@@ -230,7 +230,7 @@ public class PostServiceImpl implements PostService {
 		}
 
 		// TODO
-		post.setPostItems(new ArrayList<>()); // Emptying post items to avoid cascading error
+		post.setPostMediaList(new ArrayList<>()); // Emptying post items to avoid cascading error
 		post.setActive(true);
 		post.setCreatedBy(postBy);
 		post.setCreatedOn(new Date());
@@ -240,23 +240,23 @@ public class PostServiceImpl implements PostService {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving the post.");
 		}
 
-		List<PostItem> postItems = new ArrayList<>();
+		List<PostMedia> postMediaList = new ArrayList<>();
 
 		for (int i = 0; i < files.length; i++) {
-			PostItem postItem = new PostItem();
-			postItem.setPostId(post.getId());
-			postItem.setSequenceId(i + 1);
-			postItem.setCreatedOn(new Date());
-			postItem.setContentType(files[i].getContentType());
-			postItem.setActive(true);
+			PostMedia postMedia = new PostMedia();
+			postMedia.setPostId(post.getId());
+			postMedia.setSequenceId(i + 1);
+			postMedia.setCreatedOn(new Date());
+			postMedia.setContentType(files[i].getContentType());
+			postMedia.setActive(true);
 
 			File postFile = fileService.converMultipartFileToFile(files[i]);
 			String fileType = fileService.getFileExtension(files[i].getOriginalFilename());
-			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postItem.getSequenceId()) + "."
+			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postMedia.getSequenceId()) + "."
 					+ fileType;
 			try {
 				if (!fileType.toLowerCase().equals("mp4")) {
-					postItem.setAspectRatio(fileService.getFileAspectRaio(postFile));
+					postMedia.setAspectRatio(fileService.getFileAspectRaio(postFile));
 					if (files[i].getSize() > 1000000) {
 						File scaledImageFile = fileService.resizeImageByPercent(postFile, fileName, 0.50);
 						amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);
@@ -265,7 +265,7 @@ public class PostServiceImpl implements PostService {
 						}
 					}
 				}else {
-					postItem.setAspectRatio(new Float(100));
+					postMedia.setAspectRatio(new Float(100));
 				}
 				amazonS3.putObject(postsS3Bucket, fileName, postFile);
 			} catch (IOException e) {
@@ -275,15 +275,15 @@ public class PostServiceImpl implements PostService {
 				postFile.delete();
 			}
 
-			postItem.setS3BucketId(1);
-			postItem.setFileName(fileName);
-			postItem.setSourceLink("https://" + postsS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
-			postItems.add(postItem);
+			postMedia.setS3BucketId(1);
+			postMedia.setFileName(fileName);
+			postMedia.setSourceLink("https://" + postsS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
+			postMediaList.add(postMedia);
 		}
 
 		try {
-			postItemRepository.saveAll(postItems);
-			post.setPostItems(postItems);
+			postMediaRepository.saveAll(postMediaList);
+			post.setPostMediaList(postMediaList);
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
 		}
@@ -292,9 +292,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public UserPostsResponseDTO createPostItems(List<PostItem> postItems, Long postId, Long userId) {
-		postItems.forEach(postItem -> {
-			postItem.setSequenceId(postItems.indexOf(postItem));
+	public UserPostsResponseDTO savePostMediaList(List<PostMedia> postMediaList, Long postId, Long userId) {
+		postMediaList.forEach(postItem -> {
+			postItem.setSequenceId(postMediaList.indexOf(postItem));
 			postItem.setPostId(postId);
 			postItem.setActive(true);
 			postItem.setCreatedOn(new Date());
@@ -307,7 +307,7 @@ public class PostServiceImpl implements PostService {
 		});
 
 		try {
-			postItemRepository.saveAll(postItems);
+			postMediaRepository.saveAll(postMediaList);
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
 		}

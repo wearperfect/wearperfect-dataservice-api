@@ -10,7 +10,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.wearperfect.dataservice.api.entities.Post;
-import com.wearperfect.dataservice.api.entities.PostItem;
+import com.wearperfect.dataservice.api.entities.PostMedia;
 import com.wearperfect.dataservice.api.entities.Post_;
 
 public class PostDetailsSpecification {
@@ -31,7 +31,7 @@ public class PostDetailsSpecification {
 			@Override
 			public Predicate toPredicate(Root<Post> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 				
-				//root.fetch(Post_.postItems);
+				//root.fetch(Post_.postMediaList);
 				Predicate userPostsPredicate=cq.where(
 						cb.and(
 						cb.equal(root.get(Post_.createdBy), userId),

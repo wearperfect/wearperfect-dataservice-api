@@ -15,8 +15,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "post_items")
-public class PostItem {
+@Table(name = "post_media")
+public class PostMedia {
 
 	@Id
 	@Column(name = "id")
