@@ -38,13 +38,13 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-xml", version: "2.11.3"
-	compileOnly "org.projectlombok:lombok"
+	compileOnly "org.projectlombok:lombok:1.18.20"
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	compileOnly "org.hibernate:hibernate-jpamodelgen:${jpamodelgenVersion}"
 	developmentOnly "org.springframework.boot:spring-boot-devtools"
 	runtimeOnly "mysql:mysql-connector-java"
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    annotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok:1.18.20"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"	
     annotationProcessor("org.hibernate:hibernate-jpamodelgen:${jpamodelgenVersion}")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
