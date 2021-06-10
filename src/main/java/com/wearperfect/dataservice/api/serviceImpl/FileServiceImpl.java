@@ -101,4 +101,16 @@ public class FileServiceImpl implements FileService {
 		return aspectRatio;
 	}
 
+	@Override
+	public Integer getFileHeight(File file) throws IOException {
+		BufferedImage originalImage = ImageIO.read(file);
+		return originalImage.getHeight();
+	}
+
+	@Override
+	public Integer getFileWidth(File file) throws IOException {
+		BufferedImage originalImage = ImageIO.read(file);
+		return originalImage.getWidth();
+	}
+
 }

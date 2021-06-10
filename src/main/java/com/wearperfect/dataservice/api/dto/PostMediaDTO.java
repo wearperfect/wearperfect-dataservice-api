@@ -10,6 +10,8 @@ public class PostMediaDTO {
 	Integer sequenceId;
 	String sourceLink;
 	String contentType;
+	Integer height;
+	Integer width;
 	Float aspectRatio;
 	Boolean active;
 	Long createdOn;

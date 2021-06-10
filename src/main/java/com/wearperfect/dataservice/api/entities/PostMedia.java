@@ -38,6 +38,12 @@ public class PostMedia {
 	@Column(name = "content_type")
 	String contentType;
 	
+	@Column(name = "height")
+	Integer height;
+	
+	@Column(name = "width")
+	Integer width;
+	
 	@Column(name = "aspect_ratio")
 	Float aspectRatio;
 

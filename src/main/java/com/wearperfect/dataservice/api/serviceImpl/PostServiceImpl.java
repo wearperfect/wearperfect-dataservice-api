@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.abercap.mediainfo.api.MediaInfo;
 import com.amazonaws.services.s3.AmazonS3;
 import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
@@ -257,6 +258,8 @@ public class PostServiceImpl implements PostService {
 			try {
 				if (!fileType.toLowerCase().equals("mp4")) {
 					postMedia.setAspectRatio(fileService.getFileAspectRaio(postFile));
+					postMedia.setHeight(fileService.getFileHeight(postFile));
+					postMedia.setWidth(fileService.getFileWidth(postFile));
 					if (files[i].getSize() > 1000000) {
 						File scaledImageFile = fileService.resizeImageByPercent(postFile, fileName, 0.50);
 						amazonS3.putObject(postsS3Bucket, fileName, scaledImageFile);

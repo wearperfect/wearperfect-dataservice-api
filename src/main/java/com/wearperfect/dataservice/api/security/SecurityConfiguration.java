@@ -49,7 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				"/signup/**",
 				"/feed/**",
 				"/explore/**",
-				"/filters/**")
+				"/filters/**",
+				"/users/**/posts/**/comments")
 			.permitAll()
 			.anyRequest()
 			.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -59,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000", "http://192.168.55.107:3000"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000", "http://192.168.55.107:3000", "http://192.168.55.101:19000", "http://192.168.55.102:19000", "http://192.168.55.103:19000", "http://192.168.55.104:19000", "http://192.168.55.105:19000", "http://192.168.55.106:19000", "http://192.168.55.107:19000", "http://192.168.55.108:19000", "http://192.168.55.109:19000"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("x-requested-with", "Content-Type", "origin", "authorization", "accept", "client-security-token"));
 		configuration.setMaxAge(new Long(3600));
