@@ -23,6 +23,8 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	@Override
 	public String generateToken(CustomUserDetails userDetails) {
 		HashMap<String, Object> claims = new HashMap<>();
+		claims.put("userId", userDetails.getUserId());
+		claims.put("username", userDetails.getUsername());
 		return createToken(claims, String.valueOf(userDetails.getUserId()));
 	}
 	

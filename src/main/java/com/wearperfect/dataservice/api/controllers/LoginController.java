@@ -22,7 +22,7 @@ public class LoginController {
 	UserMapper userMapper;
 	
 	@PostMapping("/signin")
-	public AuthenticationResponse userSignin(@RequestBody(required = true) AuthenticationRequest authenticationRequest) {
+	public String userSignin(@RequestBody(required = true) AuthenticationRequest authenticationRequest) {
 		return userService.authenticateUser(authenticationRequest);
 	}
 	

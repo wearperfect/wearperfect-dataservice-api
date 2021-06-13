@@ -25,7 +25,7 @@ public interface UserService {
 
 	UserDTO updateUser(User user);
 
-	AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest);
+	String authenticateUser(AuthenticationRequest authenticationRequest);
 
 	UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture);
 

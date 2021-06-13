@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) {
+	public String authenticateUser(AuthenticationRequest authenticationRequest) {
 		// BCryptPasswordEncoder passwordEncoder = new
 		// BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
 		try {
@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
 
 		final CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
-		return new AuthenticationResponse(userDetails.getUserId(), jwtUtiilService.generateToken(userDetails));
+		return jwtUtiilService.generateToken(userDetails);
 	}
 
 	@Override
