@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.entities.Country_;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostSave;
+import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
@@ -58,7 +60,7 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public List<PostDetailsDTO> getFeed() {
-		List<Post> posts = postRepository.findAll();
+		List<Post> posts = postRepository.findAll(Sort.by(Direction.DESC, Post_.CREATED_ON));
 		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
@@ -76,7 +78,7 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public List<PostDetailsDTO> getFeedByUserId(Long userId) {
-		List<Post> posts = postRepository.findAll();
+		List<Post> posts = postRepository.findAll(Sort.by(Direction.DESC, Post_.CREATED_ON));
 		//List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
 		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());

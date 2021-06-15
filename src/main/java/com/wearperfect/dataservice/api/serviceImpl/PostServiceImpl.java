@@ -40,6 +40,7 @@ import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.PostSave_;
 import com.wearperfect.dataservice.api.entities.PostUserTag;
 import com.wearperfect.dataservice.api.entities.PostUserTag_;
+import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
@@ -117,7 +118,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getPostsByUserId(Long userId) {
-		List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
+		List<Post> posts = postRepository.findByCreatedBy(userId, PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Direction.DESC, Post_.CREATED_ON)));
 		List<PostDetailsDTO> userPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		userPostsDtoList.forEach(post -> {
