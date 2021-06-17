@@ -24,5 +24,5 @@ public interface PostService {
 
 	UserPostsResponseDTO savePostMediaList(List<PostMedia> postMediaList, Long postId, Long userId);
 
-	UserPostsResponseDTO deletePost(Long userId, Long postId);
+	PostDTO deletePost(Long userId, Long postId);
 }

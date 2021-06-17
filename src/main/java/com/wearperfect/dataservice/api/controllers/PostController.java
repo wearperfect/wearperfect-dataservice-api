@@ -60,8 +60,8 @@ public class PostController {
 	}
 
 	@DeleteMapping(path = "/users/{userId}/posts/{postId}")
-	UserPostsResponseDTO deletePost(@PathVariable(name = "userId", required = true) Long userId,
+	PostDTO deletePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		return null;
+		return postService.deletePost(userId, postId);
 	}
 }

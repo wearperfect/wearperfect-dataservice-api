@@ -34,7 +34,7 @@ public class PostLike {
 	@Column(name="liked_on")
 	Date likedOn;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="liked_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User likedByUserDetails;
 	

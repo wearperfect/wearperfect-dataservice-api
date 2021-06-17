@@ -16,12 +16,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.abercap.mediainfo.api.MediaInfo;
 import com.amazonaws.services.s3.AmazonS3;
 import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
@@ -33,9 +32,9 @@ import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
-import com.wearperfect.dataservice.api.entities.PostMedia;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostLike_;
+import com.wearperfect.dataservice.api.entities.PostMedia;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.PostSave_;
 import com.wearperfect.dataservice.api.entities.PostUserTag;
@@ -49,12 +48,14 @@ import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
+import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
 import com.wearperfect.dataservice.api.repositories.PostUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
+import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
@@ -65,6 +66,9 @@ import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 @Transactional
 public class PostServiceImpl implements PostService {
 
+	@Autowired
+	CustomUserDetailsService customUserDetailsService;
+	
 	@Autowired
 	UserRepository userRepository;
 
@@ -320,9 +324,19 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public UserPostsResponseDTO deletePost(Long userId, Long postId) {
-		// TODO Auto-generated method stub
-		return null;
+	public PostDTO deletePost(Long userId, Long postId) {
+		CustomUserDetails loggedInUserDetails = customUserDetailsService.getLoggedInUserDetails();
+		if(!loggedInUserDetails.getUserId().equals(userId)) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
+		}
+		
+		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
+		if(!post.isEmpty()) {
+			postRepository.deleteById(post.get().getId());
+			return postMapper.mapPostToPostDto(post.get());
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Post not found.");
+		}
 	}
 
 }

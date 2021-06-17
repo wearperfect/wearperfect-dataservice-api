@@ -10,8 +10,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -61,6 +63,13 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 		Collection<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+	}
+
+	@Override
+	public CustomUserDetails getLoggedInUserDetails() throws UsernameNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		return customUserDetails;
 	}
 
 }

@@ -37,7 +37,7 @@ public class PostSave {
 	@Column(name="saved_on")
 	Date savedOn;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="saved_by", referencedColumnName = "id", insertable = false, updatable = false)
 	User savedByUserDetails;
 }
