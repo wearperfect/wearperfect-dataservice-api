@@ -115,7 +115,7 @@ public class FeedServiceImpl implements FeedService {
 			}
 			post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
-					PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), Pagination.PageSize.POST_COMMENTS.getValue(),
+					PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), 2, //Pagination.PageSize.POST_COMMENTS.getValue()
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
 			List<PostCommentDetailsDTO> comments = commentsList.stream()
 					.map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))

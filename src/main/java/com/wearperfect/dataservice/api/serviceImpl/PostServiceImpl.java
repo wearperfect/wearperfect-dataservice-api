@@ -295,7 +295,6 @@ public class PostServiceImpl implements PostService {
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
 		}
-
 		return getPostByUserIdAndPostId(postBy, post.getId());
 	}
 
