@@ -26,6 +26,7 @@ public class UserProfileUpdateController {
 	@PutMapping(value = "/users/{userId}/profile/update/profile-picture")
 	public UserDTO updateProfilePicture(@PathVariable(name = "userId") Long userId,
 			@RequestPart(name = "files", required = false) MultipartFile profilePicture) {
+		System.out.println("Profile picture update");
 		return userProfileUpdateService.updateProfilePicture(userId, profilePicture);
 	}
 
