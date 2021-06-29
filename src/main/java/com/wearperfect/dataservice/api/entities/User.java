@@ -53,6 +53,9 @@ public class User {
 
 	@Column(name = "profile_picture")
 	private String profilePicture;
+	
+	@Column(name = "profile_cover_picture")
+	private String profileCoverPicture;
 
 	@Column(name = "bio")
 	private String bio;

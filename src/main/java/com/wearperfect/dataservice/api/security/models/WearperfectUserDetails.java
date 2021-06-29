@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetails implements UserDetails {
+public class WearperfectUserDetails implements UserDetails {
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
 	Collection<? extends GrantedAuthority> authorities;
 
-	public CustomUserDetails(Long userId, String username, String password, Boolean accountNonExpired,
+	public WearperfectUserDetails(Long userId, String username, String password, Boolean accountNonExpired,
 			Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled,
 			Collection<? extends GrantedAuthority> collection) {
 		this.userId = userId;

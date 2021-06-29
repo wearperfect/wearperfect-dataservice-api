@@ -14,8 +14,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
-import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
 
 @Component
@@ -25,7 +25,7 @@ public class JWTRequestFilter extends OncePerRequestFilter{
 	JwtUtiilService jwtUtiilService;
 	
 	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	WearperfectUserDetailsService wearperfectUserDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,7 +41,7 @@ public class JWTRequestFilter extends OncePerRequestFilter{
 		}
 		
 		if(null != userId && SecurityContextHolder.getContext().getAuthentication() == null) {
-			CustomUserDetails userDetails = customUserDetailsService.loadUserByUserId(Long.valueOf(userId));
+			WearperfectUserDetails userDetails = wearperfectUserDetailsService.loadUserByUserId(Long.valueOf(userId));
 			if(jwtUtiilService.validateToken(jwt, userDetails)) {
 				System.out.println("User "+userDetails.getUsername()+" authorized succesfully");
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -21,19 +21,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.wearperfect.dataservice.api.entities.Role;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
-import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
-import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 
 @Service
 @Transactional
-public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
+public class WearperfectUserDetailsServiceImpl implements WearperfectUserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
 
 	@Override
-	public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public WearperfectUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		List<User> users = userRepository
 				.findAll(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(username));
@@ -44,16 +44,16 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 			throw new HttpClientErrorException(HttpStatus.CONFLICT);
 		} else {
 			User user = users.get(0);
-			return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), true, true, true, user.getActive(), mapRolesToAuthorities(user.getRoleDetails()));
+			return new WearperfectUserDetails(user.getId(), user.getUsername(), user.getPassword(), true, true, true, user.getActive(), mapRolesToAuthorities(user.getRoleDetails()));
 		}
 	}
 	
 	@Override
-	public CustomUserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
+	public WearperfectUserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
 
 		Optional<User> user = userRepository.findById(userId);
 		if(user.isPresent()) {
-			return new CustomUserDetails(user.get().getId(), user.get().getUsername(), user.get().getPassword(), true, true, true, user.get().getActive(), mapRolesToAuthorities(user.get().getRoleDetails()));
+			return new WearperfectUserDetails(user.get().getId(), user.get().getUsername(), user.get().getPassword(), true, true, true, user.get().getActive(), mapRolesToAuthorities(user.get().getRoleDetails()));
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
@@ -66,10 +66,10 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	}
 
 	@Override
-	public CustomUserDetails getLoggedInUserDetails() throws UsernameNotFoundException {
+	public WearperfectUserDetails getLoggedInUserDetails() throws UsernameNotFoundException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-		return customUserDetails;
+		WearperfectUserDetails wearperfectUserDetails = (WearperfectUserDetails) authentication.getPrincipal();
+		return wearperfectUserDetails;
 	}
 
 }

@@ -12,6 +12,7 @@ public class UserDetailsDTO {
 	private String email;
 	private String phone;
 	private String profilePicture;
+	private String profileCoverPicture;
 	private String bio;
 	private String website;
 	private Integer genderId;

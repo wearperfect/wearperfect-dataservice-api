@@ -20,14 +20,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.wearperfect.dataservice.api.security.filters.JWTRequestFilter;
-import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	CustomUserDetailsService userDetailsService;
+	WearperfectUserDetailsService userDetailsService;
 	
 	@Autowired
 	JWTRequestFilter jwtRequestFilter;

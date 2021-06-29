@@ -25,7 +25,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
-import com.wearperfect.dataservice.api.dto.AuthenticationResponse;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
@@ -45,9 +44,9 @@ import com.wearperfect.dataservice.api.repositories.FollowRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.RoleRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
-import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
-import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.CityService;
 import com.wearperfect.dataservice.api.service.CountryService;
 import com.wearperfect.dataservice.api.service.FileService;
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	AuthenticationManager authenticationManager;
 
 	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	WearperfectUserDetailsService wearperfectUserDetailsService;
 
 	@Autowired
 	JwtUtiilService jwtUtiilService;
@@ -198,7 +197,7 @@ public class UserServiceImpl implements UserService {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid credentials");
 		}
 
-		final CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService
+		final WearperfectUserDetails userDetails = (WearperfectUserDetails) wearperfectUserDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 		return jwtUtiilService.generateToken(userDetails);
 	}
@@ -262,7 +261,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetailsDTO getUserDetailsByUsername(String username) {
-		Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username));
+		Optional<User> user = userRepository.findByUsername(username);
 		UserDetailsDTO userDetails;
 		if (user.isPresent()) {
 			userDetails = userMapper.mapUserToUserDetailsDto(user.get());

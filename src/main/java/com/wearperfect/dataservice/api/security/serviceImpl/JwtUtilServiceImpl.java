@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 
-import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
 
 import io.jsonwebtoken.Claims;
@@ -21,7 +21,7 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	private final String SECRET_KEY = "Wearperfect@2019";
 
 	@Override
-	public String generateToken(CustomUserDetails userDetails) {
+	public String generateToken(WearperfectUserDetails userDetails) {
 		HashMap<String, Object> claims = new HashMap<>();
 		claims.put("userId", userDetails.getUserId());
 		claims.put("username", userDetails.getUsername());
@@ -39,7 +39,7 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	}
 	
 	@Override
-	public Boolean validateToken(String token, CustomUserDetails userDetails) {
+	public Boolean validateToken(String token, WearperfectUserDetails userDetails) {
 		final Long userId = Long.valueOf(extractUserId(token));
 		return (userId.equals(userDetails.getUserId()));
 	}

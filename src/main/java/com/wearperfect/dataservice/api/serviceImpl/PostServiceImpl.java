@@ -54,8 +54,8 @@ import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
 import com.wearperfect.dataservice.api.repositories.PostUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
-import com.wearperfect.dataservice.api.security.models.CustomUserDetails;
-import com.wearperfect.dataservice.api.security.service.CustomUserDetailsService;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
@@ -67,7 +67,7 @@ import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
 public class PostServiceImpl implements PostService {
 
 	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	WearperfectUserDetailsService wearperfectUserDetailsService;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -324,7 +324,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDTO deletePost(Long userId, Long postId) {
-		CustomUserDetails loggedInUserDetails = customUserDetailsService.getLoggedInUserDetails();
+		WearperfectUserDetails loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
 		if(!loggedInUserDetails.getUserId().equals(userId)) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
 		}
