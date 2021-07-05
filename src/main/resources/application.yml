@@ -55,6 +55,7 @@ application:
       buckets:
         posts: wearperfect-posts
         profile-pictures: wearperfect-profile-pictures
+        profile-cover-pictures: wearperfect-profile-cover-pictures
 # Security configuration
 security:
   user:

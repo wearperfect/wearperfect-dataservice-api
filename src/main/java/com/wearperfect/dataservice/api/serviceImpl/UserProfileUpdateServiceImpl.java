@@ -42,6 +42,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Value("${application.aws.s3.buckets.profile-pictures}")
 	String profilePicturesS3Bucket;
+	
+	@Value("${application.aws.s3.buckets.profile-cover-pictures}")
+	String profileCoverPicturesS3Bucket;
 
 	@Value("${cloud.aws.region.static}")
 	private String postss3Region;
@@ -56,11 +59,12 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 				user.get().setLastUpdatedOn(currentDate);
 				if (null != profilePicture) {
 					File profilePictureFile = fileService.converMultipartFileToFile(profilePicture);
-					String fileName = userId+"_"+currentDate.getTime()+ "." + profilePicture.getContentType().substring(profilePicture.getContentType().lastIndexOf("/")+1);
+					String fileName = "U"+userId+"_PP_"+currentDate.getTime()+ "." + profilePicture.getContentType().substring(profilePicture.getContentType().lastIndexOf("/")+1);
 					try {
 						if(null != user.get().getProfilePicture()) {
 							// Delete existing profile picture
 							String existingProfilePictureObjectKey = user.get().getProfilePicture().substring(user.get().getProfilePicture().lastIndexOf("/")+1);
+							if(amazonS3.doesObjectExist(profilePicturesS3Bucket, existingProfilePictureObjectKey))
 							amazonS3.deleteObject(profilePicturesS3Bucket, existingProfilePictureObjectKey);
 						}
 						if (profilePicture.getSize() > 1000000) {
@@ -94,8 +98,49 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateProfileCoverPicture(Long userId, MultipartFile profileCoverPicture) {
-		// TODO Auto-generated method stub
-		return null;
+		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUser.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+			if (user.isPresent()) {
+				Date currentDate = new Date();
+				user.get().setLastUpdatedOn(currentDate);
+				if (null != profileCoverPicture) {
+					File profileCoverPictureFile = fileService.converMultipartFileToFile(profileCoverPicture);
+					String fileName = "U"+userId+"_PCP_"+currentDate.getTime()+ "." + profileCoverPicture.getContentType().substring(profileCoverPicture.getContentType().lastIndexOf("/")+1);
+					try {
+						if(null != user.get().getProfileCoverPicture()) {
+							// Delete existing profile picture
+							String existingProfileCoverPictureObjectKey = user.get().getProfileCoverPicture().substring(user.get().getProfileCoverPicture().lastIndexOf("/")+1);
+							if(amazonS3.doesObjectExist(profileCoverPicturesS3Bucket, existingProfileCoverPictureObjectKey))
+								amazonS3.deleteObject(profileCoverPicturesS3Bucket, existingProfileCoverPictureObjectKey);
+						}
+						if (profileCoverPicture.getSize() > 1000000) {
+							try {
+								File scaledImageFile = fileService.resizeImageByPercent(profileCoverPictureFile, fileName, 0.75);
+								amazonS3.putObject(profileCoverPicturesS3Bucket, fileName, scaledImageFile);
+								if (scaledImageFile.exists()) {
+									scaledImageFile.delete();
+								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else {
+							amazonS3.putObject(profileCoverPicturesS3Bucket, fileName, profileCoverPictureFile);
+						}
+					} finally {
+						profileCoverPictureFile.delete();
+					}
+					user.get().setProfileCoverPicture(
+							"https://" + profileCoverPicturesS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
+				}
+				
+				User updateUser = userRepository.saveAndFlush(user.get());
+				return userMapper.mapUserToUserDto(updateUser);
+			}
+			throw new UserNotFoundException();
+		}
+		throw new AccessForbiddenException(userId, "Cannot update other user's profile picture.");
 	}
 
 	@Override
