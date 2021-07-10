@@ -29,21 +29,34 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	}
 	
 	@Override
+	public Boolean validateToken(String token, WearperfectUserDetails userDetails) {
+		final Long userId = Long.valueOf(extractUserId(token));
+		final Date tokenIssuedAt = extractIssuedAt(token);
+		final Date tokenExpirationDate = extractExpiration(token);
+		Boolean isValidUser = userId.equals(userDetails.getUserId());
+		Boolean isPasswordValid = true;
+		if(null != userDetails.getPasswordLastUpdatedOn()) {
+			isPasswordValid = tokenIssuedAt.getTime()>=userDetails.getPasswordLastUpdatedOn().getTime();
+			System.out.println("tokenIssuedAt.getTime():::::::::::::::::::::::::::::::::"+tokenIssuedAt.getTime());
+			System.out.println("userDetails.getPasswordLastUpdatedOn().getTime()::::::::"+userDetails.getPasswordLastUpdatedOn().getTime());
+		}
+		Boolean isTokenNonExpired = new Date().getTime()<tokenExpirationDate.getTime();
+		return isValidUser && isPasswordValid && isTokenNonExpired;
+	}
+	
+	@Override
 	public String extractUserId(String token){
 		return extractClaim(token, Claims::getSubject);
 	}
 	
-	@Override
+	public Date extractIssuedAt(String token){
+		return extractClaim(token, Claims::getIssuedAt);
+	}
+	
 	public Date extractExpiration(String token){
 		return extractClaim(token, Claims::getExpiration);
 	}
 	
-	@Override
-	public Boolean validateToken(String token, WearperfectUserDetails userDetails) {
-		final Long userId = Long.valueOf(extractUserId(token));
-		return (userId.equals(userDetails.getUserId()));
-	}
-
 	private String createToken(Map<String, Object> claims, String subject) {
 		return Jwts.builder().addClaims(claims).setSubject(subject).setIssuedAt(new Date()).setExpiration(new Date(3000, 01, 01))
 				.signWith(SignatureAlgorithm.HS512, new Base64Codec().encode(SECRET_KEY)).compact();

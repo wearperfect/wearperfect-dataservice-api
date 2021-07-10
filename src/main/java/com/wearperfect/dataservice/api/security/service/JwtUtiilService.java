@@ -10,7 +10,5 @@ public interface JwtUtiilService {
 	
 	String extractUserId(String token);
 
-	Date extractExpiration(String token);
-
 	public Boolean validateToken(String token, WearperfectUserDetails userDetails);
 }

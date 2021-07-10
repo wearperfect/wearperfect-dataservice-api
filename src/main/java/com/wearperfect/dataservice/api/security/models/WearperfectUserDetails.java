@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.security.models;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,8 @@ public class WearperfectUserDetails implements UserDetails {
 	String username;
 
 	String password;
+	
+	Date passwordLastUpdatedOn;
 
 	Boolean accountNonExpired;
 
@@ -28,12 +31,14 @@ public class WearperfectUserDetails implements UserDetails {
 
 	Collection<? extends GrantedAuthority> authorities;
 
-	public WearperfectUserDetails(Long userId, String username, String password, Boolean accountNonExpired,
+	public WearperfectUserDetails(Long userId, String username, String password,
+			Date passwordLastUpdatedOn, Boolean accountNonExpired,
 			Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled,
 			Collection<? extends GrantedAuthority> collection) {
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
+		this.passwordLastUpdatedOn =passwordLastUpdatedOn;
 		this.accountNonExpired = accountNonExpired;
 		this.accountNonLocked = accountNonLocked;
 		this.credentialsNonExpired = credentialsNonExpired;
@@ -53,6 +58,10 @@ public class WearperfectUserDetails implements UserDetails {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+	
+	public Date getPasswordLastUpdatedOn() {
+		return passwordLastUpdatedOn;
 	}
 
 	@Override

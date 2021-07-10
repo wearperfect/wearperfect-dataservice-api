@@ -331,31 +331,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO resetUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
+	public String resetUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isPresent()) {
 			if (passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmNewPassword())) {
 				user.get().setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+				user.get().setPasswordLastUpdatedOn(new Date());
+				userRepository.saveAndFlush(user.get());
+				return authenticateUser(new AuthenticationRequest(user.get().getUsername(), user.get().getPassword()));
+			}else {
+				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "New Password and Confirm New Password values doesn't match.");
 			}
-			userRepository.save(user.get());
-			return userMapper.mapUserToUserDto(user.get());
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@Override
-	public UserDTO changeUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
+	public String changeUserPassword(Long userId, PasswordResetDTO passwordResetDto) {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isPresent()) {
+			System.out.println(passwordEncoder.encode(passwordResetDto.getOldPassword()));
+			System.out.println(user.get().getPassword());
 			if (passwordEncoder.matches(passwordResetDto.getOldPassword(), user.get().getPassword())) {
 				if (passwordResetDto.getNewPassword().equals(passwordResetDto.getConfirmNewPassword())) {
 					user.get().setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+					user.get().setPasswordLastUpdatedOn(new Date());
+					userRepository.saveAndFlush(user.get());
+					return authenticateUser(new AuthenticationRequest(user.get().getUsername(), passwordResetDto.getNewPassword()));
+				}else {
+					throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "New Password and Confirm New Password values doesn't match.");
 				}
-				userRepository.save(user.get());
-				return userMapper.mapUserToUserDto(user.get());
 			} else {
-				throw new HttpClientErrorException(HttpStatus.EXPECTATION_FAILED, "Please enter correct Old Password.");
+				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Please enter correct Old Password.");
 			}
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);

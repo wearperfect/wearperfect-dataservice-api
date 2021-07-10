@@ -35,6 +35,10 @@ public class User {
 	@Transient
 	@Column(name = "password")
 	private String password;
+	
+	@Transient
+	@Column(name = "passwordLastUpdatedOn")
+	private Date passwordLastUpdatedOn;
 
 	@Column(name = "role_id")
 	private Integer roleId;
@@ -47,9 +51,15 @@ public class User {
 
 	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "verified_email")
+	private Boolean verifiedEmail;
 
 	@Column(name = "phone")
 	private String phone;
+	
+	@Column(name = "verified_phone")
+	private Boolean verifiedPhone;
 
 	@Column(name = "profile_picture")
 	private String profilePicture;

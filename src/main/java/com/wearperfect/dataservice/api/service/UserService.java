@@ -33,9 +33,9 @@ public interface UserService {
 
 	BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
 
-	UserDTO resetUserPassword(Long userId, PasswordResetDTO passwordResetDto);
+	String resetUserPassword(Long userId, PasswordResetDTO passwordResetDto);
 
-	UserDTO changeUserPassword(Long userId, PasswordResetDTO passwordResetDto);
+	String changeUserPassword(Long userId, PasswordResetDTO passwordResetDto);
 	
 	UserDetailsDTO changeUserRole(Long userId, Integer roleId);
 	

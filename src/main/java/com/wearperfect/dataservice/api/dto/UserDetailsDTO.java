@@ -10,7 +10,9 @@ public class UserDetailsDTO {
 	private String fullname;
 	private Long dob;
 	private String email;
+	private Boolean verifiedEmail;
 	private String phone;
+	private Boolean verifiedPhone;
 	private String profilePicture;
 	private String profileCoverPicture;
 	private String bio;

@@ -53,13 +53,13 @@ public class UserController {
 	}
 
 	@PutMapping(value = "/users/{userId}/password/reset")
-	public UserDTO resetUserPassword(@PathVariable(name = "userId") Long userId,
+	public String resetUserPassword(@PathVariable(name = "userId") Long userId,
 			@RequestBody(required = true) PasswordResetDTO passwordResetDto) {
 		return userService.resetUserPassword(userId, passwordResetDto);
 	}
 
 	@PutMapping(value = "/users/{userId}/password/change")
-	public UserDTO changeUserPassword(@PathVariable(name = "userId") Long userId,
+	public String changeUserPassword(@PathVariable(name = "userId") Long userId,
 			@RequestBody(required = true) PasswordResetDTO passwordResetDto) {
 		return userService.changeUserPassword(userId, passwordResetDto);
 	}

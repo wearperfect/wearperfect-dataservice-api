@@ -44,7 +44,7 @@ public class WearperfectUserDetailsServiceImpl implements WearperfectUserDetails
 			throw new HttpClientErrorException(HttpStatus.CONFLICT);
 		} else {
 			User user = users.get(0);
-			return new WearperfectUserDetails(user.getId(), user.getUsername(), user.getPassword(), true, true, true, user.getActive(), mapRolesToAuthorities(user.getRoleDetails()));
+			return new WearperfectUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.getPasswordLastUpdatedOn(),true, true, true, user.getActive(), mapRolesToAuthorities(user.getRoleDetails()));
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class WearperfectUserDetailsServiceImpl implements WearperfectUserDetails
 
 		Optional<User> user = userRepository.findById(userId);
 		if(user.isPresent()) {
-			return new WearperfectUserDetails(user.get().getId(), user.get().getUsername(), user.get().getPassword(), true, true, true, user.get().getActive(), mapRolesToAuthorities(user.get().getRoleDetails()));
+			return new WearperfectUserDetails(user.get().getId(), user.get().getUsername(), user.get().getPassword(), user.get().getPasswordLastUpdatedOn(), true, true, true, user.get().getActive(), mapRolesToAuthorities(user.get().getRoleDetails()));
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
