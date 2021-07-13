@@ -23,10 +23,13 @@ public class UserDetailsDTO {
 	private Integer stateId;
 	private Integer countryId;
 	private Integer roleId;
-	private RoleBasicDetailsDTO role;
 	private Long createdOn;
 	private Long lastUpdatedOn;
 	private Boolean active;
+	
+	private Boolean following;
+	
+	private RoleBasicDetailsDTO role;
 
 	private CityBasicDetailsDTO city;
 	private StateBasicDetailsDTO state;

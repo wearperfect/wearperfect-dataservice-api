@@ -34,6 +34,7 @@ import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Role;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
@@ -98,10 +99,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	FileService fileService;
-	
+
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	RoleMapper roleMapper;
 
@@ -119,9 +120,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDTO> getUsers(String realm) {
 		List<User> users;
-		if(realm.equalsIgnoreCase("BRANDS")) {
+		if (realm.equalsIgnoreCase("BRANDS")) {
 			users = userRepository.findByRoleId(4);
-		}else if (realm.equalsIgnoreCase("DESIGNERS")) {
+		} else if (realm.equalsIgnoreCase("DESIGNERS")) {
 			users = userRepository.findByRoleId(3);
 		} else if (realm.equalsIgnoreCase("USERS")) {
 			users = userRepository.findByRoleId(2);
@@ -139,6 +140,20 @@ public class UserServiceImpl implements UserService {
 			userDetails = userMapper.mapUserToUserDetailsDto(user.get());
 		} else {
 			return null;
+		}
+
+		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
+
+		if(loggedInUser.getUserId() == userId) {
+			userDetails.setFollowing(true);
+		}else {
+			Optional<Follow> follow = Optional
+					.ofNullable(followRepository.findByUserIdAndFollowingBy(userId, loggedInUser.getUserId()));
+			if (follow.isPresent()) {
+				userDetails.setFollowing(true);
+			} else {
+				userDetails.setFollowing(false);
+			}
 		}
 		userDetails.setTotalPosts(postRepository.countByCreatedBy(userId));
 		userDetails.setTotalFollowers(followRepository.countByUserId(userId));
@@ -339,8 +354,9 @@ public class UserServiceImpl implements UserService {
 				user.get().setPasswordLastUpdatedOn(new Date());
 				userRepository.saveAndFlush(user.get());
 				return authenticateUser(new AuthenticationRequest(user.get().getUsername(), user.get().getPassword()));
-			}else {
-				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "New Password and Confirm New Password values doesn't match.");
+			} else {
+				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+						"New Password and Confirm New Password values doesn't match.");
 			}
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
@@ -358,9 +374,11 @@ public class UserServiceImpl implements UserService {
 					user.get().setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
 					user.get().setPasswordLastUpdatedOn(new Date());
 					userRepository.saveAndFlush(user.get());
-					return authenticateUser(new AuthenticationRequest(user.get().getUsername(), passwordResetDto.getNewPassword()));
-				}else {
-					throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "New Password and Confirm New Password values doesn't match.");
+					return authenticateUser(
+							new AuthenticationRequest(user.get().getUsername(), passwordResetDto.getNewPassword()));
+				} else {
+					throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+							"New Password and Confirm New Password values doesn't match.");
 				}
 			} else {
 				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Please enter correct Old Password.");
@@ -375,10 +393,11 @@ public class UserServiceImpl implements UserService {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isPresent()) {
 			Optional<Role> role = roleRepository.findById(roleId);
-			if(!role.isPresent()) {
-				throw new HttpClientErrorException(HttpStatus.NOT_ACCEPTABLE, "Invalid role. Please provide valid role.");
+			if (!role.isPresent()) {
+				throw new HttpClientErrorException(HttpStatus.NOT_ACCEPTABLE,
+						"Invalid role. Please provide valid role.");
 			}
-			if(!roleId.equals(user.get().getRoleId())) {
+			if (!roleId.equals(user.get().getRoleId())) {
 				user.get().setRoleId(roleId);
 				userRepository.save(user.get());
 			}
