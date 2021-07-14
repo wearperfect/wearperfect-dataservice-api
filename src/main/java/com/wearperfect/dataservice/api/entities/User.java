@@ -96,6 +96,9 @@ public class User {
 
 	@Column(name = "business_and_support_id")
 	private Long businessAndSupportId;
+	
+	@Column(name = "verified")
+	private Boolean verified;
 
 	@Column(name = "created_on")
 	private Date createdOn;

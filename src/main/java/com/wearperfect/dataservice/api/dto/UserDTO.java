@@ -27,6 +27,7 @@ public class UserDTO {
 	private Long currentAddressId;
 	private Long deliveryAddressId;
 	private Long businessAndSupportId;
+	private Boolean verified;
 	private Long createdOn;
 	private Long lastUpdatedOn;
 	private Boolean active;

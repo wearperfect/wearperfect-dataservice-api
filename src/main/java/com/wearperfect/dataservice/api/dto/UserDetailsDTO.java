@@ -23,6 +23,7 @@ public class UserDetailsDTO {
 	private Integer stateId;
 	private Integer countryId;
 	private Integer roleId;
+	private Boolean verified;
 	private Long createdOn;
 	private Long lastUpdatedOn;
 	private Boolean active;

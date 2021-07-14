@@ -9,5 +9,6 @@ public class UserBasicDetailsDTO {
 	private String fullname;
 	private String profilePicture;
 	private String profileCoverPicture;
+	private Boolean verified;
 	private Boolean active;
 }
