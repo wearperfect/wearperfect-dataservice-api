@@ -44,7 +44,7 @@ public class UserDetailsDTO {
 	private AddressDetailsDTO homeAddress;
 	private AddressDetailsDTO currentAddress;
 	private AddressDetailsDTO deliveryAddress;
-	private BusinessAndSupportDetailsDTO businessAndSupport;
+	private BusinessAndSupportDTO businessAndSupport;
 
 	private Long totalFollowers;
 	private Long totalFollowing;

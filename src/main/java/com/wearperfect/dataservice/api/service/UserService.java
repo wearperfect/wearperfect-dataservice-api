@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
-import com.wearperfect.dataservice.api.dto.AuthenticationResponse;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
@@ -31,7 +29,7 @@ public interface UserService {
 
 	UserDetailsDTO updateUserIntroductionDetails(Long userId, UserDTO userDto);
 
-	BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
+	BusinessAndSupportDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
 
 	String resetUserPassword(Long userId, PasswordResetDTO passwordResetDto);
 

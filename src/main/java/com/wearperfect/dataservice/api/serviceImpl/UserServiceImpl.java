@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CountryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
@@ -332,7 +331,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(Long userId,
+	public BusinessAndSupportDTO updateUserBusinessAndSupportDetails(Long userId,
 			BusinessAndSupportDTO businessAndSupportDto) {
 		BusinessAndSupport businessAndSupport = businessAndSupportMapper
 				.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
@@ -342,7 +341,7 @@ public class UserServiceImpl implements UserService {
 
 		}
 		businessAndSupportRepository.save(businessAndSupport);
-		return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(businessAndSupport);
+		return businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(businessAndSupport);
 	}
 
 	@Override

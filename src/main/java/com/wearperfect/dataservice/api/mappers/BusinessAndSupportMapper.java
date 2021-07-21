@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
 
 @Mapper(uses= {CountryMapper.class, StateMapper.class, CityMapper.class, UtilityMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -21,9 +20,4 @@ public interface BusinessAndSupportMapper {
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	BusinessAndSupport mapBusinessAndSupportDtoToBusinessAndSupport(BusinessAndSupportDTO businessAndSupportDto);
-	
-	@Mapping(source = "cityDetails", target = "city")
-	@Mapping(source = "stateDetails", target = "state")
-	@Mapping(source = "countryDetails", target = "country")
-	BusinessAndSupportDetailsDTO mapBusinessAndSupportToBusinessAndSupportDetailsDto(BusinessAndSupport businessAndSupport);
 }

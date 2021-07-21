@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.service.BusinessAndSupportService;
 
 @RestController
@@ -23,24 +22,24 @@ public class BusinessAndSupportController {
 	BusinessAndSupportService businessAndSupportService;
 
 	@GetMapping(value = "/businessandsupport")
-	List<BusinessAndSupportDetailsDTO> getAllBusinessAndSupport(@RequestParam(name="page", required = false) Integer page) {
+	List<BusinessAndSupportDTO> getAllBusinessAndSupport(@RequestParam(name="page", required = false) Integer page) {
 		return businessAndSupportService.getAllBusinessAndSupport(page);
 	}
 
 	@GetMapping(value = "/users/{userId}/businessandsupport/{businessAndSupportId}")
-	BusinessAndSupportDetailsDTO getBusinessAndSupportById(@PathVariable(name = "userId") Long userId,
+	BusinessAndSupportDTO getBusinessAndSupportById(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "businessAndSupportId") Long businessAndSupportId) {
 		return businessAndSupportService.getBusinessAndSupportById(userId, businessAndSupportId);
 	}
 
 	@PostMapping(value = "/users/{userId}/businessandsupport")
-	BusinessAndSupportDetailsDTO createCategory(@PathVariable(name = "userId") Long userId, 
+	BusinessAndSupportDTO createCategory(@PathVariable(name = "userId") Long userId, 
 			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
 		return businessAndSupportService.createBusinessAndSupport(userId, businessAndSupportDto);
 	}
 
 	@PutMapping(value = "/users/{userId}/businessandsupport/{businessAndSupportId}")
-	BusinessAndSupportDetailsDTO updateCategory(@PathVariable(name = "userId") Long userId,
+	BusinessAndSupportDTO updateCategory(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "businessAndSupportId") Long businessAndSupportId,
 			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
 		return businessAndSupportService.updateBusinessAndSupport(userId, businessAndSupportId, businessAndSupportDto);

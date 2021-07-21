@@ -18,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
 import com.wearperfect.dataservice.api.entities.BusinessAndSupport_;
 import com.wearperfect.dataservice.api.entities.User;
@@ -53,27 +52,27 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 	CountryService countryService;
 
 	@Override
-	public List<BusinessAndSupportDetailsDTO> getAllBusinessAndSupport(Integer page) {
+	public List<BusinessAndSupportDTO> getAllBusinessAndSupport(Integer page) {
 		if(null == page || page < 0 ) {
 			page = Pagination.PageNumber.DEFAULT.getValue();
 		}
 		Page<BusinessAndSupport> businessAndSupport = businessAndSupportRepository.findAll(PageRequest.of(page, Pagination.PageSize.BUSINESS_AND_SUPPORT.getValue(), Sort.by(Direction.DESC, BusinessAndSupport_.CREATED_ON)));
-		return businessAndSupport.getContent().stream().map(business -> businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(business))
+		return businessAndSupport.getContent().stream().map(business -> businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(business))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public BusinessAndSupportDetailsDTO getBusinessAndSupportById(Long userId, Long businessAndSupportId) {
+	public BusinessAndSupportDTO getBusinessAndSupportById(Long userId, Long businessAndSupportId) {
 		Optional<BusinessAndSupport> businessAndSupport = businessAndSupportRepository.findByIdAndUserId(businessAndSupportId, userId);
 		if(businessAndSupport.isPresent()) {
-			return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(businessAndSupport.get());	
+			return businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(businessAndSupport.get());	
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@Override
-	public BusinessAndSupportDetailsDTO createBusinessAndSupport(Long userId,
+	public BusinessAndSupportDTO createBusinessAndSupport(Long userId,
 			BusinessAndSupportDTO businessAndSupportDto) {
 		BusinessAndSupport businessAndSupport =  businessAndSupportMapper.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
 		businessAndSupport.setActive(true);
@@ -86,7 +85,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 			user.get().setBusinessAndSupportId(businessAndSupport.getId());
 			userRepository.save(user.get());
 		}
-		BusinessAndSupportDetailsDTO businessAndSupportDetailsDto = getBusinessAndSupportById(userId, businessAndSupport.getId());
+		BusinessAndSupportDTO businessAndSupportDetailsDto = getBusinessAndSupportById(userId, businessAndSupport.getId());
 		businessAndSupportDetailsDto.setCity(cityService.getCityDetailsByCityId(businessAndSupport.getCityId()));
 		businessAndSupportDetailsDto.setState(stateService.getStateDetailsByStateId(businessAndSupport.getStateId()));
 		businessAndSupportDetailsDto.setCountry(countryService.getCountryDetailsByCountryId(businessAndSupport.getCountryId()));
@@ -94,7 +93,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 	}
 
 	@Override
-	public BusinessAndSupportDetailsDTO updateBusinessAndSupport(Long userId, Long businessAndSupportId,
+	public BusinessAndSupportDTO updateBusinessAndSupport(Long userId, Long businessAndSupportId,
 			BusinessAndSupportDTO businessAndSupportDto) {
 		
 		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
@@ -118,7 +117,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 			existingBusinessAndSupport.get().setLastUpdatedBy(userId);
 			existingBusinessAndSupport.get().setLastUpdatedOn(new Date());
 			businessAndSupportRepository.save(existingBusinessAndSupport.get());
-			return businessAndSupportMapper.mapBusinessAndSupportToBusinessAndSupportDetailsDto(existingBusinessAndSupport.get());
+			return businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(existingBusinessAndSupport.get());
 		}else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}

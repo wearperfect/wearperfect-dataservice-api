@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
@@ -84,7 +83,7 @@ public class UserController {
 	}
 
 	@PutMapping(value = "/users/{userId}/profile/businessdetails")
-	public BusinessAndSupportDetailsDTO updateUserBusinessAndSupportDetails(@PathVariable(name = "userId") Long userId,
+	public BusinessAndSupportDTO updateUserBusinessAndSupportDetails(@PathVariable(name = "userId") Long userId,
 			@RequestBody(required = true) BusinessAndSupportDTO businessAndSupportDto) {
 		return userService.updateUserBusinessAndSupportDetails(userId, businessAndSupportDto);
 	}
