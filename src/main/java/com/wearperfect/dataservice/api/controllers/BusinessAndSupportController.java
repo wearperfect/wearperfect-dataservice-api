@@ -33,13 +33,27 @@ public class BusinessAndSupportController {
 	}
 
 	@PostMapping(value = "/users/{userId}/businessandsupport")
-	BusinessAndSupportDTO createCategory(@PathVariable(name = "userId") Long userId, 
+	BusinessAndSupportDTO createBusinessAndSupport(@PathVariable(name = "userId") Long userId, 
 			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
 		return businessAndSupportService.createBusinessAndSupport(userId, businessAndSupportDto);
 	}
 
 	@PutMapping(value = "/users/{userId}/businessandsupport/{businessAndSupportId}")
-	BusinessAndSupportDTO updateCategory(@PathVariable(name = "userId") Long userId,
+	BusinessAndSupportDTO updateBusinessAndSupport(@PathVariable(name = "userId") Long userId,
+			@PathVariable(name = "businessAndSupportId") Long businessAndSupportId,
+			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
+		return businessAndSupportService.updateBusinessAndSupport(userId, businessAndSupportId, businessAndSupportDto);
+	}
+	
+	@PutMapping(value = "/users/{userId}/businessandsupport/{businessAndSupportId}/address")
+	BusinessAndSupportDTO updateBusinessAddress(@PathVariable(name = "userId") Long userId,
+			@PathVariable(name = "businessAndSupportId") Long businessAndSupportId,
+			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
+		return businessAndSupportService.updateBusinessAndSupport(userId, businessAndSupportId, businessAndSupportDto);
+	}
+	
+	@PutMapping(value = "/users/{userId}/businessandsupport/{businessAndSupportId}/support")
+	BusinessAndSupportDTO updateBusinessSupport(@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "businessAndSupportId") Long businessAndSupportId,
 			@RequestBody BusinessAndSupportDTO businessAndSupportDto) {
 		return businessAndSupportService.updateBusinessAndSupport(userId, businessAndSupportId, businessAndSupportDto);

@@ -14,6 +14,12 @@ public interface BusinessAndSupportService {
 
 	BusinessAndSupportDTO updateBusinessAndSupport(Long userId, Long businessAndSupportId,
 			BusinessAndSupportDTO businessAndSupportDto);
+	
+	BusinessAndSupportDTO updateBusinessAddress(Long userId, Long businessAndSupportId,
+			BusinessAndSupportDTO businessAndSupportDto);
+	
+	BusinessAndSupportDTO updateBusinessSupport(Long userId, Long businessAndSupportId,
+			BusinessAndSupportDTO businessAndSupportDto);
 
 	BusinessAndSupportDTO deleteBusinessAndSupport(Long userId, Long businessAndSupportId);
 

@@ -122,6 +122,57 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+
+
+	@Override
+	public BusinessAndSupportDTO updateBusinessAddress(Long userId, Long businessAndSupportId,
+			BusinessAndSupportDTO businessAndSupportDto) {
+		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
+		}
+		
+		Optional<BusinessAndSupport> existingBusinessAndSupport = businessAndSupportRepository.findById(businessAndSupportId);
+		if(existingBusinessAndSupport.isPresent()) {
+			BusinessAndSupport businessAndSupport =  businessAndSupportMapper.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
+			existingBusinessAndSupport.get().setTitle(businessAndSupport.getTitle());
+			existingBusinessAndSupport.get().setCityId(businessAndSupport.getCityId());
+			existingBusinessAndSupport.get().setStateId(businessAndSupport.getStateId());
+			existingBusinessAndSupport.get().setCountryId(businessAndSupport.getCountryId());
+			existingBusinessAndSupport.get().setAddressLine1(businessAndSupport.getAddressLine1());
+			existingBusinessAndSupport.get().setGeoLocation(businessAndSupport.getGeoLocation());
+			existingBusinessAndSupport.get().setLandmark(businessAndSupport.getLandmark());
+			existingBusinessAndSupport.get().setZipCode(businessAndSupport.getZipCode());
+			existingBusinessAndSupport.get().setLastUpdatedBy(userId);
+			existingBusinessAndSupport.get().setLastUpdatedOn(new Date());
+			businessAndSupportRepository.save(existingBusinessAndSupport.get());
+			return businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(existingBusinessAndSupport.get());
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public BusinessAndSupportDTO updateBusinessSupport(Long userId, Long businessAndSupportId,
+			BusinessAndSupportDTO businessAndSupportDto) {
+		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
+		}
+		
+		Optional<BusinessAndSupport> existingBusinessAndSupport = businessAndSupportRepository.findById(businessAndSupportId);
+		if(existingBusinessAndSupport.isPresent()) {
+			BusinessAndSupport businessAndSupport =  businessAndSupportMapper.mapBusinessAndSupportDtoToBusinessAndSupport(businessAndSupportDto);
+			existingBusinessAndSupport.get().setSupportEmail(businessAndSupport.getSupportEmail());
+			existingBusinessAndSupport.get().setSupportPhone(businessAndSupport.getSupportPhone());
+			existingBusinessAndSupport.get().setSupportLink(businessAndSupport.getSupportLink());
+			existingBusinessAndSupport.get().setLastUpdatedBy(userId);
+			existingBusinessAndSupport.get().setLastUpdatedOn(new Date());
+			businessAndSupportRepository.save(existingBusinessAndSupport.get());
+			return businessAndSupportMapper.mapBusinessAndSupporToBusinessAndSupportDto(existingBusinessAndSupport.get());
+		}else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+	}
 
 	@Override
 	public BusinessAndSupportDTO deleteBusinessAndSupport(Long userId, Long businessAndSupportId) {
