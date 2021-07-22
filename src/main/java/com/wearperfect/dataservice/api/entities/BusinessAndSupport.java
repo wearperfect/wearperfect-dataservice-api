@@ -40,7 +40,7 @@ public class BusinessAndSupport {
 	String landmark;
 
 	@Column(name = "zip_code")
-	Integer zipCode;
+	String zipCode;
 	
 	@Column(name = "city_id")
 	Integer cityId;

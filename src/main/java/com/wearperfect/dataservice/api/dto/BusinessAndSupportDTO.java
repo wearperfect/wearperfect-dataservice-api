@@ -17,7 +17,7 @@ public class BusinessAndSupportDTO {
 
 	String landmark;
 
-	Integer zipCode;
+	String zipCode;
 
 	CityBasicDetailsDTO city;
 
