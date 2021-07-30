@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.service.MessageService;
 
@@ -25,9 +26,14 @@ public class MessageController {
 	@Autowired
 	MessageService messageService;
 	
-	@GetMapping(path = "/users/{sentBy}/messages/contacts")
-	List<UserContactMessageDetailsDTO> getUserMessagesContacts(@PathVariable(name = "sentBy", required = true) Long sentBy) {
-		return messageService.getUserMessagesContacts(sentBy);
+	@GetMapping(path = "/users/{userId}/messages/contacts/suggested")
+	UserContactSuggestionsDTO getUserContactSuggestionsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+		return messageService.getUserContactSuggestionsByUserId(userId);
+	}
+	
+	@GetMapping(path = "/users/{sentBy}/messages/contacts/communicated")
+	List<UserContactMessageDetailsDTO> getCommunicatedUserContactsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+		return messageService.getCommunicatedUserContactsByUserId(userId);
 	}
 
 	@GetMapping(path = "/users/{sentBy}/messages/contacts/{sentTo}")
