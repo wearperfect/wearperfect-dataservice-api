@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -13,19 +14,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
+import com.wearperfect.dataservice.api.dto.MessageDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
+import com.wearperfect.dataservice.api.entities.Message;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.entities.UserContact;
 import com.wearperfect.dataservice.api.entities.UserContact_;
+import com.wearperfect.dataservice.api.exceptions.BadRequestException;
 import com.wearperfect.dataservice.api.mappers.MessageMapper;
 import com.wearperfect.dataservice.api.mappers.UserContactMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
@@ -103,6 +109,17 @@ public class MessageServiceImpl implements MessageService {
 				.collect(Collectors.toList());
 		return userMessagesContactsList;
 	}
+	
+	@Override
+	public UserContactMessageDetailsDTO getCommunicatedUserContactByUserIdAndContactUserId(Long userId,
+			Long contactUserId) {
+		Optional<UserContact> userContact = userContactRepository.findByUserIdAndContactUserId(userId, contactUserId);
+		if(userContact.isPresent()) {
+			return userContactMapper.mapUserContactToUserContactMessageDetailsDto(userContact.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Contact not found.");
+		}	
+	}
 
 	@Override
 	public UserPostsResponseDTO getUserMessagesWith(Long sentBy, Long sentTo) {
@@ -111,9 +128,32 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public UserPostsResponseDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserContactMessageDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files) {
+		Message message = messageMapper.mapMessageDtoToMessage(messageDto);
+		if(null == message.getSentBy() || null == message.getSentTo()) {
+			throw new BadRequestException("sentBy and sentTo fields should not null.");
+		}
+		
+		Date currentTimestamp = new Date();
+		
+		Optional<UserContact> userContact = userContactRepository.findByUserIdAndContactUserId(messageDto.getSentBy(), messageDto.getSentTo());
+		if(userContact.isPresent()) {
+			userContact.get().setLastContactedOn(new Date());
+		}else {
+			UserContact newUserContact = new UserContact();
+			newUserContact.setUserId(messageDto.getSentBy());
+			newUserContact.setContactUserId(messageDto.getSentTo());
+			newUserContact.setFirstContactedOn(currentTimestamp);
+			newUserContact.setLastContactedOn(currentTimestamp);
+			newUserContact.setActive(true);
+			userContactRepository.save(newUserContact);
+		}
+		
+		message.setCreatedOn(currentTimestamp);
+		
+		messageRepository.save(message);
+		
+		return getCommunicatedUserContactByUserIdAndContactUserId(messageDto.getSentBy(), messageDto.getSentTo());
 	}
 
 	@Override

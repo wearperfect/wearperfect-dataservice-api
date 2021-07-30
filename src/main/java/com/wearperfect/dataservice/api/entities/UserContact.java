@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="user_contacts")
-public class UserContact {
+public class UserContact implements Serializable{
 
 	@Id
 	@Column(name = "id")

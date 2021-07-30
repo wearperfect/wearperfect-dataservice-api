@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ import com.wearperfect.dataservice.api.entities.UserContact;
 public interface UserContactRepository extends JpaRepository<UserContact, Integer>, JpaSpecificationExecutor<UserContact>{
 	
 	List<UserContact> findByUserId(Long userId, Pageable page);
+	
+	Optional<UserContact> findByUserIdAndContactUserId(Long userId, Long contactUserId);
 }

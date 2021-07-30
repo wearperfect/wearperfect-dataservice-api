@@ -31,7 +31,7 @@ public class MessageController {
 		return messageService.getUserContactSuggestionsByUserId(userId);
 	}
 	
-	@GetMapping(path = "/users/{sentBy}/messages/contacts/communicated")
+	@GetMapping(path = "/users/{userId}/messages/contacts/communicated")
 	List<UserContactMessageDetailsDTO> getCommunicatedUserContactsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return messageService.getCommunicatedUserContactsByUserId(userId);
 	}
@@ -43,7 +43,7 @@ public class MessageController {
 	}
 
 	@PostMapping(path = "/users/{sentBy}/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	UserPostsResponseDTO sendMessage(Authentication authentication,
+	UserContactMessageDetailsDTO sendMessage(Authentication authentication,
 			@PathVariable(name = "sentBy", required = true) Long sentBy,
 			@RequestPart(name = "data") MessageDTO messageDto,
 			@RequestPart(name = "files") MultipartFile[] files) {
