@@ -15,5 +15,9 @@ public interface UserContactRepository extends JpaRepository<UserContact, Intege
 	
 	List<UserContact> findByUserId(Long userId, Pageable page);
 	
+	List<UserContact> findByUserIdOrContactUserId(Long userId, Long contactUserId, Pageable page);
+	
 	Optional<UserContact> findByUserIdAndContactUserId(Long userId, Long contactUserId);
+	
+	Optional<UserContact> findByUserIdInAndContactUserIdIn(Long[] userIdList, Long[] contactUserIdList);
 }

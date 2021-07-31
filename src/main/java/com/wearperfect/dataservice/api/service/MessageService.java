@@ -19,7 +19,7 @@ public interface MessageService {
 	
 	UserContactMessageDetailsDTO getCommunicatedUserContactByUserIdAndContactUserId(Long userId, Long contactUserId);
 
-	UserPostsResponseDTO getUserMessagesWith(Long sentBy, Long sentTo);
+	UserContactMessageDetailsDTO getUserMessagesWith(Long userId, Long targetUserId);
 
 	UserContactMessageDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files);
 

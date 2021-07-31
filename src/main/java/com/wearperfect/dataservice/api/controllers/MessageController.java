@@ -17,7 +17,6 @@ import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
-import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.service.MessageService;
 
 @RestController
@@ -36,10 +35,10 @@ public class MessageController {
 		return messageService.getCommunicatedUserContactsByUserId(userId);
 	}
 
-	@GetMapping(path = "/users/{sentBy}/messages/contacts/{sentTo}")
-	UserPostsResponseDTO getUserMessagesWith(@PathVariable(name = "sentBy", required = true) Long sentBy,
-			@PathVariable(name = "sentTo", required = true) Long sentTo) {
-		return messageService.getUserMessagesWith(sentBy, sentTo);
+	@GetMapping(path = "/users/{userId}/messages/conversation-with/{targetUserId}")
+	UserContactMessageDetailsDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
+			@PathVariable(name = "targetUserId", required = true) Long targetUserId) {
+		return messageService.getUserMessagesWith(userId, targetUserId);
 	}
 
 	@PostMapping(path = "/users/{sentBy}/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
