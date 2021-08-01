@@ -9,7 +9,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserContactSuggestionsDTO {
 	
-	List<UserBasicDetailsDTO> recentlyContacted;
+	List<UserBasicDetailsDTO> recents;
 	
-	List<UserBasicDetailsDTO> others;
+	List<UserBasicDetailsDTO> searched;
+	
+	List<UserBasicDetailsDTO> connections;
 }

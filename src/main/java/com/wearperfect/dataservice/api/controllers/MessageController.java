@@ -1,7 +1,5 @@
 package com.wearperfect.dataservice.api.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.service.MessageService;
 
 @RestController
@@ -24,18 +21,8 @@ public class MessageController {
 
 	@Autowired
 	MessageService messageService;
-	
-	@GetMapping(path = "/users/{userId}/messages/contacts/suggested")
-	UserContactSuggestionsDTO getUserContactSuggestionsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
-		return messageService.getUserContactSuggestionsByUserId(userId);
-	}
-	
-	@GetMapping(path = "/users/{userId}/messages/contacts/communicated")
-	List<UserContactMessageDetailsDTO> getCommunicatedUserContactsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
-		return messageService.getCommunicatedUserContactsByUserId(userId);
-	}
 
-	@GetMapping(path = "/users/{userId}/messages/conversation-with/{targetUserId}")
+	@GetMapping(path = "/users/{userId}/messages/with/{targetUserId}")
 	UserContactMessageDetailsDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "targetUserId", required = true) Long targetUserId) {
 		return messageService.getUserMessagesWith(userId, targetUserId);
