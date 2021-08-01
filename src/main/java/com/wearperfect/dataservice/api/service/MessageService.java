@@ -4,13 +4,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 
 public interface MessageService {
 
-	UserContactMessageDetailsDTO getUserMessagesWith(Long userId, Long targetUserId);
+	UserContactDetailsDTO getUserMessagesWith(Long userId, Long targetUserId);
 
-	UserContactMessageDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files);
+	UserContactDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files);
 
 	PostDTO deleteMessage(Long sentBy, Long messageId);
 

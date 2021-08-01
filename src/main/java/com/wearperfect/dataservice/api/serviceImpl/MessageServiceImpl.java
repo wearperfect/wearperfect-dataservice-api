@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.MessageDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 import com.wearperfect.dataservice.api.entities.Message;
 import com.wearperfect.dataservice.api.entities.Message_;
 import com.wearperfect.dataservice.api.entities.UserContact;
@@ -57,19 +57,24 @@ public class MessageServiceImpl implements MessageService {
 	UserMapper userMapper;
 
 	@Override
-	public UserContactMessageDetailsDTO getUserMessagesWith(Long userId, Long targetUserId) {
+	public UserContactDetailsDTO getUserMessagesWith(Long userId, Long targetUserId) {
 		Long[] sentBySentToList = {userId, targetUserId};
 		List<Message> messages = messageRepository.findBySentByInAndSentToIn( sentBySentToList, sentBySentToList,
 				PageRequest.of(0, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
 		Optional<UserContact> userContact = userContactRepository.findByUserIdInAndContactUserIdIn(sentBySentToList, sentBySentToList);
-		UserContactMessageDetailsDTO userContactMessageDetails = userContactMapper.mapUserContactToUserContactMessageDetailsDto(userContact.get());
-		List<MessageDetailsDTO> userMessages = messages.stream().map(message->messageMapper.mapMessageToMessageDetailsDto(message)).collect(Collectors.toList());
-		userContactMessageDetails.setMessages(userMessages);
-		return userContactMessageDetails;
+		if(userContact.isPresent()) {
+			UserContactDetailsDTO userContactMessageDetails = userContactMapper.mapUserContactToUserContactDetailsDto(userContact.get());
+			List<MessageDetailsDTO> userMessages = messages.stream().map(message->messageMapper.mapMessageToMessageDetailsDto(message)).collect(Collectors.toList());
+			userContactMessageDetails.setMessages(userMessages);
+			return userContactMessageDetails;
+		}else {
+			return new UserContactDetailsDTO();
+		}
+		
 	}
 
 	@Override
-	public UserContactMessageDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto,
+	public UserContactDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto,
 			MultipartFile[] files) {
 		Message message = messageMapper.mapMessageDtoToMessage(messageDto);
 		if (null == message.getSentBy() || null == message.getSentTo()) {
@@ -85,7 +90,7 @@ public class MessageServiceImpl implements MessageService {
 		Optional<UserContact> userContact = userContactRepository.findByUserIdInAndContactUserIdIn(userIdList, userIdList);
 		if (userContact.isPresent()) {
 			userContact.get().setLastContactedOn(new Date());
-			return userContactMapper.mapUserContactToUserContactMessageDetailsDto(userContact.get());
+			return userContactMapper.mapUserContactToUserContactDetailsDto(userContact.get());
 		} else {
 			UserContact newUserContact = new UserContact();
 			newUserContact.setUserId(messageDto.getSentBy());
@@ -94,7 +99,7 @@ public class MessageServiceImpl implements MessageService {
 			newUserContact.setLastContactedOn(currentTimestamp);
 			newUserContact.setActive(true);
 			userContactRepository.save(newUserContact);
-			return userContactMapper.mapUserContactToUserContactMessageDetailsDto(newUserContact);
+			return userContactMapper.mapUserContactToUserContactDetailsDto(newUserContact);
 		}
 	}
 

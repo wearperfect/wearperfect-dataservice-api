@@ -14,7 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Follow_;
@@ -84,11 +84,11 @@ public class UserContactServiceImpl implements UserContactService {
 	}
 
 	@Override
-	public List<UserContactMessageDetailsDTO> getCommunicatedContacts(Long userId) {
+	public List<UserContactDetailsDTO> getCommunicatedContacts(Long userId) {
 		List<UserContact> userContacts = userContactRepository.findByUserIdOrContactUserId(userId, userId,
 				PageRequest.of(0, 100, Sort.by(Direction.DESC, UserContact_.LAST_CONTACTED_ON)));
-		List<UserContactMessageDetailsDTO> userMessagesContactsList = userContacts.stream()
-				.map(userContact -> userContactMapper.mapUserContactToUserContactMessageDetailsDto(userContact))
+		List<UserContactDetailsDTO> userMessagesContactsList = userContacts.stream()
+				.map(userContact -> userContactMapper.mapUserContactToUserContactDetailsDto(userContact))
 				.collect(Collectors.toList());
 		return userMessagesContactsList;
 	}

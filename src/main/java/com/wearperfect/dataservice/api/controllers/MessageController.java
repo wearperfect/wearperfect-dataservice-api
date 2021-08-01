@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 import com.wearperfect.dataservice.api.service.MessageService;
 
 @RestController
@@ -23,13 +23,13 @@ public class MessageController {
 	MessageService messageService;
 
 	@GetMapping(path = "/users/{userId}/messages/with/{targetUserId}")
-	UserContactMessageDetailsDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
+	UserContactDetailsDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "targetUserId", required = true) Long targetUserId) {
 		return messageService.getUserMessagesWith(userId, targetUserId);
 	}
 
 	@PostMapping(path = "/users/{sentBy}/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	UserContactMessageDetailsDTO sendMessage(Authentication authentication,
+	UserContactDetailsDTO sendMessage(Authentication authentication,
 			@PathVariable(name = "sentBy", required = true) Long sentBy,
 			@RequestPart(name = "data") MessageDTO messageDto,
 			@RequestPart(name = "files") MultipartFile[] files) {

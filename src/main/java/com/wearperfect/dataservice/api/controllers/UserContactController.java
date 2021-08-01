@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wearperfect.dataservice.api.dto.UserContactMessageDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.service.UserContactService;
 
@@ -23,7 +23,7 @@ public class UserContactController {
 	}
 	
 	@GetMapping(path = "/users/{userId}/contacts/communicated")
-	List<UserContactMessageDetailsDTO> getCommunicatedUserContactsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
+	List<UserContactDetailsDTO> getCommunicatedUserContactsByUserId(@PathVariable(name = "userId", required = true) Long userId) {
 		return userContactService.getCommunicatedContacts(userId);
 	}
 	
