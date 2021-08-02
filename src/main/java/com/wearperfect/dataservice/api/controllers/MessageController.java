@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
-import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 import com.wearperfect.dataservice.api.service.MessageService;
 
 @RestController
@@ -23,13 +22,13 @@ public class MessageController {
 	MessageService messageService;
 
 	@GetMapping(path = "/users/{userId}/messages/with/{targetUserId}")
-	UserContactDetailsDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
+	UserContactMessagesDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "targetUserId", required = true) Long targetUserId) {
 		return messageService.getUserMessagesWith(userId, targetUserId);
 	}
 
 	@PostMapping(path = "/users/{sentBy}/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	UserContactDetailsDTO sendMessage(Authentication authentication,
+	UserContactMessagesDTO sendMessage(Authentication authentication,
 			@PathVariable(name = "sentBy", required = true) Long sentBy,
 			@RequestPart(name = "data") MessageDTO messageDto,
 			@RequestPart(name = "files") MultipartFile[] files) {
@@ -37,7 +36,7 @@ public class MessageController {
 	}
 
 	@DeleteMapping(path = "/users/{sentBy}/messages/{messageId}")
-	PostDTO deleteMessage(@PathVariable(name = "sentBy", required = true) Long sentBy,
+	UserContactMessagesDTO deleteMessage(@PathVariable(name = "sentBy", required = true) Long sentBy,
 			@PathVariable(name = "messageId", required = true) Long messageId) {
 		return messageService.deleteMessage(sentBy, messageId);
 	}

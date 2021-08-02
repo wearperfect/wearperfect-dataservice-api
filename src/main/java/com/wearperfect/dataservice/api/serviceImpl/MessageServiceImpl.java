@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.MessageDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 import com.wearperfect.dataservice.api.entities.Message;
 import com.wearperfect.dataservice.api.entities.Message_;
 import com.wearperfect.dataservice.api.entities.UserContact;
@@ -57,40 +59,52 @@ public class MessageServiceImpl implements MessageService {
 	UserMapper userMapper;
 
 	@Override
-	public UserContactDetailsDTO getUserMessagesWith(Long userId, Long targetUserId) {
+	public UserContactMessagesDTO getUserMessagesWith(Long userId, Long targetUserId) {
 		Long[] sentBySentToList = {userId, targetUserId};
-		List<Message> messages = messageRepository.findBySentByInAndSentToIn( sentBySentToList, sentBySentToList,
-				PageRequest.of(0, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
-		Optional<UserContact> userContact = userContactRepository.findByUserIdInAndContactUserIdIn(sentBySentToList, sentBySentToList);
+		Optional<UserContact> userContact = userContactRepository.findByUserIdAndContactUserId(userId, targetUserId);
 		if(userContact.isPresent()) {
-			UserContactDetailsDTO userContactMessageDetails = userContactMapper.mapUserContactToUserContactDetailsDto(userContact.get());
+			UserContactMessagesDTO userContactMessages = userContactMapper.mapUserContactToUserContactMessagesDto(userContact.get());
+			List<Message> messages = messageRepository.findBySentByInAndSentToIn( sentBySentToList, sentBySentToList,
+					PageRequest.of(0, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
 			List<MessageDetailsDTO> userMessages = messages.stream().map(message->messageMapper.mapMessageToMessageDetailsDto(message)).collect(Collectors.toList());
-			userContactMessageDetails.setMessages(userMessages);
-			return userContactMessageDetails;
+			userContactMessages.setMessages(userMessages);
+			return userContactMessages;
 		}else {
-			return new UserContactDetailsDTO();
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Contact not found.");
 		}
 		
 	}
 
 	@Override
-	public UserContactDetailsDTO sendMessage(Long sentBy, String name, MessageDTO messageDto,
+	public UserContactMessagesDTO sendMessage(Long sentBy, String name, MessageDTO messageDto,
 			MultipartFile[] files) {
+		Date currentTimestamp = new Date();
+		UserContactMessagesDTO userContactMessages;
 		Message message = messageMapper.mapMessageDtoToMessage(messageDto);
 		if (null == message.getSentBy() || null == message.getSentTo()) {
 			throw new BadRequestException("sentBy and sentTo fields should not null.");
 		}
-
-		Date currentTimestamp = new Date();
-		
 		message.setCreatedOn(currentTimestamp);
-		messageRepository.save(message);
+		message = messageRepository.save(message);
 
-		Long[] userIdList = {message.getSentBy(), message.getSentTo()};
-		Optional<UserContact> userContact = userContactRepository.findByUserIdInAndContactUserIdIn(userIdList, userIdList);
-		if (userContact.isPresent()) {
-			userContact.get().setLastContactedOn(new Date());
-			return userContactMapper.mapUserContactToUserContactDetailsDto(userContact.get());
+		Optional<UserContact> sentByUserContact = userContactRepository.findByUserIdAndContactUserId(message.getSentBy(), message.getSentTo());
+		Optional<UserContact> sentToUserContact = userContactRepository.findByUserIdAndContactUserId(message.getSentTo(), message.getSentBy());
+		
+		if (sentToUserContact.isPresent()) {
+			sentToUserContact.get().setLastContactedOn(new Date());
+		} else {
+			UserContact newUserContact = new UserContact();
+			newUserContact.setUserId(messageDto.getSentTo());
+			newUserContact.setContactUserId(messageDto.getSentBy());
+			newUserContact.setFirstContactedOn(currentTimestamp);
+			newUserContact.setLastContactedOn(currentTimestamp);
+			newUserContact.setActive(true);
+			userContactRepository.save(newUserContact);
+		}
+		
+		if (sentByUserContact.isPresent()) {
+			sentByUserContact.get().setLastContactedOn(new Date());
+			userContactMessages = userContactMapper.mapUserContactToUserContactMessagesDto(sentByUserContact.get());
 		} else {
 			UserContact newUserContact = new UserContact();
 			newUserContact.setUserId(messageDto.getSentBy());
@@ -99,12 +113,17 @@ public class MessageServiceImpl implements MessageService {
 			newUserContact.setLastContactedOn(currentTimestamp);
 			newUserContact.setActive(true);
 			userContactRepository.save(newUserContact);
-			return userContactMapper.mapUserContactToUserContactDetailsDto(newUserContact);
+			userContactMessages = userContactMapper.mapUserContactToUserContactMessagesDto(newUserContact);
 		}
+		
+		List<MessageDetailsDTO> messages = new ArrayList<>();
+		messages.add(messageMapper.mapMessageToMessageDetailsDto(message));
+		userContactMessages.setMessages(messages);
+		return userContactMessages;
 	}
 
 	@Override
-	public PostDTO deleteMessage(Long sentBy, Long messageId) {
+	public UserContactMessagesDTO deleteMessage(Long sentBy, Long messageId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

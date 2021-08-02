@@ -1,9 +1,11 @@
 package com.wearperfect.dataservice.api.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
-public class UserContactDetailsDTO {
+public class UserContactMessagesDTO {
 	
 	Integer id;
 
@@ -20,4 +22,6 @@ public class UserContactDetailsDTO {
 	UserBasicDetailsDTO userDetails;
 
 	UserBasicDetailsDTO contactUserDetails;
+	
+	List<MessageDetailsDTO> messages;
 }

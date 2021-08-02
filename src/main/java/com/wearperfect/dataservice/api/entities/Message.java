@@ -69,8 +69,4 @@ public class Message {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = ContentType.class)
 	@JoinColumn(name = "media_type", referencedColumnName = "id", insertable = false, updatable = false)
 	ContentType mediaTypeDetails;
-	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = UserContact.class)
-	@JoinColumn(name = "sent_by", referencedColumnName = "user_id", insertable = false, updatable = false)
-	UserContact userContact;
 }

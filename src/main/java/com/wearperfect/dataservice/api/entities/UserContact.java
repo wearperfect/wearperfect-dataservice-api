@@ -49,7 +49,4 @@ public class UserContact implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	@JoinColumn(name = "contact_user_id", referencedColumnName = "id", insertable = false, updatable = false)
 	User contactUserDetails;
-	
-	@OneToMany(mappedBy = "userContact", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = Message.class)
-	List<Message> messages;
 }
