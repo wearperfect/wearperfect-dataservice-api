@@ -24,7 +24,7 @@ public class MessageController {
 	@GetMapping(path = "/users/{userId}/messages/with/{targetUserId}")
 	UserContactMessagesDTO getUserMessagesWith(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "targetUserId", required = true) Long targetUserId) {
-		return messageService.getUserMessagesWith(userId, targetUserId);
+		return messageService.getUserMessagesWith(userId, targetUserId, 0);
 	}
 
 	@PostMapping(path = "/users/{sentBy}/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

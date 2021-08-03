@@ -7,7 +7,7 @@ import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 
 public interface MessageService {
 
-	UserContactMessagesDTO getUserMessagesWith(Long userId, Long targetUserId);
+	UserContactMessagesDTO getUserMessagesWith(Long userId, Long targetUserId, Integer page);
 
 	UserContactMessagesDTO sendMessage(Long sentBy, String name, MessageDTO messageDto, MultipartFile[] files);
 

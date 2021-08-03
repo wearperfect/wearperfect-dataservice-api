@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserContactDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
@@ -22,11 +21,14 @@ import com.wearperfect.dataservice.api.entities.Follow_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.entities.UserContact;
 import com.wearperfect.dataservice.api.entities.UserContact_;
+import com.wearperfect.dataservice.api.mappers.MessageMapper;
 import com.wearperfect.dataservice.api.mappers.UserContactMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
+import com.wearperfect.dataservice.api.repositories.MessageRepository;
 import com.wearperfect.dataservice.api.repositories.UserContactRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.service.MessageService;
 import com.wearperfect.dataservice.api.service.UserContactService;
 
 @Service
@@ -47,6 +49,15 @@ public class UserContactServiceImpl implements UserContactService {
 
 	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired
+	MessageRepository messageRepository;
+	
+	@Autowired
+	MessageMapper messageMapper; 
+	
+	@Autowired
+	MessageService messageService;
 
 	@Override
 	public UserContactSuggestionsDTO getSuggestedContacts(Long userId) {
@@ -88,9 +99,11 @@ public class UserContactServiceImpl implements UserContactService {
 	public List<UserContactMessagesDTO> getCommunicatedContacts(Long userId) {
 		List<UserContact> userContacts = userContactRepository.findByUserId(userId,
 				PageRequest.of(0, 100, Sort.by(Direction.DESC, UserContact_.LAST_CONTACTED_ON)));
-		List<UserContactMessagesDTO> userContactMesggesList = userContacts.stream()
-				.map(userContact -> userContactMapper.mapUserContactToUserContactMessagesDto(userContact))
-				.collect(Collectors.toList());
+		List<UserContactMessagesDTO> userContactMesggesList = new ArrayList<>();
+		userContacts.stream().forEach(userContact->{
+			UserContactMessagesDTO userContactMessages = messageService.getUserMessagesWith(userContact.getUserId(), userContact.getContactUserId(), 0);
+			userContactMesggesList.add(userContactMessages);
+		});
 		return userContactMesggesList;
 	}
 

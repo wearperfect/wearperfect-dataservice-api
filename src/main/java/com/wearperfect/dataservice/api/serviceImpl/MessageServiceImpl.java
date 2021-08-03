@@ -59,13 +59,13 @@ public class MessageServiceImpl implements MessageService {
 	UserMapper userMapper;
 
 	@Override
-	public UserContactMessagesDTO getUserMessagesWith(Long userId, Long targetUserId) {
+	public UserContactMessagesDTO getUserMessagesWith(Long userId, Long targetUserId, Integer page) {
 		Long[] sentBySentToList = {userId, targetUserId};
 		Optional<UserContact> userContact = userContactRepository.findByUserIdAndContactUserId(userId, targetUserId);
 		if(userContact.isPresent()) {
 			UserContactMessagesDTO userContactMessages = userContactMapper.mapUserContactToUserContactMessagesDto(userContact.get());
 			List<Message> messages = messageRepository.findBySentByInAndSentToIn( sentBySentToList, sentBySentToList,
-					PageRequest.of(0, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
+					PageRequest.of(page, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
 			List<MessageDetailsDTO> userMessages = messages.stream().map(message->messageMapper.mapMessageToMessageDetailsDto(message)).collect(Collectors.toList());
 			userContactMessages.setMessages(userMessages);
 			return userContactMessages;
