@@ -21,6 +21,7 @@ import com.wearperfect.dataservice.api.dto.MessageDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 import com.wearperfect.dataservice.api.entities.Message;
 import com.wearperfect.dataservice.api.entities.Message_;
+import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.entities.UserContact;
 import com.wearperfect.dataservice.api.exceptions.BadRequestException;
 import com.wearperfect.dataservice.api.mappers.MessageMapper;
@@ -31,6 +32,7 @@ import com.wearperfect.dataservice.api.repositories.MessageRepository;
 import com.wearperfect.dataservice.api.repositories.UserContactRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.MessageService;
+import com.wearperfect.dataservice.api.service.UserService;
 
 @Service
 @Transactional
@@ -50,6 +52,9 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	FollowRepository followRepository;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -117,6 +122,10 @@ public class MessageServiceImpl implements MessageService {
 		List<MessageDetailsDTO> messages = new ArrayList<>();
 		messages.add(messageMapper.mapMessageToMessageDetailsDto(message));
 		userContactMessages.setMessages(messages);
+		if(null == userContactMessages.getContactUserDetails()) {
+			Optional<User> user = userRepository.findById(messageDto.getSentTo());
+			userContactMessages.setContactUserDetails(userMapper.mapUserToUserBasicDetailsDto(user.get()));
+		}
 		return userContactMessages;
 	}
 
