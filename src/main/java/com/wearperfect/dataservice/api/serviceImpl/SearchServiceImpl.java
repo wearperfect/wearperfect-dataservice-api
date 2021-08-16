@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.HashTagSearchDTO;
@@ -12,11 +15,11 @@ import com.wearperfect.dataservice.api.dto.SearchResponseDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.entities.HashTag;
 import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entities.User_;
 import com.wearperfect.dataservice.api.mappers.HashTagMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.HashTagRepository;
 import com.wearperfect.dataservice.api.repositories.PostHashTagRepository;
-import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.service.SearchService;
 
@@ -59,7 +62,7 @@ public class SearchServiceImpl implements SearchService {
 
 			System.out.println(firstLetter + "-----" + searchContentQuery);
 			if (firstLetter.equalsIgnoreCase("@") || realm.equalsIgnoreCase("accounts")) {
-				List<User> users = userRepository.findByUsernameLike(searchContentQuery);
+				List<User> users = userRepository.findByUsernameLike(searchContentQuery, PageRequest.of(0, 25, Sort.by(Direction.ASC, User_.USERNAME)));
 				List<UserDTO> userDtoList = users.stream().map(user -> userMapper.mapUserToUserDto(user))
 						.collect(Collectors.toList());
 				searchResponse.setUsers(userDtoList);

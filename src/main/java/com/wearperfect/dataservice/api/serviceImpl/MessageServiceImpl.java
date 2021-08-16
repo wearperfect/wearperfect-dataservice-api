@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.MessageDTO;
 import com.wearperfect.dataservice.api.dto.MessageDetailsDTO;
@@ -65,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
 		if(userContact.isPresent()) {
 			UserContactMessagesDTO userContactMessages = userContactMapper.mapUserContactToUserContactMessagesDto(userContact.get());
 			List<Message> messages = messageRepository.findBySentByInAndSentToIn( sentBySentToList, sentBySentToList,
-					PageRequest.of(page, 50, Sort.by(Direction.ASC, Message_.CREATED_ON)));
+					PageRequest.of(page, 50, Sort.by(Direction.DESC, Message_.CREATED_ON)));
 			List<MessageDetailsDTO> userMessages = messages.stream().map(message->messageMapper.mapMessageToMessageDetailsDto(message)).collect(Collectors.toList());
 			userContactMessages.setMessages(userMessages);
 			return userContactMessages;
@@ -76,8 +75,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public UserContactMessagesDTO sendMessage(Long sentBy, String name, MessageDTO messageDto,
-			MultipartFile[] files) {
+	public UserContactMessagesDTO sendMessage(Long sentBy, String name, MessageDTO messageDto) {
 		Date currentTimestamp = new Date();
 		UserContactMessagesDTO userContactMessages;
 		Message message = messageMapper.mapMessageDtoToMessage(messageDto);
