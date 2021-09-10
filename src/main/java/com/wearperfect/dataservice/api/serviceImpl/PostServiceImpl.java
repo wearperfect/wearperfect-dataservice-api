@@ -37,8 +37,8 @@ import com.wearperfect.dataservice.api.entities.PostLike_;
 import com.wearperfect.dataservice.api.entities.PostMedia;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.PostSave_;
-import com.wearperfect.dataservice.api.entities.PostUserTag;
-import com.wearperfect.dataservice.api.entities.PostUserTag_;
+import com.wearperfect.dataservice.api.entities.PostUserMention;
+import com.wearperfect.dataservice.api.entities.PostUserMention_;
 import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
@@ -157,8 +157,8 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getTaggedPostsByUserId(Long userId) {
-		List<PostUserTag> taggedPosts = postUserTagRepository.findByTaggedUserId(userId,
-				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserTag_.TAGGED_ON)));
+		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.MENTIONED_ON)));
 		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
 				.collect(Collectors.toList());
 		List<Post> posts = postRepository.findByIdIn(likedPostIds);
