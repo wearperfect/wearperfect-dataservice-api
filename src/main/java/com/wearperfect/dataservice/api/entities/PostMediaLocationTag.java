@@ -11,11 +11,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="products")
-public class Product {
+@Table(name="post_media_location_tags")
+public class PostMediaLocationTag {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+
+	@Column(name = "post_media_id")
+	Long postMediaId;
 }

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -16,31 +17,28 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "post_user_mentions")
-public class PostUserMention {
+@Table(name="post_media_user_tags")
+public class PostMediaUserTag {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@Column(name = "post_id")
-	Long postId;
+	@Column(name = "post_media_id")
+	Long postMediaId;
 
-	@Column(name = "mentioned_user_id")
-	Long mentionedUserId;
-
-	@Column(name = "mentioned_by")
-	Long mentionedBy;
+	@Column(name = "user_id")
+	Long styleId;
 
 	@Column(name = "created_on")
 	Date createdOn;
-	
+
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name = "mentioned_user_id", referencedColumnName = "id",insertable = false, updatable = false)
-	User mentionedUserDetails;
+	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+	User userDetails;
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name = "mentioned_by", referencedColumnName = "id",insertable = false, updatable = false)
-	User mentionedByUserDetails;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PostMedia.class)
+	@JoinColumn(name="post_media_id", referencedColumnName = "id", insertable = false, updatable = false)
+	PostMedia postMediaDetails;
 }

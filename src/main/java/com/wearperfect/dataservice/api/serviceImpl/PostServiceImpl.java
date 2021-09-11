@@ -157,14 +157,15 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getTaggedPostsByUserId(Long userId) {
-		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
-				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.MENTIONED_ON)));
-		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
-				.collect(Collectors.toList());
-		List<Post> posts = postRepository.findByIdIn(likedPostIds);
-		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
-				.collect(Collectors.toList());
-		return new UserPostsResponseDTO(userId, likedPostsDtoList);
+//		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
+//				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.MENTIONED_ON)));
+//		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
+//				.collect(Collectors.toList());
+//		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+//		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+//				.collect(Collectors.toList());
+//		return new UserPostsResponseDTO(userId, likedPostsDtoList);
+		return null;
 	}
 
 	@Override
