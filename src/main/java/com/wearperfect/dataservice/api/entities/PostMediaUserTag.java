@@ -29,14 +29,20 @@ public class PostMediaUserTag {
 	Long postMediaId;
 
 	@Column(name = "user_id")
-	Long styleId;
+	Long userId;
+	
+	@Column(name = "tag_location_x")
+	Double tagLocationX;
+	
+	@Column(name = "tag_location_y")
+	Double tagLocationY;
 
 	@Column(name = "created_on")
 	Date createdOn;
 
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-	User userDetails;
+	User taggedUserDetails;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PostMedia.class)
 	@JoinColumn(name="post_media_id", referencedColumnName = "id", insertable = false, updatable = false)
