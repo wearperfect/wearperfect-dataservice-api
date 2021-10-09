@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
@@ -157,15 +156,14 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getTaggedPostsByUserId(Long userId) {
-//		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
-//				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.MENTIONED_ON)));
-//		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
-//				.collect(Collectors.toList());
-//		List<Post> posts = postRepository.findByIdIn(likedPostIds);
-//		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
-//				.collect(Collectors.toList());
-//		return new UserPostsResponseDTO(userId, likedPostsDtoList);
-		return null;
+		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.CREATED_ON)));
+		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
+				.collect(Collectors.toList());
+		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
+				.collect(Collectors.toList());
+		return new UserPostsResponseDTO(userId, likedPostsDtoList);
 	}
 
 	@Override
@@ -261,6 +259,7 @@ public class PostServiceImpl implements PostService {
 			String fileType = fileService.getFileExtension(files[i].getOriginalFilename());
 			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postMedia.getSequenceId()) + "."
 					+ fileType;
+			System.out.println(i+" Type:::"+files[i].getOriginalFilename());
 			try {
 				if (!fileType.toLowerCase().equals("mp4")) {
 					postMedia.setAspectRatio(fileService.getFileAspectRaio(postFile));
