@@ -34,6 +34,8 @@ import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostLike_;
 import com.wearperfect.dataservice.api.entities.PostMedia;
+import com.wearperfect.dataservice.api.entities.PostMediaUserTag;
+import com.wearperfect.dataservice.api.entities.PostMediaUserTag_;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.PostSave_;
 import com.wearperfect.dataservice.api.entities.PostUserMention;
@@ -42,6 +44,8 @@ import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
+import com.wearperfect.dataservice.api.mappers.PostMediaMapper;
+import com.wearperfect.dataservice.api.mappers.PostMediaUserTagMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
 import com.wearperfect.dataservice.api.repositories.FollowRepository;
@@ -51,7 +55,7 @@ import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
-import com.wearperfect.dataservice.api.repositories.PostUserTagRepository;
+import com.wearperfect.dataservice.api.repositories.PostMediaUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
@@ -67,7 +71,7 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	WearperfectUserDetailsService wearperfectUserDetailsService;
-	
+
 	@Autowired
 	UserRepository userRepository;
 
@@ -76,6 +80,12 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	PostMediaRepository postMediaRepository;
+
+	@Autowired
+	PostMediaMapper postMediaMapper;
+
+	@Autowired
+	PostMediaUserTagMapper postMediaUserTagMapper;
 
 	@Autowired
 	ContentTypeRepository contentTypeRepository;
@@ -87,17 +97,17 @@ public class PostServiceImpl implements PostService {
 	PostSaveRepository postSaveRepository;
 
 	@Autowired
-	PostUserTagRepository postUserTagRepository;
-	
+	PostMediaUserTagRepository postMediaUserTagRepository;
+
 	@Autowired
 	PostCommentRepository postCommentRepository;
-	
+
 	@Autowired
 	PostCommentMapper postCommentMapper;
 
 	@Autowired
 	MasterRepository masterRepository;
-	
+
 	@Autowired
 	FollowRepository followRepository;
 
@@ -121,7 +131,8 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getPostsByUserId(Long userId) {
-		List<Post> posts = postRepository.findByCreatedBy(userId, PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Direction.DESC, Post_.CREATED_ON)));
+		List<Post> posts = postRepository.findByCreatedBy(userId,
+				PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Direction.DESC, Post_.CREATED_ON)));
 		List<PostDetailsDTO> userPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		userPostsDtoList.forEach(post -> {
@@ -156,9 +167,9 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public UserPostsResponseDTO getTaggedPostsByUserId(Long userId) {
-		List<PostUserMention> taggedPosts = postUserTagRepository.findByMentionedUserId(userId,
-				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostUserMention_.CREATED_ON)));
-		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostId())
+		List<PostMediaUserTag> taggedPosts = postMediaUserTagRepository.findByTaggedUserId(userId,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostMediaUserTag_.CREATED_ON)));
+		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostMediaDetails().getPostId())
 				.collect(Collectors.toList());
 		List<Post> posts = postRepository.findByIdIn(likedPostIds);
 		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
@@ -171,19 +182,17 @@ public class PostServiceImpl implements PostService {
 		Optional<Post> eixistingPost = postRepository
 				.findOne(PostDetailsSpecification.postByUserIdAndPostIdPredicate(userId, postId));
 		PostDetailsDTO post = postMapper.mapPostToPostDetailsDto(eixistingPost.get());
-		
+
 		post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
 		//
-		Optional<PostLike> like = Optional
-				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(post.getId(), userId));
+		Optional<PostLike> like = Optional.ofNullable(postLikeRepository.findByPostIdAndLikedBy(post.getId(), userId));
 		if (like.isPresent() && like.get().getLikedBy() == userId) {
 			post.setLiked(true);
 		} else {
 			post.setLiked(false);
 		}
 		//
-		Optional<PostSave> save = Optional
-				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
+		Optional<PostSave> save = Optional.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
 		if (save.isPresent() && save.get().getSavedBy() == userId) {
 			post.setSaved(true);
 		} else {
@@ -193,9 +202,9 @@ public class PostServiceImpl implements PostService {
 		if (eixistingPost.get().getCreatedBy() == userId) {
 			post.setFollowing(true);
 		} else {
-			Optional<Follow> follow = Optional
-					.ofNullable(followRepository.findByUserIdAndFollowingBy(eixistingPost.get().getCreatedBy(), userId));
-			System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
+			Optional<Follow> follow = Optional.ofNullable(
+					followRepository.findByUserIdAndFollowingBy(eixistingPost.get().getCreatedBy(), userId));
+			System.out.println(">>>>>>>>>>>>>>>" + follow.isPresent());
 			if (follow.isPresent()) {
 				post.setFollowing(true);
 			} else {
@@ -210,17 +219,15 @@ public class PostServiceImpl implements PostService {
 				.map(comment -> postCommentMapper.mapPostCommentToPostCommentDetailsDto(comment))
 				.collect(Collectors.toList());
 		post.setComments(comments);
-		
+
 		List<PostDetailsDTO> userPostsDtoList = new ArrayList<>();
 		userPostsDtoList.add(post);
 		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
 
 	@Override
-	public UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDTO postDto,
+	public UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDetailsDTO postDetailsDto,
 			MultipartFile[] files) {
-
-		Post post = postMapper.mapPostDtoToPost(postDto);
 
 		Optional<User> loggedInUser = userRepository
 				.findOne(UserDetailsSpecification.userMobileOrEmailOrUsernamePredicate(loggedInUsername));
@@ -234,11 +241,15 @@ public class PostServiceImpl implements PostService {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "No media content available to create a post.");
 		}
 
-		// TODO
+		Date creationDate = new Date();
+
+		Post post = new Post();
+		post.setDescription(postDetailsDto.getDescription());
 		post.setPostMediaList(new ArrayList<>()); // Emptying post items to avoid cascading error
 		post.setActive(true);
 		post.setCreatedBy(postBy);
-		post.setCreatedOn(new Date());
+		post.setCreatedOn(creationDate);
+
 		try {
 			postRepository.save(post);
 		} catch (Exception e) {
@@ -248,10 +259,11 @@ public class PostServiceImpl implements PostService {
 		List<PostMedia> postMediaList = new ArrayList<>();
 
 		for (int i = 0; i < files.length; i++) {
-			PostMedia postMedia = new PostMedia();
+			PostMedia postMedia = postMediaMapper
+					.mapPostMediaDetailsDtoToPostMedia(postDetailsDto.getPostMediaList().get(i));
 			postMedia.setPostId(post.getId());
 			postMedia.setSequenceId(i + 1);
-			postMedia.setCreatedOn(new Date());
+			postMedia.setCreatedOn(post.getCreatedOn());
 			postMedia.setContentType(files[i].getContentType());
 			postMedia.setActive(true);
 
@@ -259,7 +271,7 @@ public class PostServiceImpl implements PostService {
 			String fileType = fileService.getFileExtension(files[i].getOriginalFilename());
 			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postMedia.getSequenceId()) + "."
 					+ fileType;
-			System.out.println(i+" Type:::"+files[i].getOriginalFilename());
+			System.out.println(i + " Type:::" + files[i].getOriginalFilename());
 			try {
 				if (!fileType.toLowerCase().equals("mp4")) {
 					postMedia.setAspectRatio(fileService.getFileAspectRaio(postFile));
@@ -272,7 +284,7 @@ public class PostServiceImpl implements PostService {
 							scaledImageFile.delete();
 						}
 					}
-				}else {
+				} else {
 					postMedia.setAspectRatio(new Float(100));
 				}
 				amazonS3.putObject(postsS3Bucket, fileName, postFile);
@@ -286,15 +298,34 @@ public class PostServiceImpl implements PostService {
 			postMedia.setS3BucketId(1);
 			postMedia.setFileName(fileName);
 			postMedia.setSourceLink("https://" + postsS3Bucket + ".s3." + postss3Region + ".amazonaws.com/" + fileName);
-			postMediaList.add(postMedia);
+
+			try {
+				postMedia = postMediaRepository.save(postMedia);
+				postMediaList.add(postMedia);
+			} catch (Exception e) {
+				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
+			}
+
+			List<PostMediaUserTag> userTags = postMedia.getUserTags();
+			for (int j = 0; j < userTags.size(); j++) {
+				userTags.get(j).setCreatedOn(postMedia.getCreatedOn());
+				userTags.get(j).setPostMediaId(postMedia.getId());
+				if (null == userTags.get(j).getTagLocationX()) {
+					userTags.get(j).setTagLocationX(0d);
+				}
+				if (null == userTags.get(j).getTagLocationY()) {
+					userTags.get(j).setTagLocationY(0d);
+				}
+			}
+			try {
+				userTags = postMediaUserTagRepository.saveAll(userTags);
+				postMedia.setUserTags(userTags);
+			} catch (Exception e) {
+				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+						"Error in saving post media user tags. " + e.getMessage());
+			}
 		}
 
-		try {
-			postMediaRepository.saveAll(postMediaList);
-			post.setPostMediaList(postMediaList);
-		} catch (Exception e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
-		}
 		return getPostByUserIdAndPostId(postBy, post.getId());
 	}
 
@@ -325,15 +356,15 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostDTO deletePost(Long userId, Long postId) {
 		WearperfectUserDetails loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if(!loggedInUserDetails.getUserId().equals(userId)) {
+		if (!loggedInUserDetails.getUserId().equals(userId)) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
 		}
-		
+
 		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
-		if(!post.isEmpty()) {
+		if (!post.isEmpty()) {
 			postRepository.deleteById(post.get().getId());
 			return postMapper.mapPostToPostDto(post.get());
-		}else {
+		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Post not found.");
 		}
 	}

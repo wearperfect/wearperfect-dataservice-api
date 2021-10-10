@@ -3,7 +3,7 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class PostMediaUserTagDTO {
+public class PostMediaUserTagDetailsDto {
 
 	Long id;
 
@@ -16,4 +16,6 @@ public class PostMediaUserTagDTO {
 	Double tagLocationY;
 
 	Long createdOn;
+	
+	UserBasicDetailsDTO taggedUserDetails;
 }

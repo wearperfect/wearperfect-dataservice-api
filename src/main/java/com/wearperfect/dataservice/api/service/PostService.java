@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.dto.PostDTO;
+import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.entities.PostMedia;
 
@@ -20,7 +21,7 @@ public interface PostService {
 
 	UserPostsResponseDTO getPostByUserIdAndPostId(Long userId, Long postId);
 
-	UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDTO postDto, MultipartFile[] files);
+	UserPostsResponseDTO createPost(Long postBy, String loggedInUsername, PostDetailsDTO postDetailsDTO, MultipartFile[] files);
 
 	UserPostsResponseDTO savePostMediaList(List<PostMedia> postMediaList, Long postId, Long userId);
 

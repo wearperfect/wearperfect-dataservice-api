@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.dto.PostDTO;
+import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.service.PostService;
@@ -57,15 +59,16 @@ public class PostController {
 	@PostMapping(path = "/users/{userId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	UserPostsResponseDTO createPost(Authentication authentication,
 			@PathVariable(name = "userId", required = true) Long userId,
-			@RequestPart(name = "data") String postDto,
+			@RequestPart(name = "data") String postDetailsDto,
 			@RequestPart(name = "files") MultipartFile[] files) throws JsonMappingException, JsonProcessingException {
 		System.out.println("Files Length>>>>>"+ files.length);
-		System.out.println("PostDTO>>>>>>>>>>"+postDto);
+		System.out.println("PostDTO>>>>>>>>>>"+postDetailsDto);
 		
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
-		PostDTO postObj = mapper.readValue(postDto, PostDTO.class);
-		
+		PostDetailsDTO postObj = mapper.readValue(postDetailsDto, PostDetailsDTO.class);
+				
 		return postService.createPost(userId, authentication.getName(), postObj, files);
 	}
 

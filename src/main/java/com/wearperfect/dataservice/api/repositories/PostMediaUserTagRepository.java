@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import com.wearperfect.dataservice.api.entities.PostMediaUserTag;
 import com.wearperfect.dataservice.api.entities.PostUserMention;
 
 @Repository
-public interface PostUserTagRepository extends JpaRepository<PostUserMention, Long>, JpaSpecificationExecutor<PostUserMention>{
+public interface PostMediaUserTagRepository extends JpaRepository<PostMediaUserTag, Long>, JpaSpecificationExecutor<PostMediaUserTag>{
 
-	List<PostUserMention> findByMentionedUserId(Long taggedUserId, Pageable page);
+	List<PostMediaUserTag> findByTaggedUserId(Long taggedUserId, Pageable page);
 }

@@ -1,5 +1,7 @@
 package com.wearperfect.dataservice.api.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -9,7 +11,6 @@ public class PostMediaDetailsDTO {
 	Long postId;
 	Integer sequenceId;
 	String sourceLink;
-	//ContentTypeBasicDetailsDTO contentType;
 	String contentType;
 	Integer height;
 	Integer width;
@@ -17,5 +18,5 @@ public class PostMediaDetailsDTO {
 	Boolean active;
 	Long createdOn;
 	Long lastUpdatedOn;
-	
+	List<PostMediaUserTagDetailsDto> userTags;
 }

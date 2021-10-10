@@ -28,8 +28,8 @@ public class PostMediaUserTag {
 	@Column(name = "post_media_id")
 	Long postMediaId;
 
-	@Column(name = "user_id")
-	Long userId;
+	@Column(name = "tagged_user_id")
+	Long taggedUserId;
 	
 	@Column(name = "tag_location_x")
 	Double tagLocationX;
@@ -41,7 +41,7 @@ public class PostMediaUserTag {
 	Date createdOn;
 
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "tagged_user_id", referencedColumnName = "id", insertable = false, updatable = false)
 	User taggedUserDetails;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = PostMedia.class)
