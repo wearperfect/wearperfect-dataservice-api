@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.wearperfect.dataservice.api.constants.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.entities.Country_;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
@@ -31,7 +30,6 @@ import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
 import com.wearperfect.dataservice.api.service.FeedService;
-import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 
 @Service
 @Transactional
@@ -101,11 +99,11 @@ public class FeedServiceImpl implements FeedService {
 				post.setSaved(false);
 			}
 			//
-			if (post.getCreatedBy().getId() == userId) {
+			if (post.getCreatedBy() == userId) {
 				post.setFollowing(true);
 			} else {
 				Optional<Follow> follow = Optional
-						.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy().getId(), userId));
+						.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy(), userId));
 				System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
 				if (follow.isPresent()) {
 					post.setFollowing(true);

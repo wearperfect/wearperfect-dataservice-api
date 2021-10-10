@@ -21,8 +21,6 @@ public interface PostMapper {
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")
 	Post mapPostDtoToPost(PostDTO postDto);
 	
-	@Mapping(source = "createdByUserDetails", target = "createdBy")
-	@Mapping(source = "lastUpdatedByUserDetails", target = "lastUpdatedBy")
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
 	PostDetailsDTO mapPostToPostDetailsDto(Post post);

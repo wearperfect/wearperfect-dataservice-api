@@ -15,11 +15,11 @@ public class PostDetailsDTO {
 	
 	Boolean active;
 	
-	UserBasicDetailsDTO createdBy;
+	Long createdBy;
 	
 	Long createdOn;
 	
-	UserBasicDetailsDTO lastUpdatedBy;
+	Long lastUpdatedBy;
 	
 	Long lastUpdatedOn;
 	
@@ -32,6 +32,10 @@ public class PostDetailsDTO {
 	Long totalLikes;
 	
 	Long totalComments;
+	
+	UserBasicDetailsDTO createdByUserDetails;
+	
+	UserBasicDetailsDTO lastUpdatedByUserDetails;
 	
 	List<PostCommentDetailsDTO> comments;
 	
