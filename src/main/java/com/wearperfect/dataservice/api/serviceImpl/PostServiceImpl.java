@@ -421,7 +421,12 @@ public class PostServiceImpl implements PostService {
 
 		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
 		if (!post.isEmpty()) {
+			List<PostMedia> postMediaList = post.get().getPostMediaList();
 			postRepository.deleteById(post.get().getId());
+			postMediaList.stream().forEach(postMedia->{
+				System.out.println(postMedia.getSourceLink());
+				amazonS3.deleteObject(postsS3Bucket, postMedia.getFileName());
+			});
 			return postMapper.mapPostToPostDto(post.get());
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Post not found.");
