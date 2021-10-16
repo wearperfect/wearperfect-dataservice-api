@@ -4,5 +4,5 @@ import com.wearperfect.dataservice.api.dto.SearchResponseDTO;
 
 public interface SearchService {
 
-	SearchResponseDTO search(String realm, String query);
+	SearchResponseDTO search(String realm, String query, Boolean strictMode);
 }

@@ -31,18 +31,18 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	UserMapper userMapper;
-	
+
 	@Autowired
 	HashTagRepository hashTagRepository;
-	
+
 	@Autowired
 	HashTagMapper hashTagMapper;
-	
+
 	@Autowired
 	PostHashTagRepository postHashTagRepository;
 
 	@Override
-	public SearchResponseDTO search(String realm, String query) {
+	public SearchResponseDTO search(String realm, String query, Boolean strictMode) {
 
 		SearchResponseDTO searchResponse = new SearchResponseDTO();
 
@@ -51,26 +51,38 @@ public class SearchServiceImpl implements SearchService {
 			String searchContentQuery;
 
 			if (firstLetter.equalsIgnoreCase("@") || firstLetter.equalsIgnoreCase("#")) {
-				searchContentQuery = "%" + query.substring(1, query.length()) + "%";
+				if (strictMode == true) {
+					searchContentQuery = query.substring(1, query.length()) + "%";
+				} else {
+					searchContentQuery = "%" + query.substring(1, query.length()) + "%";
+				}
 				if (query.length() == 1) {
 					searchResponse.setUsers(new LinkedList<>());
 					return searchResponse;
 				}
 			} else {
-				searchContentQuery = "%" + query + "%";
+				if (strictMode == true) {
+					searchContentQuery = query + "%";
+				} else {
+					searchContentQuery = "%" + query + "%";
+				}
 			}
 
 			System.out.println(firstLetter + "-----" + searchContentQuery);
 			if (firstLetter.equalsIgnoreCase("@") || realm.equalsIgnoreCase("accounts")) {
-				List<User> users = userRepository.findByUsernameLike(searchContentQuery, PageRequest.of(0, 25, Sort.by(Direction.ASC, User_.USERNAME)));
+				List<User> users = userRepository.findByUsernameLike(searchContentQuery,
+						PageRequest.of(0, 25, Sort.by(Direction.ASC, User_.USERNAME)));
 				List<UserDTO> userDtoList = users.stream().map(user -> userMapper.mapUserToUserDto(user))
 						.collect(Collectors.toList());
 				searchResponse.setUsers(userDtoList);
 			} else if (firstLetter.equalsIgnoreCase("#") || realm.equalsIgnoreCase("tags")) {
 				List<HashTag> hashTags = hashTagRepository.findByTagLike(searchContentQuery);
-				List<HashTagSearchDTO> searchedHashTagDtoList = hashTags.stream().map(hashTag->hashTagMapper.mapHashTagToHashTagSearchDto(hashTag)).collect(Collectors.toList());
-				searchedHashTagDtoList.forEach(searchedHashTagDto->{
-					searchedHashTagDto.setTotalPostsTagged(postHashTagRepository.countByHashTagId(searchedHashTagDto.getId()));
+				List<HashTagSearchDTO> searchedHashTagDtoList = hashTags.stream()
+						.map(hashTag -> hashTagMapper.mapHashTagToHashTagSearchDto(hashTag))
+						.collect(Collectors.toList());
+				searchedHashTagDtoList.forEach(searchedHashTagDto -> {
+					searchedHashTagDto
+							.setTotalPostsTagged(postHashTagRepository.countByHashTagId(searchedHashTagDto.getId()));
 				});
 				searchResponse.setHashTags(searchedHashTagDtoList);
 			}

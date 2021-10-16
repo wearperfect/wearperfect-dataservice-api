@@ -13,10 +13,14 @@ public class SearchController {
 
 	@Autowired
 	SearchService searchService;
-	
+
 	@GetMapping(path = "/search")
 	SearchResponseDTO search(@RequestParam(name = "realm", required = true) String realm,
-			@RequestParam(name = "query", required = true) String query) {
-		return searchService.search(realm, query);
+			@RequestParam(name = "query", required = true) String query,
+			@RequestParam(name = "strictMode", required = false) Boolean strictMode) {
+		if (strictMode == null) {
+			strictMode = false;
+		}
+		return searchService.search(realm, query, strictMode);
 	}
 }
