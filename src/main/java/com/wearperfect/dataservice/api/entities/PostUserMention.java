@@ -43,4 +43,8 @@ public class PostUserMention {
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
 	@JoinColumn(name = "mentioned_by", referencedColumnName = "id",insertable = false, updatable = false)
 	User mentionedByUserDetails;
+	
+	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Post.class)
+	@JoinColumn(name = "post_id", referencedColumnName = "id",insertable = false, updatable = false)
+	Post postDetails;
 }

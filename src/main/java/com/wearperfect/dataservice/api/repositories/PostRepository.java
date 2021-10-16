@@ -19,6 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 	
 	List<Post> findByCreatedBy(Long userId, Pageable page);
 	
-	List<Post> findByIdIn(List<Long> postIdList);
+	List<Post> findByIdIn(List<Long> postIdList, Pageable page);
 }
 

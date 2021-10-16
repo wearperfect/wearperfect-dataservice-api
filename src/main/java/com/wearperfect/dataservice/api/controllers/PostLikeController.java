@@ -25,7 +25,7 @@ public class PostLikeController {
 	}
 
 	@PostMapping(path = "/users/{userId}/posts/{postId}/likes")
-	PostLikeDTO likePost(@PathVariable(name = "userId", required = true) Long userId,
+	Long likePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postLikeService.likePost(userId, postId);
 	}

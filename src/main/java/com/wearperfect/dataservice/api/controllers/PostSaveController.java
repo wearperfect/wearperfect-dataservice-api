@@ -16,7 +16,7 @@ public class PostSaveController {
 	PostSaveService postSaveService;
 
 	@PostMapping(path = "/users/{userId}/posts/{postId}/saves")
-	PostSaveDTO savePost(@PathVariable(name = "userId", required = true) Long userId,
+	Long savePost(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
 		return postSaveService.savePost(userId, postId);
 	}

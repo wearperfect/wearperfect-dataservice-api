@@ -36,13 +36,13 @@ public class PostLikeServiceImpl implements  PostLikeService{
 	}
 
 	@Override
-	public PostLikeDTO likePost(Long userId, Long postId) {
+	public Long likePost(Long userId, Long postId) {
 
 		Optional<PostLike> existingPostLike = Optional
 				.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
 
 		if (existingPostLike.isPresent()) {
-			return postLikeMapper.mapPostLikeToPostLikeDto(existingPostLike.get());
+			return postId;
 		}
 
 		PostLike like = new PostLike();
@@ -50,7 +50,7 @@ public class PostLikeServiceImpl implements  PostLikeService{
 		like.setLikedBy(userId);
 		like.setLikedOn(new Date());
 		PostLike postLike = postLikeRepository.save(like);
-		return postLikeMapper.mapPostLikeToPostLikeDto(postLike);
+		return postId;
 	}
 
 	@Override

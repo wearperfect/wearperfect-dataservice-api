@@ -25,13 +25,13 @@ public class PostSaveServiceImpl implements PostSaveService {
 	PostSaveMapper postSaveMapper;
 
 	@Override
-	public PostSaveDTO savePost(Long userId, Long postId) {
+	public Long savePost(Long userId, Long postId) {
 
 		Optional<PostSave> existingPostSave = Optional
 				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
 
 		if (existingPostSave.isPresent()) {
-			return postSaveMapper.mapPostSaveToPostSaveDto(existingPostSave.get());
+			return postId;
 		}
 
 		PostSave save = new PostSave();
@@ -39,7 +39,7 @@ public class PostSaveServiceImpl implements PostSaveService {
 		save.setSavedBy(userId);
 		save.setSavedOn(new Date());
 		PostSave postSave = postSaveRepository.save(save);
-		return postSaveMapper.mapPostSaveToPostSaveDto(postSave);
+		return postId;
 	}
 
 	@Override

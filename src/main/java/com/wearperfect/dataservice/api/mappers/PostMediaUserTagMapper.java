@@ -8,7 +8,7 @@ import com.wearperfect.dataservice.api.dto.PostMediaUserTagDTO;
 import com.wearperfect.dataservice.api.dto.PostMediaUserTagDetailsDto;
 import com.wearperfect.dataservice.api.entities.PostMediaUserTag;
 
-@Mapper(uses = { ContentTypeMapper.class, PostMediaUserTagMapper.class, UserMapper.class, UtilityMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = { ContentTypeMapper.class, PostMediaMapper.class, UserMapper.class, UtilityMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMediaUserTagMapper {
 	
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")

@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.dto.HashTagDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
@@ -38,8 +42,6 @@ import com.wearperfect.dataservice.api.entities.PostMediaUserTag;
 import com.wearperfect.dataservice.api.entities.PostMediaUserTag_;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.PostSave_;
-import com.wearperfect.dataservice.api.entities.PostUserMention;
-import com.wearperfect.dataservice.api.entities.PostUserMention_;
 import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
@@ -53,14 +55,16 @@ import com.wearperfect.dataservice.api.repositories.MasterRepository;
 import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
 import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
+import com.wearperfect.dataservice.api.repositories.PostMediaUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
-import com.wearperfect.dataservice.api.repositories.PostMediaUserTagRepository;
 import com.wearperfect.dataservice.api.repositories.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
+import com.wearperfect.dataservice.api.service.HashTagService;
 import com.wearperfect.dataservice.api.service.PostService;
+import com.wearperfect.dataservice.api.service.PostUserMentionService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
@@ -121,6 +125,12 @@ public class PostServiceImpl implements PostService {
 	FileService fileService;
 
 	@Autowired
+	HashTagService hashTagService;
+	
+	@Autowired
+	PostUserMentionService postUserMentionService;
+
+	@Autowired
 	AmazonS3 amazonS3;
 
 	@Value("${application.aws.s3.buckets.posts}")
@@ -147,7 +157,8 @@ public class PostServiceImpl implements PostService {
 				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostLike_.LIKED_ON)));
 		List<Long> likedPostIds = likedPosts.stream().map(likedPost -> likedPost.getPostId())
 				.collect(Collectors.toList());
-		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<Post> posts = postRepository.findByIdIn(likedPostIds,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, Post_.CREATED_ON)));
 		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		return new UserPostsResponseDTO(userId, likedPostsDtoList);
@@ -159,7 +170,8 @@ public class PostServiceImpl implements PostService {
 				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostSave_.SAVED_ON)));
 		List<Long> savedPostsIds = savedPosts.stream().map(savedPost -> savedPost.getPostId())
 				.collect(Collectors.toList());
-		List<Post> posts = postRepository.findByIdIn(savedPostsIds);
+		List<Post> posts = postRepository.findByIdIn(savedPostsIds,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, Post_.CREATED_ON)));
 		List<PostDetailsDTO> savedPostDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		return new UserPostsResponseDTO(userId, savedPostDtoList);
@@ -171,7 +183,8 @@ public class PostServiceImpl implements PostService {
 				PageRequest.of(0, 10, Sort.by(Direction.DESC, PostMediaUserTag_.CREATED_ON)));
 		List<Long> likedPostIds = taggedPosts.stream().map(taggedPost -> taggedPost.getPostMediaDetails().getPostId())
 				.collect(Collectors.toList());
-		List<Post> posts = postRepository.findByIdIn(likedPostIds);
+		List<Post> posts = postRepository.findByIdIn(likedPostIds,
+				PageRequest.of(0, 10, Sort.by(Direction.DESC, Post_.CREATED_ON)));
 		List<PostDetailsDTO> likedPostsDtoList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		return new UserPostsResponseDTO(userId, likedPostsDtoList);
@@ -285,7 +298,7 @@ public class PostServiceImpl implements PostService {
 						}
 					}
 				} else {
-					postMedia.setAspectRatio(new Float(100));
+					postMedia.setAspectRatio(100f);
 				}
 				amazonS3.putObject(postsS3Bucket, fileName, postFile);
 			} catch (IOException e) {
@@ -303,7 +316,7 @@ public class PostServiceImpl implements PostService {
 				postMedia = postMediaRepository.save(postMedia);
 				postMediaList.add(postMedia);
 			} catch (Exception e) {
-				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
+				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in creating post because of error in saving post media.");
 			}
 
 			List<PostMediaUserTag> userTags = postMedia.getUserTags();
@@ -322,8 +335,54 @@ public class PostServiceImpl implements PostService {
 				postMedia.setUserTags(userTags);
 			} catch (Exception e) {
 				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-						"Error in saving post media user tags. " + e.getMessage());
+						"Error in creating post because of error in saving post media user tags. " + e.getMessage());
 			}
+		}
+		
+		post.setPostMediaList(postMediaList);
+
+		// Hash Tags
+		String hashTagRegexPattern = "(#\\w+)";
+		Pattern hashTagPattern = Pattern.compile(hashTagRegexPattern);
+		Matcher hashTagMatcher = hashTagPattern.matcher(post.getDescription());
+		LinkedHashSet<String> hashTags = new LinkedHashSet<String>();
+		while (hashTagMatcher.find()) {
+			hashTags.add(hashTagMatcher.group(1).substring(1));
+		}
+
+		List<HashTagDTO> savedHashTagDtoList = new ArrayList<>();
+		
+		try {
+			savedHashTagDtoList  = hashTagService.saveHashTags(hashTags);
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in creating post because of error in new post hash tags. " + e.getMessage());
+		}
+		
+		List<Long> savedHashTagIdList = savedHashTagDtoList.stream().map(hashTagDto -> hashTagDto.getId())
+				.collect(Collectors.toList());
+		
+		try {
+			hashTagService.savePostHashTags(savedHashTagIdList, post.getId());
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in creating post because of error in saving post hash tags. " + e.getMessage());
+		}
+		
+		// User Mentions
+		String userMentionRegexPattern = "(@\\w+)";
+		Pattern userMentionPattern = Pattern.compile(userMentionRegexPattern);
+		Matcher userMentionMatcher = userMentionPattern.matcher(post.getDescription());
+		LinkedHashSet<String> userMentionSet = new LinkedHashSet<String>();
+		while (userMentionMatcher.find()) {
+			userMentionSet.add(userMentionMatcher.group(1).substring(1));
+		}
+		System.out.println(userMentionSet);
+		try {
+			postUserMentionService.savePostUserMentions(post.getId(), postBy, userMentionSet);
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+			"Error in creating post because of error in saving post user mentions." + e.getMessage());
 		}
 
 		return getPostByUserIdAndPostId(postBy, post.getId());

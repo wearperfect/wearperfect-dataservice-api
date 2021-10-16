@@ -8,7 +8,7 @@ public interface PostLikeService {
 	
 	List<PostLikeDTO> postLikes(Long userId, Long postId);
 
-	PostLikeDTO likePost(Long userId, Long postId);
+	Long likePost(Long userId, Long postId);
 	
 	Long unLikePost(Long userId, Long postId);
 }
