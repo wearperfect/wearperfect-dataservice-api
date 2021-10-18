@@ -65,6 +65,7 @@ import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.HashTagService;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.service.PostUserMentionService;
+import com.wearperfect.dataservice.api.service.UserService;
 import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
@@ -114,6 +115,9 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	FollowRepository followRepository;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	UserMapper userMapper;
@@ -235,6 +239,8 @@ public class PostServiceImpl implements PostService {
 
 		List<PostDetailsDTO> userPostsDtoList = new ArrayList<>();
 		userPostsDtoList.add(post);
+		
+		post.setCreatedByUserDetails(userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get()));
 		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
 

@@ -75,7 +75,7 @@ public class SearchServiceImpl implements SearchService {
 				List<UserDTO> userDtoList = users.stream().map(user -> userMapper.mapUserToUserDto(user))
 						.collect(Collectors.toList());
 				searchResponse.setUsers(userDtoList);
-			} else if (firstLetter.equalsIgnoreCase("#") || realm.equalsIgnoreCase("tags")) {
+			} else if (firstLetter.equalsIgnoreCase("#") || realm.equalsIgnoreCase("hashTags")) {
 				List<HashTag> hashTags = hashTagRepository.findByTagLike(searchContentQuery);
 				List<HashTagSearchDTO> searchedHashTagDtoList = hashTags.stream()
 						.map(hashTag -> hashTagMapper.mapHashTagToHashTagSearchDto(hashTag))
