@@ -2,7 +2,6 @@ package com.wearperfect.dataservice.api.entities;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,6 +35,10 @@ public class PostSave {
 	
 	@Column(name="saved_on")
 	Date savedOn;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Post.class)
+	@JoinColumn(name="post_id", referencedColumnName = "id", insertable = false, updatable = false)
+	Post postDetails;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
 	@JoinColumn(name="saved_by", referencedColumnName = "id", insertable = false, updatable = false)

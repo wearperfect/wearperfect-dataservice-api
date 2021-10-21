@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,16 @@ public class PostServiceImpl implements PostService {
 	private String postss3Region;
 
 	@Override
+	public PostDTO getPostById(Long postId) {
+		Optional<Post> post = postRepository.findById(postId);
+		if (post.isPresent()) {
+			return postMapper.mapPostToPostDto(post.get());
+		} else {
+			throw new EntityNotFoundException("Post not found with postId: " + postId);
+		}
+	}
+
+	@Override
 	public UserPostsResponseDTO getPostsByUserId(Long userId) {
 		List<Post> posts = postRepository.findByCreatedBy(userId,
 				PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Direction.DESC, Post_.CREATED_ON)));
@@ -234,7 +245,11 @@ public class PostServiceImpl implements PostService {
 				post.setFollowing(false);
 			}
 		}
+
+		// Set total comments in Post
 		post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
+
+		// Set comments in Post
 		final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
 				PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), Pagination.PageSize.POST_COMMENTS.getValue(),
 						Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));
@@ -288,7 +303,7 @@ public class PostServiceImpl implements PostService {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Error in creating post because of error in saving post media. " + e.getMessage());
 		}
-		
+
 		// Save tagged Hash Tags
 		try {
 			savePostHashTags(post.getId(), post.getDescription());
@@ -397,7 +412,8 @@ public class PostServiceImpl implements PostService {
 		return postMediaList;
 	}
 
-	private List<PostMediaUserTag> savePostMediaUserTags(PostMedia postMedia, List<PostMediaUserTag> postMediaUserTags) {
+	private List<PostMediaUserTag> savePostMediaUserTags(PostMedia postMedia,
+			List<PostMediaUserTag> postMediaUserTags) {
 
 		for (int j = 0; j < postMediaUserTags.size(); j++) {
 			postMediaUserTags.get(j).setCreatedOn(postMedia.getCreatedOn());

@@ -7,6 +7,8 @@ import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 
 public interface PostService {
+	
+	PostDTO getPostById(Long postId);
 
 	UserPostsResponseDTO getPostsByUserId(Long userId);
 

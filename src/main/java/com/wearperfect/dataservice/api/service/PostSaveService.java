@@ -2,7 +2,9 @@ package com.wearperfect.dataservice.api.service;
 
 import java.util.List;
 
+import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostSaveDTO;
+import com.wearperfect.dataservice.api.dto.PostSaveDetailsDTO;
 
 public interface PostSaveService {
 
@@ -10,7 +12,7 @@ public interface PostSaveService {
 
 	Boolean isPostSavedByUserId(Long userId, Long postId);
 
-	Long savePost(Long userId, Long postId);
+	PostSaveDetailsDTO savePost(Long userId, Long postId);
 
-	Long unSavePost(Long userId, Long postId);
+	PostDTO unSavePost(Long userId, Long postId);
 }
