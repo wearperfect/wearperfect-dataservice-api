@@ -31,16 +31,14 @@ public class PostUserMentionServiceImpl implements PostUserMentionService {
 	UserRepository userRepository;
 
 	@Override
-	public List<PostUserMentionDTO> savePostUserMentions(Long postId, Long mentionedBy, Set<String> usernameSet) {
+	public List<PostUserMentionDTO> savePostUserMentions(Long postId, Set<String> usernameSet) {
 
 		List<User> userList = userRepository.findByUsernameIn(usernameSet);
 
-		List<PostUserMention> userMentionsList = userList.stream().filter(user->user!=null).map(user -> {
+		List<PostUserMention> userMentionsList = userList.stream().filter(user -> user != null).map(user -> {
 			PostUserMention postUserMention = new PostUserMention();
-			System.out.println(postId+"|"+user.getId()+"|"+mentionedBy+"|"+new Date().getTime());
 			postUserMention.setPostId(postId);
-			postUserMention.setMentionedUserId(user.getId());
-			postUserMention.setMentionedBy(mentionedBy);
+			postUserMention.setUserId(user.getId());
 			postUserMention.setCreatedOn(new Date());
 			return postUserMention;
 		}).collect(Collectors.toList());
@@ -48,7 +46,8 @@ public class PostUserMentionServiceImpl implements PostUserMentionService {
 		try {
 			userMentionsList = postUserMentionRepository.saveAll(userMentionsList);
 		} catch (Exception e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving the post user mentions. "+e.getMessage());
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in saving the post user mentions. " + e.getMessage());
 		}
 
 		return userMentionsList.stream()

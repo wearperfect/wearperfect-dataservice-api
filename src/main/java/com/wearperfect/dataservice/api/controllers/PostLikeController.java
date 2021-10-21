@@ -17,11 +17,16 @@ public class PostLikeController {
 
 	@Autowired
 	PostLikeService postLikeService;
-	
+
+	@GetMapping(path = "/posts/{postId}/likes")
+	List<PostLikeDTO> postLikes(@PathVariable(name = "postId", required = true) Long postId) {
+		return postLikeService.postLikes(postId);
+	}
+
 	@GetMapping(path = "/users/{userId}/posts/{postId}/likes")
-	List<PostLikeDTO> postLikes(@PathVariable(name = "userId", required = true) Long userId,
+	Boolean isPostLikedByUserId(@PathVariable(name = "userId", required = true) Long userId,
 			@PathVariable(name = "postId", required = true) Long postId) {
-		return postLikeService.postLikes(userId, postId);
+		return postLikeService.isPostLikedByUserId(userId, postId);
 	}
 
 	@PostMapping(path = "/users/{userId}/posts/{postId}/likes")

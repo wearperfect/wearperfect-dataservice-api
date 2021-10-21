@@ -50,6 +50,7 @@ import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsSe
 import com.wearperfect.dataservice.api.service.CityService;
 import com.wearperfect.dataservice.api.service.CountryService;
 import com.wearperfect.dataservice.api.service.FileService;
+import com.wearperfect.dataservice.api.service.FollowService;
 import com.wearperfect.dataservice.api.service.StateService;
 import com.wearperfect.dataservice.api.service.UserService;
 
@@ -100,6 +101,9 @@ public class UserServiceImpl implements UserService {
 	FileService fileService;
 
 	@Autowired
+	FollowService followService;
+
+	@Autowired
 	RoleRepository roleRepository;
 
 	@Autowired
@@ -143,12 +147,10 @@ public class UserServiceImpl implements UserService {
 
 		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
 
-		if(loggedInUser.getUserId() == userId) {
+		if (loggedInUser.getUserId() == userId) {
 			userDetails.setFollowing(true);
-		}else {
-			Optional<Follow> follow = Optional
-					.ofNullable(followRepository.findByUserIdAndFollowingBy(userId, loggedInUser.getUserId()));
-			if (follow.isPresent()) {
+		} else {
+			if (followService.isUserFollowedByUserId(userId, loggedInUser.getUserId())) {
 				userDetails.setFollowing(true);
 			} else {
 				userDetails.setFollowing(false);

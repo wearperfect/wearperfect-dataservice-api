@@ -19,8 +19,6 @@ import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
-import com.wearperfect.dataservice.api.entities.PostLike;
-import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
@@ -30,6 +28,9 @@ import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
 import com.wearperfect.dataservice.api.repositories.PostRepository;
 import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
 import com.wearperfect.dataservice.api.service.FeedService;
+import com.wearperfect.dataservice.api.service.FollowService;
+import com.wearperfect.dataservice.api.service.PostLikeService;
+import com.wearperfect.dataservice.api.service.PostSaveService;
 
 @Service
 @Transactional
@@ -52,6 +53,15 @@ public class FeedServiceImpl implements FeedService {
 
 	@Autowired
 	PostMapper postMapper;
+	
+	@Autowired
+	PostLikeService postLikeService;
+	
+	@Autowired
+	PostSaveService postSaveService;
+	
+	@Autowired
+	FollowService followService;
 
 	@Autowired
 	PostCommentMapper postCommentMapper;
@@ -77,41 +87,39 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public List<PostDetailsDTO> getFeedByUserId(Long userId) {
 		List<Post> posts = postRepository.findAll(Sort.by(Direction.DESC, Post_.CREATED_ON));
-		//List<Post> posts = postRepository.findAll(PostDetailsSpecification.postsByUserIdPredicate(userId));
 		List<PostDetailsDTO> postDetailsList = posts.stream().map(post -> postMapper.mapPostToPostDetailsDto(post))
 				.collect(Collectors.toList());
 		postDetailsList.forEach(post -> {
+			// Updating Post with total likes
 			post.setTotalLikes(postLikeRepository.countByPostId(post.getId()));
-			//
-			Optional<PostLike> like = Optional
-					.ofNullable(postLikeRepository.findByPostIdAndLikedBy(post.getId(), userId));
-			if (like.isPresent() && like.get().getLikedBy() == userId) {
+			
+			// Updating Post with total comments
+			post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
+			
+			// Updating Post if post is liked by requested user
+			if (postLikeService.isPostLikedByUserId(userId, post.getId())) {
 				post.setLiked(true);
 			} else {
 				post.setLiked(false);
 			}
-			//
-			Optional<PostSave> save = Optional
-					.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
-			if (save.isPresent() && save.get().getSavedBy() == userId) {
+			
+			// Updating Post if post is saved by requested user
+			if (postSaveService.isPostSavedByUserId(userId, post.getId())) {
 				post.setSaved(true);
 			} else {
 				post.setSaved(false);
 			}
-			//
+			
+			// Updating Post if post is followed by requested user
 			if (post.getCreatedBy() == userId) {
 				post.setFollowing(true);
 			} else {
-				Optional<Follow> follow = Optional
-						.ofNullable(followRepository.findByUserIdAndFollowingBy(post.getCreatedBy(), userId));
-				System.out.println(">>>>>>>>>>>>>>>"+follow.isPresent());
-				if (follow.isPresent()) {
+				if (followService.isUserFollowedByUserId(post.getCreatedBy(), userId)) {
 					post.setFollowing(true);
 				} else {
 					post.setFollowing(false);
 				}
 			}
-			post.setTotalComments(postCommentRepository.countByPostId(post.getId()));
 			final List<PostComment> commentsList = postCommentRepository.findByPostId(post.getId(),
 					PageRequest.of(Pagination.PageNumber.DEFAULT.getValue(), 2, //Pagination.PageSize.POST_COMMENTS.getValue()
 							Sort.by(Direction.DESC, PostComment_.COMMENTED_ON)));

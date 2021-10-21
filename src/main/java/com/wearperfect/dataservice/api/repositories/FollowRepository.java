@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long>, JpaSpecif
 
 	List<Follow> findByFollowingBy(Long userId);
 
-	Follow findByUserIdAndFollowingBy(Long userId, Long followedBy);
+	Optional<Follow> findByUserIdAndFollowingBy(Long userId, Long followingBy);
 
 	List<Follow> findByUserIdOrFollowingBy(Long userId, Long followedBy);
 

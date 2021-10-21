@@ -9,15 +9,11 @@ public class PostUserMentionDetailsDTO {
 
 	Long postId;
 
-	Long mentionedUserId;
-
-	Long mentionedBy;
+	Long userId;
 
 	Long createdOn;
 	
-	UserBasicDetailsDTO mentionedUserDetails;
-	
-	UserBasicDetailsDTO mentionedByUserDetails;
-	
+	UserBasicDetailsDTO userDetails;
+		
 	PostDetailsDTO postDetails;
 }

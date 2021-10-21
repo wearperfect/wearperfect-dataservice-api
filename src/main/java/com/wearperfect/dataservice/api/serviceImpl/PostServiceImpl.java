@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -29,8 +27,9 @@ import com.wearperfect.dataservice.api.dto.HashTagDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
+import com.wearperfect.dataservice.api.dto.PostHashTagDTO;
+import com.wearperfect.dataservice.api.dto.PostUserMentionDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
-import com.wearperfect.dataservice.api.entities.ContentType;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
@@ -63,12 +62,13 @@ import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.HashTagService;
+import com.wearperfect.dataservice.api.service.PostHashTagService;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.service.PostUserMentionService;
 import com.wearperfect.dataservice.api.service.UserService;
-import com.wearperfect.dataservice.api.specifications.ContentTypeDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
 import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
+import com.wearperfect.dataservice.api.utility.service.TextUtilService;
 
 @Service
 @Transactional
@@ -115,7 +115,7 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	FollowRepository followRepository;
-	
+
 	@Autowired
 	UserService userService;
 
@@ -130,9 +130,15 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	HashTagService hashTagService;
-	
+
+	@Autowired
+	PostHashTagService postHashTagService;
+
 	@Autowired
 	PostUserMentionService postUserMentionService;
+
+	@Autowired
+	TextUtilService textUtilService;
 
 	@Autowired
 	AmazonS3 amazonS3;
@@ -209,7 +215,7 @@ public class PostServiceImpl implements PostService {
 			post.setLiked(false);
 		}
 		//
-		Optional<PostSave> save = Optional.ofNullable(postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId));
+		Optional<PostSave> save = postSaveRepository.findByPostIdAndSavedBy(post.getId(), userId);
 		if (save.isPresent() && save.get().getSavedBy() == userId) {
 			post.setSaved(true);
 		} else {
@@ -219,8 +225,8 @@ public class PostServiceImpl implements PostService {
 		if (eixistingPost.get().getCreatedBy() == userId) {
 			post.setFollowing(true);
 		} else {
-			Optional<Follow> follow = Optional.ofNullable(
-					followRepository.findByUserIdAndFollowingBy(eixistingPost.get().getCreatedBy(), userId));
+			Optional<Follow> follow = followRepository.findByUserIdAndFollowingBy(eixistingPost.get().getCreatedBy(),
+					userId);
 			System.out.println(">>>>>>>>>>>>>>>" + follow.isPresent());
 			if (follow.isPresent()) {
 				post.setFollowing(true);
@@ -239,7 +245,7 @@ public class PostServiceImpl implements PostService {
 
 		List<PostDetailsDTO> userPostsDtoList = new ArrayList<>();
 		userPostsDtoList.add(post);
-		
+
 		post.setCreatedByUserDetails(userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get()));
 		return new UserPostsResponseDTO(userId, userPostsDtoList);
 	}
@@ -260,36 +266,87 @@ public class PostServiceImpl implements PostService {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "No media content available to create a post.");
 		}
 
-		Date creationDate = new Date();
-
 		Post post = new Post();
 		post.setDescription(postDetailsDto.getDescription());
 		post.setPostMediaList(new ArrayList<>()); // Emptying post items to avoid cascading error
 		post.setActive(true);
 		post.setCreatedBy(postBy);
-		post.setCreatedOn(creationDate);
+		post.setCreatedOn(new Date());
 
 		try {
-			postRepository.save(post);
+			post = postRepository.save(post);
+			postDetailsDto.setId(post.getId());
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving the post.");
 		}
+
+		// Save Post Media
+		try {
+			List<PostMedia> postMediaList = savePostMedia(postDetailsDto, files);
+			post.setPostMediaList(postMediaList);
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in creating post because of error in saving post media. " + e.getMessage());
+		}
+		
+		// Save tagged Hash Tags
+		try {
+			savePostHashTags(post.getId(), post.getDescription());
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in creating post because of error in saving post hash tags. " + e.getMessage());
+		}
+
+		// Save mentioned User Mentions
+		try {
+			savePostUserMentions(post.getId(), post.getDescription());
+		} catch (Exception e) {
+			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Error in creating post because of error in saving user mentions. " + e.getMessage());
+		}
+
+		return getPostByUserIdAndPostId(postBy, post.getId());
+	}
+
+	@Override
+	public PostDTO deletePost(Long userId, Long postId) {
+		WearperfectUserDetails loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (!loggedInUserDetails.getUserId().equals(userId)) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
+		}
+
+		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
+		if (!post.isEmpty()) {
+			List<PostMedia> postMediaList = post.get().getPostMediaList();
+			postRepository.deleteById(post.get().getId());
+			postMediaList.stream().forEach(postMedia -> {
+				System.out.println(postMedia.getSourceLink());
+				amazonS3.deleteObject(postsS3Bucket, postMedia.getFileName());
+			});
+			return postMapper.mapPostToPostDto(post.get());
+		} else {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Post not found.");
+		}
+	}
+
+	// ############PRIVATE METHODS############
+	private List<PostMedia> savePostMedia(PostDetailsDTO postDetailsDto, MultipartFile[] files) {
 
 		List<PostMedia> postMediaList = new ArrayList<>();
 
 		for (int i = 0; i < files.length; i++) {
 			PostMedia postMedia = postMediaMapper
 					.mapPostMediaDetailsDtoToPostMedia(postDetailsDto.getPostMediaList().get(i));
-			postMedia.setPostId(post.getId());
+			postMedia.setPostId(postDetailsDto.getId());
 			postMedia.setSequenceId(i + 1);
-			postMedia.setCreatedOn(post.getCreatedOn());
+			postMedia.setCreatedOn(new Date());
 			postMedia.setContentType(files[i].getContentType());
 			postMedia.setActive(true);
 
 			File postFile = fileService.converMultipartFileToFile(files[i]);
 			String fileType = fileService.getFileExtension(files[i].getOriginalFilename());
-			String fileName = post.getCreatedBy() + "_" + post.getId() + "_" + (postMedia.getSequenceId()) + "."
-					+ fileType;
+			String fileName = postDetailsDto.getCreatedBy() + "_" + postDetailsDto.getId() + "_"
+					+ (postMedia.getSequenceId()) + "." + fileType;
 			System.out.println(i + " Type:::" + files[i].getOriginalFilename());
 			try {
 				if (!fileType.toLowerCase().equals("mp4")) {
@@ -322,121 +379,71 @@ public class PostServiceImpl implements PostService {
 				postMedia = postMediaRepository.save(postMedia);
 				postMediaList.add(postMedia);
 			} catch (Exception e) {
-				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in creating post because of error in saving post media.");
+				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+						"Error in creating post because of error in saving post media.");
 			}
 
+			// Save Post Media User Tags
 			List<PostMediaUserTag> userTags = postMedia.getUserTags();
-			for (int j = 0; j < userTags.size(); j++) {
-				userTags.get(j).setCreatedOn(postMedia.getCreatedOn());
-				userTags.get(j).setPostMediaId(postMedia.getId());
-				if (null == userTags.get(j).getTagLocationX()) {
-					userTags.get(j).setTagLocationX(0d);
-				}
-				if (null == userTags.get(j).getTagLocationY()) {
-					userTags.get(j).setTagLocationY(0d);
-				}
-			}
 			try {
-				userTags = postMediaUserTagRepository.saveAll(userTags);
+				userTags = savePostMediaUserTags(postMedia, userTags);
 				postMedia.setUserTags(userTags);
 			} catch (Exception e) {
 				throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
 						"Error in creating post because of error in saving post media user tags. " + e.getMessage());
 			}
 		}
-		
-		post.setPostMediaList(postMediaList);
 
-		// Hash Tags
-		String hashTagRegexPattern = "(#\\w+)";
-		Pattern hashTagPattern = Pattern.compile(hashTagRegexPattern);
-		Matcher hashTagMatcher = hashTagPattern.matcher(post.getDescription());
-		LinkedHashSet<String> hashTags = new LinkedHashSet<String>();
-		while (hashTagMatcher.find()) {
-			hashTags.add(hashTagMatcher.group(1).substring(1));
+		return postMediaList;
+	}
+
+	private List<PostMediaUserTag> savePostMediaUserTags(PostMedia postMedia, List<PostMediaUserTag> postMediaUserTags) {
+
+		for (int j = 0; j < postMediaUserTags.size(); j++) {
+			postMediaUserTags.get(j).setCreatedOn(postMedia.getCreatedOn());
+			postMediaUserTags.get(j).setPostMediaId(postMedia.getId());
+			if (null == postMediaUserTags.get(j).getTagLocationX()) {
+				postMediaUserTags.get(j).setTagLocationX(0d);
+			}
+			if (null == postMediaUserTags.get(j).getTagLocationY()) {
+				postMediaUserTags.get(j).setTagLocationY(0d);
+			}
 		}
 
-		List<HashTagDTO> savedHashTagDtoList = new ArrayList<>();
-		
 		try {
-			savedHashTagDtoList  = hashTagService.saveHashTags(hashTags);
+			postMediaUserTags = postMediaUserTagRepository.saveAll(postMediaUserTags);
 		} catch (Exception e) {
 			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Error in creating post because of error in new post hash tags. " + e.getMessage());
+					"Error in saving post media. " + e.getMessage());
 		}
-		
+
+		return postMediaUserTags;
+	}
+
+	private List<PostHashTagDTO> savePostHashTags(Long postId, String postCaption) {
+
+		Set<String> hashTags = textUtilService.extractHashTagsFromText(postCaption);
+
+		// Save new hash tags to HashTags table
+		List<HashTagDTO> savedHashTagDtoList = hashTagService.saveHashTags(hashTags);
+
 		List<Long> savedHashTagIdList = savedHashTagDtoList.stream().map(hashTagDto -> hashTagDto.getId())
 				.collect(Collectors.toList());
-		
-		try {
-			hashTagService.savePostHashTags(savedHashTagIdList, post.getId());
-		} catch (Exception e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Error in creating post because of error in saving post hash tags. " + e.getMessage());
-		}
-		
-		// User Mentions
-		String userMentionRegexPattern = "(@\\w+)";
-		Pattern userMentionPattern = Pattern.compile(userMentionRegexPattern);
-		Matcher userMentionMatcher = userMentionPattern.matcher(post.getDescription());
-		LinkedHashSet<String> userMentionSet = new LinkedHashSet<String>();
-		while (userMentionMatcher.find()) {
-			userMentionSet.add(userMentionMatcher.group(1).substring(1));
-		}
-		System.out.println(userMentionSet);
-		try {
-			postUserMentionService.savePostUserMentions(post.getId(), postBy, userMentionSet);
-		} catch (Exception e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-			"Error in creating post because of error in saving post user mentions." + e.getMessage());
-		}
 
-		return getPostByUserIdAndPostId(postBy, post.getId());
+		// Save tagged hash tags to PostHashTags table
+		List<PostHashTagDTO> postHashTagDtoList = postHashTagService.savePostHashTags(savedHashTagIdList, postId);
+
+		return postHashTagDtoList;
 	}
 
-	@Override
-	public UserPostsResponseDTO savePostMediaList(List<PostMedia> postMediaList, Long postId, Long userId) {
-		postMediaList.forEach(postItem -> {
-			postItem.setSequenceId(postMediaList.indexOf(postItem));
-			postItem.setPostId(postId);
-			postItem.setActive(true);
-			postItem.setCreatedOn(new Date());
-			Optional<ContentType> contentType = contentTypeRepository
-					.findOne(ContentTypeDetailsSpecification.contentTypeExtensionPredicate(postItem.getContentType()));
-			if (!contentType.isPresent()) {
-				throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Content type not supported");
-			}
-			postItem.setContentType(contentType.get().getExtension());
-		});
+	private List<PostUserMentionDTO> savePostUserMentions(Long postId, String postCaption) {
 
-		try {
-			postMediaRepository.saveAll(postMediaList);
-		} catch (Exception e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in saving post items.");
-		}
+		Set<String> userMentionSet = textUtilService.extractUserMentionsFromText(postCaption);
 
-		return getPostByUserIdAndPostId(userId, postId);
-	}
+		List<PostUserMentionDTO> postUserMentionsList = postUserMentionService.savePostUserMentions(postId,
+				userMentionSet);
 
-	@Override
-	public PostDTO deletePost(Long userId, Long postId) {
-		WearperfectUserDetails loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (!loggedInUserDetails.getUserId().equals(userId)) {
-			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
-		}
-
-		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
-		if (!post.isEmpty()) {
-			List<PostMedia> postMediaList = post.get().getPostMediaList();
-			postRepository.deleteById(post.get().getId());
-			postMediaList.stream().forEach(postMedia->{
-				System.out.println(postMedia.getSourceLink());
-				amazonS3.deleteObject(postsS3Bucket, postMedia.getFileName());
-			});
-			return postMapper.mapPostToPostDto(post.get());
-		} else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Post not found.");
-		}
+		return postUserMentionsList;
 	}
 
 }

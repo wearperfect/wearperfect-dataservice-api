@@ -59,16 +59,11 @@ public class PostController {
 	@PostMapping(path = "/users/{userId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	UserPostsResponseDTO createPost(Authentication authentication,
 			@PathVariable(name = "userId", required = true) Long userId,
-			@RequestPart(name = "data") String postDetailsDto,
-			@RequestPart(name = "files") MultipartFile[] files) throws JsonMappingException, JsonProcessingException {
-		System.out.println("Files Length>>>>>"+ files.length);
-		System.out.println("PostDTO>>>>>>>>>>"+postDetailsDto);
-		
+			@RequestPart(name = "data") String postDetailsDto, @RequestPart(name = "files") MultipartFile[] files)
+			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		
 		PostDetailsDTO postObj = mapper.readValue(postDetailsDto, PostDetailsDTO.class);
-				
 		return postService.createPost(userId, authentication.getName(), postObj, files);
 	}
 

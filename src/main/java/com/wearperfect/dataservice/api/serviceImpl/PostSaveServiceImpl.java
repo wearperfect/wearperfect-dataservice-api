@@ -1,7 +1,9 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -25,10 +27,25 @@ public class PostSaveServiceImpl implements PostSaveService {
 	PostSaveMapper postSaveMapper;
 
 	@Override
+	public List<PostSaveDTO> postSaves(Long postId) {
+		List<PostSave> postSaves = postSaveRepository.findByPostId(postId);
+		return postSaves.stream().map(postSave -> postSaveMapper.mapPostSaveToPostSaveDto(postSave))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Boolean isPostSavedByUserId(Long userId, Long postId) {
+		Optional<PostSave> postSave = postSaveRepository.findByPostIdAndSavedBy(postId, userId);
+		if (postSave.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public Long savePost(Long userId, Long postId) {
 
-		Optional<PostSave> existingPostSave = Optional
-				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
+		Optional<PostSave> existingPostSave = postSaveRepository.findByPostIdAndSavedBy(postId, userId);
 
 		if (existingPostSave.isPresent()) {
 			return postId;
@@ -45,12 +62,12 @@ public class PostSaveServiceImpl implements PostSaveService {
 	@Override
 	public Long unSavePost(Long userId, Long postId) {
 
-		Optional<PostSave> existingPostSave = Optional
-				.ofNullable(postSaveRepository.findByPostIdAndSavedBy(postId, userId));
+		Optional<PostSave> existingPostSave = postSaveRepository.findByPostIdAndSavedBy(postId, userId);
 
 		if (existingPostSave.isPresent()) {
 			postSaveRepository.deleteByPostIdAndSavedBy(postId, userId);
 		}
 		return postId;
 	}
+
 }

@@ -7,5 +7,5 @@ import com.wearperfect.dataservice.api.dto.PostUserMentionDTO;
 
 public interface PostUserMentionService {
 
-	List<PostUserMentionDTO> savePostUserMentions(Long postId, Long mentionedBy, Set<String> usernameSet);
+	List<PostUserMentionDTO> savePostUserMentions(Long postId, Set<String> usernameSet);
 }

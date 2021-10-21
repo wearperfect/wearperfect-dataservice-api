@@ -27,22 +27,15 @@ public class PostUserMention {
 	@Column(name = "post_id")
 	Long postId;
 
-	@Column(name = "mentioned_user_id")
-	Long mentionedUserId;
-
-	@Column(name = "mentioned_by")
-	Long mentionedBy;
+	@Column(name = "user_id")
+	Long userId;
 
 	@Column(name = "created_on")
 	Date createdOn;
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name = "mentioned_user_id", referencedColumnName = "id",insertable = false, updatable = false)
-	User mentionedUserDetails;
-	
-	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name = "mentioned_by", referencedColumnName = "id",insertable = false, updatable = false)
-	User mentionedByUserDetails;
+	@JoinColumn(name = "user_id", referencedColumnName = "id",insertable = false, updatable = false)
+	User userDetails;
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Post.class)
 	@JoinColumn(name = "post_id", referencedColumnName = "id",insertable = false, updatable = false)

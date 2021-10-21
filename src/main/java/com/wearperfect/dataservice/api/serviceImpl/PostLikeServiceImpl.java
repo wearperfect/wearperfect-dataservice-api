@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,29 @@ import com.wearperfect.dataservice.api.service.PostLikeService;
 
 @Service
 @Transactional
-public class PostLikeServiceImpl implements  PostLikeService{
-	
+public class PostLikeServiceImpl implements PostLikeService {
+
 	@Autowired
 	PostLikeRepository postLikeRepository;
-	
+
 	@Autowired
 	PostLikeMapper postLikeMapper;
 
 	@Override
-	public List<PostLikeDTO> postLikes(Long userId, Long postId) {
-		List<PostLike> postLikes = postLikeRepository.findByPostId(postId, PageRequest.of(0, 10, Sort.by(PostLike_.LIKED_ON).descending()));
-		return postLikes.stream().map(postLike -> postLikeMapper.mapPostLikeToPostLikeDto(postLike)).collect(Collectors.toList());
+	public List<PostLikeDTO> postLikes(Long postId) {
+		List<PostLike> postLikes = postLikeRepository.findByPostId(postId,
+				PageRequest.of(0, 10, Sort.by(PostLike_.LIKED_ON).descending()));
+		return postLikes.stream().map(postLike -> postLikeMapper.mapPostLikeToPostLikeDto(postLike))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Boolean isPostLikedByUserId(Long userId, Long postId) {
+		Optional<PostLike> like = Optional.ofNullable(postLikeRepository.findByPostIdAndLikedBy(postId, userId));
+		if (like.isPresent()) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -63,4 +75,5 @@ public class PostLikeServiceImpl implements  PostLikeService{
 		}
 		return postId;
 	}
+
 }

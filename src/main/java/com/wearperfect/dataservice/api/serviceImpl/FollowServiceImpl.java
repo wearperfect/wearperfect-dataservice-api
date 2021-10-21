@@ -98,7 +98,7 @@ public class FollowServiceImpl implements FollowService {
 				followingsIdList.add(follow.getUserId());
 			}
 		});
-		
+
 		List<UserFollowUpDetailsDTO> followings = userRepository.findByIdIn(followingsIdList).stream()
 				.map(follow -> userMapper.mapUserToUserFollowUpDetailsDto(follow)).collect(Collectors.toList());
 
@@ -124,7 +124,7 @@ public class FollowServiceImpl implements FollowService {
 		follow.setActive(true);
 		follow.setCreatedOn(new Date());
 		followRepository.save(follow);
-		
+
 //		UserFollowUpDetailsDTO userFollowUpDetails = userMapper.mapUserToUserFollowUpDetailsDto(userRepository.findById(userId).get());
 //		userFollowUpDetails.setRequestedUserId(followingBy);
 //		userFollowUpDetails.setFollowing(true);
@@ -140,13 +140,22 @@ public class FollowServiceImpl implements FollowService {
 
 	@Override
 	public FollowDTO unFollowUser(Long followingBy, Long userId) {
-		Optional<Follow> follow = Optional.ofNullable(followRepository.findByUserIdAndFollowingBy(userId, followingBy));
-		if(follow.isPresent()) {
+		Optional<Follow> follow = followRepository.findByUserIdAndFollowingBy(userId, followingBy);
+		if (follow.isPresent()) {
 			followRepository.deleteByUserIdAndFollowingBy(userId, followingBy);
-		}else {
+		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 		return followMapper.mapFollowToFollowDto(follow.get());
+	}
+
+	@Override
+	public Boolean isUserFollowedByUserId(Long userId, Long followingBy) {
+		Optional<Follow> follow = followRepository.findByUserIdAndFollowingBy(userId, followingBy);
+		if (follow.isPresent()) {
+			return true;
+		}
+		return false;
 	}
 
 //	@Override

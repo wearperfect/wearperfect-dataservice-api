@@ -9,9 +9,7 @@ public class PostUserMentionDTO {
 
 	Long postId;
 
-	Long mentionedUserId;
-
-	Long mentionedBy;
+	Long userId;
 
 	Long createdOn;
 }

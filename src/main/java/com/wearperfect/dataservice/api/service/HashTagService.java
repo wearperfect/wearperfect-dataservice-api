@@ -9,6 +9,4 @@ import com.wearperfect.dataservice.api.dto.PostHashTagDTO;
 public interface HashTagService {
 	
 	List<HashTagDTO> saveHashTags(Set<String> hashTags);
-	
-	List<PostHashTagDTO> savePostHashTags(List<Long> hashTagIdList, Long postId);
 }
