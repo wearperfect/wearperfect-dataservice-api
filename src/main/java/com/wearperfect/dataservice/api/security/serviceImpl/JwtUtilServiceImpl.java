@@ -58,7 +58,7 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	}
 	
 	private String createToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().addClaims(claims).setSubject(subject).setIssuedAt(new Date()).setExpiration(new Date(3000, 01, 01))
+		return Jwts.builder().addClaims(claims).setSubject(subject).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 3600000))
 				.signWith(SignatureAlgorithm.HS512, new Base64Codec().encode(SECRET_KEY)).compact();
 	}
 	

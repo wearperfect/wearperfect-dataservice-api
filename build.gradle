@@ -1,7 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.9.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "org.asciidoctor.convert" version "1.5.8"
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id "java"
 }
 
@@ -21,9 +20,9 @@ repositories {
 
 ext {
 	set("snippetsDir", file("build/generated-snippets"))
-	set("mapstructVersion", "1.4.2.Final")
+	set("mapstructVersion", "1.5.2.Final")
 	set("jpamodelgenVersion", "5.6.4.Final")
-	set('springCloudVersion', "Hoxton.SR10")
+	set('springCloudVersion', "2021.0.3")
 }
 
 dependencies {
@@ -35,7 +34,7 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-cache"
 	implementation "org.springframework.boot:spring-boot-starter-data-redis"
 	implementation "org.springframework.boot:spring-boot-starter-web"
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation "org.springframework.data:spring-data-rest-hal-explorer"
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
@@ -66,19 +65,24 @@ test {
 	useJUnitPlatform()
 }
 
-asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
-}
-
 compileJava {
 	options.compilerArgs = [
 		"-Amapstruct.defaultComponentModel=spring"
 	]
 }
 
-sourceSets.configureEach { sourceSet ->
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', '$buildDir/generated/sources/annotationProcessor/java/']
+        }
+    }
+}
+
+/*sourceSets.configureEach { sourceSet ->
   tasks.named(sourceSet.compileJavaTaskName).configure {
     options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
   }
-}
+}*/
+
