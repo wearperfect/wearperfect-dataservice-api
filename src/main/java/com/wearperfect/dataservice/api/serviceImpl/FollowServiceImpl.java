@@ -20,8 +20,8 @@ import com.wearperfect.dataservice.api.dto.UserFollowsResponseDTO;
 import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.mappers.FollowMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.FollowRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.FollowRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.FollowService;
 
 @Service
@@ -54,10 +54,10 @@ public class FollowServiceImpl implements FollowService {
 		List<Long> followingsIdList = new LinkedList<>();
 
 		follows.stream().forEach(follow -> {
-			if (follow.getUserId() == userId) {
+			if (follow.getUserId().equals(userId)) {
 				followersList.add(follow);
 				followersIdList.add(follow.getFollowingBy());
-			} else if (follow.getFollowingBy() == userId) {
+			} else if (follow.getFollowingBy().equals(userId)) {
 				followingsList.add(follow);
 				followingsIdList.add(follow.getUserId());
 			}
@@ -71,7 +71,7 @@ public class FollowServiceImpl implements FollowService {
 			follower.setFollowed(true);
 			follower.setFollowing(false);
 			followingsIdList.forEach(followingId -> {
-				if (follower.getUserId() == followingId) {
+				if (follower.getUserId().equals(followingId)) {
 					follower.setFollowing(true);
 				}
 			});
@@ -90,10 +90,10 @@ public class FollowServiceImpl implements FollowService {
 		List<Long> followingsIdList = new LinkedList<>();
 
 		follows.stream().forEach(follow -> {
-			if (follow.getUserId() == userId) {
+			if (follow.getUserId().equals(userId)) {
 				followersList.add(follow);
 				followersIdList.add(follow.getFollowingBy());
-			} else if (follow.getFollowingBy() == userId) {
+			} else if (follow.getFollowingBy().equals(userId)) {
 				followingsList.add(follow);
 				followingsIdList.add(follow.getUserId());
 			}
@@ -107,7 +107,7 @@ public class FollowServiceImpl implements FollowService {
 			following.setFollowing(true);
 			following.setFollowed(false);
 			followersIdList.forEach(followerId -> {
-				if (following.getUserId() == followerId) {
+				if (following.getUserId().equals(followerId)) {
 					following.setFollowed(true);
 				}
 			});

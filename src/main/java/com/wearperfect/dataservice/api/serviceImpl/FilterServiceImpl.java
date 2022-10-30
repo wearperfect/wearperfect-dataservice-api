@@ -26,11 +26,11 @@ import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
 import com.wearperfect.dataservice.api.mappers.PreferenceFilterMapper;
 import com.wearperfect.dataservice.api.mappers.RegionMapper;
 import com.wearperfect.dataservice.api.mappers.StyleMapper;
-import com.wearperfect.dataservice.api.repositories.CategoryRepository;
-import com.wearperfect.dataservice.api.repositories.ColorRepository;
-import com.wearperfect.dataservice.api.repositories.GenderCategoryRepository;
-import com.wearperfect.dataservice.api.repositories.RegionRepository;
-import com.wearperfect.dataservice.api.repositories.StyleRepository;
+import com.wearperfect.dataservice.api.repository.CategoryRepository;
+import com.wearperfect.dataservice.api.repository.ColorRepository;
+import com.wearperfect.dataservice.api.repository.GenderCategoryRepository;
+import com.wearperfect.dataservice.api.repository.RegionRepository;
+import com.wearperfect.dataservice.api.repository.StyleRepository;
 import com.wearperfect.dataservice.api.service.FilterService;
 import com.wearperfect.dataservice.api.service.StyleService;
 

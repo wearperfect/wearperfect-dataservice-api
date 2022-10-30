@@ -14,8 +14,8 @@ import com.wearperfect.dataservice.api.entities.Feature;
 import com.wearperfect.dataservice.api.entities.Role;
 import com.wearperfect.dataservice.api.mappers.FeatureMapper;
 import com.wearperfect.dataservice.api.mappers.RoleMapper;
-import com.wearperfect.dataservice.api.repositories.FeatureRepository;
-import com.wearperfect.dataservice.api.repositories.RoleRepository;
+import com.wearperfect.dataservice.api.repository.FeatureRepository;
+import com.wearperfect.dataservice.api.repository.RoleRepository;
 import com.wearperfect.dataservice.api.service.SettingsService;
 
 @Service

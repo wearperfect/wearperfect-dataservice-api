@@ -17,7 +17,7 @@ import com.wearperfect.dataservice.api.dto.CategoryDTO;
 import com.wearperfect.dataservice.api.entities.Category;
 import com.wearperfect.dataservice.api.entities.Category_;
 import com.wearperfect.dataservice.api.mappers.CategoryMapper;
-import com.wearperfect.dataservice.api.repositories.CategoryRepository;
+import com.wearperfect.dataservice.api.repository.CategoryRepository;
 import com.wearperfect.dataservice.api.service.CategoryService;
 
 @Service

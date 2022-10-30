@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.wearperfect.dataservice.api" })
-@EnableJpaRepositories(basePackages = { "com.wearperfect.dataservice.api.repositories" })
+@EnableJpaRepositories(basePackages = { "com.wearperfect.dataservice.api.repository" })
 public class WearperfectDataserviceApiApplication {
 
 	public static void main(String[] args) {

@@ -23,7 +23,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.HashTagDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDTO;
@@ -49,16 +49,16 @@ import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.mappers.PostMediaMapper;
 import com.wearperfect.dataservice.api.mappers.PostMediaUserTagMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.ContentTypeRepository;
-import com.wearperfect.dataservice.api.repositories.FollowRepository;
-import com.wearperfect.dataservice.api.repositories.MasterRepository;
-import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
-import com.wearperfect.dataservice.api.repositories.PostMediaRepository;
-import com.wearperfect.dataservice.api.repositories.PostMediaUserTagRepository;
-import com.wearperfect.dataservice.api.repositories.PostRepository;
-import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.ContentTypeRepository;
+import com.wearperfect.dataservice.api.repository.FollowRepository;
+import com.wearperfect.dataservice.api.repository.MasterRepository;
+import com.wearperfect.dataservice.api.repository.PostCommentRepository;
+import com.wearperfect.dataservice.api.repository.PostLikeRepository;
+import com.wearperfect.dataservice.api.repository.PostMediaRepository;
+import com.wearperfect.dataservice.api.repository.PostMediaUserTagRepository;
+import com.wearperfect.dataservice.api.repository.PostRepository;
+import com.wearperfect.dataservice.api.repository.PostSaveRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
@@ -67,8 +67,8 @@ import com.wearperfect.dataservice.api.service.PostHashTagService;
 import com.wearperfect.dataservice.api.service.PostService;
 import com.wearperfect.dataservice.api.service.PostUserMentionService;
 import com.wearperfect.dataservice.api.service.UserService;
-import com.wearperfect.dataservice.api.specifications.PostDetailsSpecification;
-import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
+import com.wearperfect.dataservice.api.specification.PostDetailsSpecification;
+import com.wearperfect.dataservice.api.specification.UserDetailsSpecification;
 import com.wearperfect.dataservice.api.utility.service.TextUtilService;
 
 @Service
@@ -331,7 +331,7 @@ public class PostServiceImpl implements PostService {
 		}
 
 		Optional<Post> post = postRepository.findByIdAndCreatedBy(postId, userId);
-		if (!post.isEmpty()) {
+		if (!post.isPresent()) {
 			List<PostMedia> postMediaList = post.get().getPostMediaList();
 			postRepository.deleteById(post.get().getId());
 			postMediaList.stream().forEach(postMedia -> {

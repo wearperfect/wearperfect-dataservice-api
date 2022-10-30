@@ -3,7 +3,6 @@ package com.wearperfect.dataservice.api.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -24,10 +23,10 @@ import com.wearperfect.dataservice.api.entities.UserContact_;
 import com.wearperfect.dataservice.api.mappers.MessageMapper;
 import com.wearperfect.dataservice.api.mappers.UserContactMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.FollowRepository;
-import com.wearperfect.dataservice.api.repositories.MessageRepository;
-import com.wearperfect.dataservice.api.repositories.UserContactRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.FollowRepository;
+import com.wearperfect.dataservice.api.repository.MessageRepository;
+import com.wearperfect.dataservice.api.repository.UserContactRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.MessageService;
 import com.wearperfect.dataservice.api.service.UserContactService;
 

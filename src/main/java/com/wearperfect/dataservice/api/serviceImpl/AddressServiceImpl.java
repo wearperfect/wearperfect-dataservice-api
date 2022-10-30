@@ -15,8 +15,8 @@ import com.wearperfect.dataservice.api.dto.AddressDTO;
 import com.wearperfect.dataservice.api.entities.Address;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.AddressMapper;
-import com.wearperfect.dataservice.api.repositories.AddressRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.AddressRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.AddressService;
 
 @Service

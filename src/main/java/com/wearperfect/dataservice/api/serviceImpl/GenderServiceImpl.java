@@ -21,8 +21,8 @@ import com.wearperfect.dataservice.api.entities.GenderCategory_;
 import com.wearperfect.dataservice.api.entities.Gender_;
 import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
 import com.wearperfect.dataservice.api.mappers.GenderMapper;
-import com.wearperfect.dataservice.api.repositories.GenderCategoryRepository;
-import com.wearperfect.dataservice.api.repositories.GenderRepository;
+import com.wearperfect.dataservice.api.repository.GenderCategoryRepository;
+import com.wearperfect.dataservice.api.repository.GenderRepository;
 import com.wearperfect.dataservice.api.service.GenderService;
 
 @Service

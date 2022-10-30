@@ -1,12 +1,17 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
+import com.wearperfect.dataservice.api.constant.Pagination;
+import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
+import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entities.BusinessAndSupport_;
+import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
+import com.wearperfect.dataservice.api.repository.BusinessAndSupportRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
+import com.wearperfect.dataservice.api.service.BusinessAndSupportService;
+import com.wearperfect.dataservice.api.service.CityService;
+import com.wearperfect.dataservice.api.service.CountryService;
+import com.wearperfect.dataservice.api.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,18 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.constants.Pagination;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
-import com.wearperfect.dataservice.api.entities.BusinessAndSupport_;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
-import com.wearperfect.dataservice.api.repositories.BusinessAndSupportRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
-import com.wearperfect.dataservice.api.service.BusinessAndSupportService;
-import com.wearperfect.dataservice.api.service.CityService;
-import com.wearperfect.dataservice.api.service.CountryService;
-import com.wearperfect.dataservice.api.service.StateService;
+import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -96,7 +94,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 	public BusinessAndSupportDTO updateBusinessAndSupport(Long userId, Long businessAndSupportId,
 			BusinessAndSupportDTO businessAndSupportDto) {
 		
-		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
+		if(!userId.equals(businessAndSupportDto.getUserId()) || !userId.equals(businessAndSupportDto.getCreatedBy())) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		
@@ -128,7 +126,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 	@Override
 	public BusinessAndSupportDTO updateBusinessAddress(Long userId, Long businessAndSupportId,
 			BusinessAndSupportDTO businessAndSupportDto) {
-		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
+		if(!userId.equals(businessAndSupportDto.getUserId()) || !userId.equals(businessAndSupportDto.getCreatedBy())) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		
@@ -155,7 +153,7 @@ public class BusinessAndSupportServiceImpl implements BusinessAndSupportService{
 	@Override
 	public BusinessAndSupportDTO updateBusinessSupport(Long userId, Long businessAndSupportId,
 			BusinessAndSupportDTO businessAndSupportDto) {
-		if(userId != businessAndSupportDto.getUserId() || userId != businessAndSupportDto.getCreatedBy()) {
+		if(!userId.equals(businessAndSupportDto.getUserId()) || !userId.equals(businessAndSupportDto.getCreatedBy())) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		

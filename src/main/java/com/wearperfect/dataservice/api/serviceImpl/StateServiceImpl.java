@@ -21,8 +21,8 @@ import com.wearperfect.dataservice.api.entities.State;
 import com.wearperfect.dataservice.api.entities.State_;
 import com.wearperfect.dataservice.api.mappers.CountryMapper;
 import com.wearperfect.dataservice.api.mappers.StateMapper;
-import com.wearperfect.dataservice.api.repositories.CountryRepository;
-import com.wearperfect.dataservice.api.repositories.StateRepository;
+import com.wearperfect.dataservice.api.repository.CountryRepository;
+import com.wearperfect.dataservice.api.repository.StateRepository;
 import com.wearperfect.dataservice.api.service.StateService;
 
 @Service

@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
@@ -22,10 +22,10 @@ import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
-import com.wearperfect.dataservice.api.repositories.PostRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.PostCommentRepository;
+import com.wearperfect.dataservice.api.repository.PostLikeRepository;
+import com.wearperfect.dataservice.api.repository.PostRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.ExploreService;
 
 @Service

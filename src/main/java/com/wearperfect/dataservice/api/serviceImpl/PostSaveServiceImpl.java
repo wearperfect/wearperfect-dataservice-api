@@ -16,7 +16,7 @@ import com.wearperfect.dataservice.api.dto.PostSaveDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
 import com.wearperfect.dataservice.api.entities.PostSave;
 import com.wearperfect.dataservice.api.mappers.PostSaveMapper;
-import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
+import com.wearperfect.dataservice.api.repository.PostSaveRepository;
 import com.wearperfect.dataservice.api.service.PostSaveService;
 import com.wearperfect.dataservice.api.service.PostService;
 

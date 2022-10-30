@@ -1,7 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -12,21 +11,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.entities.Follow;
 import com.wearperfect.dataservice.api.entities.Post;
 import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.entities.Post_;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.PostMapper;
-import com.wearperfect.dataservice.api.repositories.FollowRepository;
-import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
-import com.wearperfect.dataservice.api.repositories.PostRepository;
-import com.wearperfect.dataservice.api.repositories.PostSaveRepository;
+import com.wearperfect.dataservice.api.repository.FollowRepository;
+import com.wearperfect.dataservice.api.repository.PostCommentRepository;
+import com.wearperfect.dataservice.api.repository.PostLikeRepository;
+import com.wearperfect.dataservice.api.repository.PostRepository;
+import com.wearperfect.dataservice.api.repository.PostSaveRepository;
 import com.wearperfect.dataservice.api.service.FeedService;
 import com.wearperfect.dataservice.api.service.FollowService;
 import com.wearperfect.dataservice.api.service.PostLikeService;
@@ -111,7 +109,7 @@ public class FeedServiceImpl implements FeedService {
 			}
 			
 			// Updating Post if post is followed by requested user
-			if (post.getCreatedBy() == userId) {
+			if (post.getCreatedBy().equals(userId)) {
 				post.setFollowing(true);
 			} else {
 				if (followService.isUserFollowedByUserId(post.getCreatedBy(), userId)) {

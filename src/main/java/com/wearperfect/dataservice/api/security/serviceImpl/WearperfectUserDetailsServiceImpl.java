@@ -20,10 +20,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.entities.Role;
 import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
-import com.wearperfect.dataservice.api.specifications.UserDetailsSpecification;
+import com.wearperfect.dataservice.api.specification.UserDetailsSpecification;
 
 @Service
 @Transactional

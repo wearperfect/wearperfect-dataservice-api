@@ -18,9 +18,9 @@ import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.entities.User_;
 import com.wearperfect.dataservice.api.mappers.HashTagMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.HashTagRepository;
-import com.wearperfect.dataservice.api.repositories.PostHashTagRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.HashTagRepository;
+import com.wearperfect.dataservice.api.repository.PostHashTagRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.SearchService;
 
 @Service

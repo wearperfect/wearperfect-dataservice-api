@@ -17,7 +17,7 @@ import com.wearperfect.dataservice.api.dto.RegionDTO;
 import com.wearperfect.dataservice.api.entities.Region;
 import com.wearperfect.dataservice.api.entities.Region_;
 import com.wearperfect.dataservice.api.mappers.RegionMapper;
-import com.wearperfect.dataservice.api.repositories.RegionRepository;
+import com.wearperfect.dataservice.api.repository.RegionRepository;
 import com.wearperfect.dataservice.api.service.RegionService;
 
 @Service

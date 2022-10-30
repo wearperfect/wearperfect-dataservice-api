@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import com.wearperfect.dataservice.api.dto.PostLikeDTO;
 import com.wearperfect.dataservice.api.entities.PostLike;
 import com.wearperfect.dataservice.api.entities.PostLike_;
 import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
-import com.wearperfect.dataservice.api.repositories.PostLikeRepository;
+import com.wearperfect.dataservice.api.repository.PostLikeRepository;
 import com.wearperfect.dataservice.api.service.PostLikeService;
 
 @Service

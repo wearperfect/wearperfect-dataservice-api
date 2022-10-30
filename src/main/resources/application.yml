@@ -33,7 +33,7 @@ logging:
     #org.hibernate: DEBUG
 # Server configuration
 server:
-  port: 8080
+  port: 8090
   sessionTimeout: 30
   servlet:
     context-path: /wearperfect/api/v1

@@ -7,13 +7,14 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.wearperfect.dataservice.api.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.wearperfect.dataservice.api.constants.Pagination;
+import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
@@ -21,8 +22,8 @@ import com.wearperfect.dataservice.api.entities.PostComment;
 import com.wearperfect.dataservice.api.entities.PostComment_;
 import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.PostCommentRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.PostCommentRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.PostCommentService;
 
 @Service
@@ -60,8 +61,11 @@ public class PostCommentsServiceImpl implements PostCommentService{
 		postComment.setActive(true);
 		postCommentRepository.save(postComment);
 		PostCommentDetailsDTO savedCommentDto = postCommentMapper.mapPostCommentToPostCommentDetailsDto(postComment);
-		UserBasicDetailsDTO userDetails = userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get());
-		savedCommentDto.setCommentedBy(userDetails);
+		Optional<User> user = userRepository.findById(userId);
+		user.ifPresent(value -> {
+			UserBasicDetailsDTO userDetails = userMapper.mapUserToUserBasicDetailsDto(userRepository.findById(userId).get());
+			savedCommentDto.setCommentedBy(userDetails);
+		});
 		return savedCommentDto;
 	}
 
@@ -76,9 +80,7 @@ public class PostCommentsServiceImpl implements PostCommentService{
 	@Override
 	public Long deletePostComment(Long userId, Long postId, Long commentId) {
 		Optional<PostComment> postComment = Optional.ofNullable(postCommentRepository.findByIdAndPostIdAndCommentedBy(commentId, postId, userId));
-		if(postComment.isPresent()) {
-			postCommentRepository.deleteById(postComment.get().getId());
-		}
+		postComment.ifPresent(comment -> postCommentRepository.deleteById(comment.getId()));
 		return postId;
 	}
 }

@@ -21,8 +21,8 @@ import com.wearperfect.dataservice.api.entities.Style;
 import com.wearperfect.dataservice.api.entities.Style_;
 import com.wearperfect.dataservice.api.entities.UserStyle;
 import com.wearperfect.dataservice.api.mappers.StyleMapper;
-import com.wearperfect.dataservice.api.repositories.StyleRepository;
-import com.wearperfect.dataservice.api.repositories.UserStyleRepository;
+import com.wearperfect.dataservice.api.repository.StyleRepository;
+import com.wearperfect.dataservice.api.repository.UserStyleRepository;
 import com.wearperfect.dataservice.api.service.StyleService;
 
 @Service

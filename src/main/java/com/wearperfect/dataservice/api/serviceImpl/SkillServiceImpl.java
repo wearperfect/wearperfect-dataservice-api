@@ -21,8 +21,8 @@ import com.wearperfect.dataservice.api.entities.Skill;
 import com.wearperfect.dataservice.api.entities.Skill_;
 import com.wearperfect.dataservice.api.entities.UserSkill;
 import com.wearperfect.dataservice.api.mappers.SkillMapper;
-import com.wearperfect.dataservice.api.repositories.SkillRepository;
-import com.wearperfect.dataservice.api.repositories.UserSkillRepository;
+import com.wearperfect.dataservice.api.repository.SkillRepository;
+import com.wearperfect.dataservice.api.repository.UserSkillRepository;
 import com.wearperfect.dataservice.api.service.SkillService;
 
 @Service

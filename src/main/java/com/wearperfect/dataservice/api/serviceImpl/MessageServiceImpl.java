@@ -23,14 +23,14 @@ import com.wearperfect.dataservice.api.entities.Message;
 import com.wearperfect.dataservice.api.entities.Message_;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.entities.UserContact;
-import com.wearperfect.dataservice.api.exceptions.BadRequestException;
+import com.wearperfect.dataservice.api.exception.BadRequestException;
 import com.wearperfect.dataservice.api.mappers.MessageMapper;
 import com.wearperfect.dataservice.api.mappers.UserContactMapper;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repositories.FollowRepository;
-import com.wearperfect.dataservice.api.repositories.MessageRepository;
-import com.wearperfect.dataservice.api.repositories.UserContactRepository;
-import com.wearperfect.dataservice.api.repositories.UserRepository;
+import com.wearperfect.dataservice.api.repository.FollowRepository;
+import com.wearperfect.dataservice.api.repository.MessageRepository;
+import com.wearperfect.dataservice.api.repository.UserContactRepository;
+import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.MessageService;
 import com.wearperfect.dataservice.api.service.UserService;
 
@@ -124,7 +124,7 @@ public class MessageServiceImpl implements MessageService {
 		userContactMessages.setMessages(messages);
 		if(null == userContactMessages.getContactUserDetails()) {
 			Optional<User> user = userRepository.findById(messageDto.getSentTo());
-			userContactMessages.setContactUserDetails(userMapper.mapUserToUserBasicDetailsDto(user.get()));
+			user.ifPresent(value -> userContactMessages.setContactUserDetails(userMapper.mapUserToUserBasicDetailsDto(value)));
 		}
 		return userContactMessages;
 	}

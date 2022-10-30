@@ -20,7 +20,7 @@ import com.wearperfect.dataservice.api.dto.WorkDTO;
 import com.wearperfect.dataservice.api.entities.Work;
 import com.wearperfect.dataservice.api.entities.Work_;
 import com.wearperfect.dataservice.api.mappers.WorkMapper;
-import com.wearperfect.dataservice.api.repositories.WorkRepository;
+import com.wearperfect.dataservice.api.repository.WorkRepository;
 import com.wearperfect.dataservice.api.service.WorkService;
 
 @Service

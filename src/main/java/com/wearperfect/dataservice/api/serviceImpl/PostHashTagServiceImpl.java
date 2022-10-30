@@ -12,7 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.wearperfect.dataservice.api.dto.PostHashTagDTO;
 import com.wearperfect.dataservice.api.entities.PostHashTag;
 import com.wearperfect.dataservice.api.mappers.PostHashTagMapper;
-import com.wearperfect.dataservice.api.repositories.PostHashTagRepository;
+import com.wearperfect.dataservice.api.repository.PostHashTagRepository;
 import com.wearperfect.dataservice.api.service.PostHashTagService;
 
 @Service
