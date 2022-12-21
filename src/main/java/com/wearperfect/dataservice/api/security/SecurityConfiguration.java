@@ -40,12 +40,15 @@ public class SecurityConfiguration {
 		.and()
 		.authorizeRequests()
 		.antMatchers(
-			"/signin/**", 
-			"/signup/**",
-			"/feed/**",
-			"/explore/**",
-			"/filters/**",
-			"/users/**/posts/**/comments")
+				"/v3/api-docs/**",
+				"/swagger-ui",
+				"/swagger-ui/**",
+				"/signin/**",
+				"/signup/**",
+				"/feed/**",
+				"/explore/**",
+				"/filters/**",
+				"/users/**/posts/**/comments")
 		.permitAll()
 		.anyRequest()
 		.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
