@@ -24,7 +24,7 @@ import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsSe
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class SecurityConfig {
 
 	@Autowired
 	WearperfectUserDetailsService userDetailsService;
@@ -43,6 +43,7 @@ public class SecurityConfiguration {
 				"/v3/api-docs/**",
 				"/swagger-ui",
 				"/swagger-ui/**",
+				"/login/**",
 				"/signin/**",
 				"/signup/**",
 				"/feed/**",

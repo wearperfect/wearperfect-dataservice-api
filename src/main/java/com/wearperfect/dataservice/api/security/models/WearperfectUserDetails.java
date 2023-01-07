@@ -14,21 +14,13 @@ public class WearperfectUserDetails implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	Long userId;
-
 	String username;
-
 	String password;
-	
 	Date passwordLastUpdatedOn;
-
 	Boolean accountNonExpired;
-
 	Boolean accountNonLocked;
-
 	Boolean credentialsNonExpired;
-
 	Boolean enabled;
-
 	Collection<? extends GrantedAuthority> authorities;
 
 	public WearperfectUserDetails(Long userId, String username, String password,

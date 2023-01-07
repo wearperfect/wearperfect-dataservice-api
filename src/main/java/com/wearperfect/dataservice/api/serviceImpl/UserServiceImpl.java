@@ -44,7 +44,7 @@ import com.wearperfect.dataservice.api.repository.PostRepository;
 import com.wearperfect.dataservice.api.repository.RoleRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
-import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
+import com.wearperfect.dataservice.api.security.service.JwtUtilService;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.CityService;
 import com.wearperfect.dataservice.api.service.CountryService;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 	WearperfectUserDetailsService wearperfectUserDetailsService;
 
 	@Autowired
-	JwtUtiilService jwtUtiilService;
+	JwtUtilService jwtUtiilService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -163,18 +163,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO createUser(User user) {
-		if (null == user.getUsername() || user.getUsername().isEmpty() || null == user.getPassword()) {
+		if (null == user.getUsername().trim() || user.getUsername().trim().isEmpty() || null == user.getPassword().trim()) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
 		}
-		user.setUsername(user.getUsername().toLowerCase());
-		if (null != user.getEmail() && !user.getEmail().isEmpty()) {
-			user.setEmail(user.getEmail().toLowerCase());
+		user.setUsername(user.getUsername().trim().toLowerCase());
+		if (null != user.getEmail().trim() && !user.getEmail().trim().isEmpty()) {
+			user.setEmail(user.getEmail().trim().toLowerCase());
 		}
 		// Validate Email
 		// Validate Phone number
 		// Validate username
 		// Validate password
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
 		user.setRoleId(2); // Default role USER
 		user.setCreatedOn(new Date());
 		user.setActive(true);
@@ -207,13 +207,13 @@ public class UserServiceImpl implements UserService {
 		// BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+					authenticationRequest.getUsername().trim(), authenticationRequest.getPassword().trim()));
 		} catch (BadCredentialsException exception) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid credentials");
 		}
 
 		final WearperfectUserDetails userDetails = (WearperfectUserDetails) wearperfectUserDetailsService
-				.loadUserByUsername(authenticationRequest.getUsername());
+				.loadUserByUsername(authenticationRequest.getUsername().trim());
 		return jwtUtiilService.generateToken(userDetails);
 	}
 

@@ -5,18 +5,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.wearperfect.dataservice.api.cache.entities.BlacklistAccessToken;
+import com.wearperfect.dataservice.api.cache.service.BlacklistAccessTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
-import com.wearperfect.dataservice.api.security.service.JwtUtiilService;
+import com.wearperfect.dataservice.api.security.service.JwtUtilService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.Base64Codec;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
-public class JwtUtilServiceImpl implements JwtUtiilService {
+public class JwtUtilServiceImpl implements JwtUtilService {
+
+	@Autowired
+	BlacklistAccessTokenService blacklistAccessTokenService;
 
 	private final String SECRET_KEY = "Wearperfect@2019";
 
@@ -29,19 +37,25 @@ public class JwtUtilServiceImpl implements JwtUtiilService {
 	}
 	
 	@Override
-	public Boolean validateToken(String token, WearperfectUserDetails userDetails) {
-		final Long userId = Long.valueOf(extractUserId(token));
-		final Date tokenIssuedAt = extractIssuedAt(token);
+	public Boolean validateToken(String token) {
+
 		final Date tokenExpirationDate = extractExpiration(token);
-		Boolean isValidUser = userId.equals(userDetails.getUserId());
-		Boolean isPasswordValid = true;
-		if(null != userDetails.getPasswordLastUpdatedOn()) {
-			isPasswordValid = tokenIssuedAt.getTime()>=userDetails.getPasswordLastUpdatedOn().getTime();
-			System.out.println("tokenIssuedAt.getTime():::::::::::::::::::::::::::::::::"+tokenIssuedAt.getTime());
-			System.out.println("userDetails.getPasswordLastUpdatedOn().getTime()::::::::"+userDetails.getPasswordLastUpdatedOn().getTime());
-		}
 		Boolean isTokenNonExpired = new Date().getTime()<tokenExpirationDate.getTime();
-		return isValidUser && isPasswordValid && isTokenNonExpired;
+		if(!isTokenNonExpired){
+			System.out.println("JwtUtilServiceImpl:validateToken: AccessToken is expired and is invalid.");
+			throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Access Token has expired.");
+		}
+
+		final boolean isAccessTokenBlacklisted = blacklistAccessTokenService.verifyIfAccessTokenIsBlacklisted(token);
+		if(isAccessTokenBlacklisted){
+			System.out.println("JwtUtilServiceImpl:validateToken: AccessToken is blacklisted and is invalid.");
+			throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Access Token is not valid.");
+		}
+
+		//ToDo
+		// Issue new token on password change and blacklist existing token.
+
+		return true;
 	}
 	
 	@Override
