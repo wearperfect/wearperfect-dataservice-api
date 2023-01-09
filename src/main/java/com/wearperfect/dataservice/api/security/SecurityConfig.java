@@ -27,7 +27,7 @@ import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsSe
 public class SecurityConfig {
 
 	@Autowired
-	WearperfectUserDetailsService userDetailsService;
+	WearperfectUserDetailsService wearperfectUserDetailsService;
 	
 	@Autowired
 	JWTRequestFilter jwtRequestFilter;
@@ -78,11 +78,11 @@ public class SecurityConfig {
 	@Bean
 	DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(userDetailsService);
+		authenticationProvider.setUserDetailsService(wearperfectUserDetailsService);
 		authenticationProvider.setPasswordEncoder(passwordEncoder());
 		return authenticationProvider;
 	}
-	
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 	return authenticationConfiguration.getAuthenticationManager();

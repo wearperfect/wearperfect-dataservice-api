@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -47,29 +50,23 @@ public class WearperfectUserDetailsServiceImpl implements WearperfectUserDetails
 			return new WearperfectUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.getPasswordLastUpdatedOn(),true, true, true, user.getActive(), mapRolesToAuthorities(user.getRoleDetails()));
 		}
 	}
-	
-	@Override
-	public WearperfectUserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
 
-		Optional<User> user = userRepository.findById(userId);
-		if(user.isPresent()) {
-			return new WearperfectUserDetails(user.get().getId(), user.get().getUsername(), user.get().getPassword(), user.get().getPasswordLastUpdatedOn(), true, true, true, user.get().getActive(), mapRolesToAuthorities(user.get().getRoleDetails()));
-		}else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+	@Override
+	public WearperfectUserPrincipal getLoggedInUserDetails() throws UsernameNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("WearperfectUserPrincipal:getLoggedInUserDetails: "+mapper.writeValueAsString(authentication));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
+		return (WearperfectUserPrincipal) authentication.getPrincipal();
 	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Role role) {
 		Collection<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
-	}
-
-	@Override
-	public WearperfectUserDetails getLoggedInUserDetails() throws UsernameNotFoundException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		WearperfectUserDetails wearperfectUserDetails = (WearperfectUserDetails) authentication.getPrincipal();
-		return wearperfectUserDetails;
 	}
 
 }

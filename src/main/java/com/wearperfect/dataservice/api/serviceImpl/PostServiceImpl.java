@@ -1,17 +1,17 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-
+import com.amazonaws.services.s3.AmazonS3;
+import com.wearperfect.dataservice.api.constant.Pagination;
+import com.wearperfect.dataservice.api.dto.*;
+import com.wearperfect.dataservice.api.entities.*;
+import com.wearperfect.dataservice.api.mappers.*;
+import com.wearperfect.dataservice.api.repository.*;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
+import com.wearperfect.dataservice.api.service.*;
+import com.wearperfect.dataservice.api.specification.PostDetailsSpecification;
+import com.wearperfect.dataservice.api.specification.UserDetailsSpecification;
+import com.wearperfect.dataservice.api.utility.service.TextUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -22,54 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.wearperfect.dataservice.api.constant.Pagination;
-import com.wearperfect.dataservice.api.dto.HashTagDTO;
-import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostDTO;
-import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PostHashTagDTO;
-import com.wearperfect.dataservice.api.dto.PostUserMentionDTO;
-import com.wearperfect.dataservice.api.dto.UserPostsResponseDTO;
-import com.wearperfect.dataservice.api.entities.Follow;
-import com.wearperfect.dataservice.api.entities.Post;
-import com.wearperfect.dataservice.api.entities.PostComment;
-import com.wearperfect.dataservice.api.entities.PostComment_;
-import com.wearperfect.dataservice.api.entities.PostLike;
-import com.wearperfect.dataservice.api.entities.PostLike_;
-import com.wearperfect.dataservice.api.entities.PostMedia;
-import com.wearperfect.dataservice.api.entities.PostMediaUserTag;
-import com.wearperfect.dataservice.api.entities.PostMediaUserTag_;
-import com.wearperfect.dataservice.api.entities.PostSave;
-import com.wearperfect.dataservice.api.entities.PostSave_;
-import com.wearperfect.dataservice.api.entities.Post_;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
-import com.wearperfect.dataservice.api.mappers.PostMapper;
-import com.wearperfect.dataservice.api.mappers.PostMediaMapper;
-import com.wearperfect.dataservice.api.mappers.PostMediaUserTagMapper;
-import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repository.ContentTypeRepository;
-import com.wearperfect.dataservice.api.repository.FollowRepository;
-import com.wearperfect.dataservice.api.repository.MasterRepository;
-import com.wearperfect.dataservice.api.repository.PostCommentRepository;
-import com.wearperfect.dataservice.api.repository.PostLikeRepository;
-import com.wearperfect.dataservice.api.repository.PostMediaRepository;
-import com.wearperfect.dataservice.api.repository.PostMediaUserTagRepository;
-import com.wearperfect.dataservice.api.repository.PostRepository;
-import com.wearperfect.dataservice.api.repository.PostSaveRepository;
-import com.wearperfect.dataservice.api.repository.UserRepository;
-import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
-import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
-import com.wearperfect.dataservice.api.service.FileService;
-import com.wearperfect.dataservice.api.service.HashTagService;
-import com.wearperfect.dataservice.api.service.PostHashTagService;
-import com.wearperfect.dataservice.api.service.PostService;
-import com.wearperfect.dataservice.api.service.PostUserMentionService;
-import com.wearperfect.dataservice.api.service.UserService;
-import com.wearperfect.dataservice.api.specification.PostDetailsSpecification;
-import com.wearperfect.dataservice.api.specification.UserDetailsSpecification;
-import com.wearperfect.dataservice.api.utility.service.TextUtilService;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -325,7 +283,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDTO deletePost(Long userId, Long postId) {
-		WearperfectUserDetails loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
 		if (!loggedInUserDetails.getUserId().equals(userId)) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "User cannot delete other's posts.");
 		}

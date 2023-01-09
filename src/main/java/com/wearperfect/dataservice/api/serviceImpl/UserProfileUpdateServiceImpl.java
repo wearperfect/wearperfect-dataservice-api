@@ -1,15 +1,5 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.entities.User;
@@ -17,10 +7,19 @@ import com.wearperfect.dataservice.api.exception.AccessForbiddenException;
 import com.wearperfect.dataservice.api.exception.UserNotFoundException;
 import com.wearperfect.dataservice.api.mappers.UserMapper;
 import com.wearperfect.dataservice.api.repository.UserRepository;
-import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.UserProfileUpdateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
@@ -51,9 +50,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateProfilePicture(Long userId, MultipartFile profilePicture) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				Date currentDate = new Date();
 				user.get().setLastUpdatedOn(currentDate);
@@ -98,9 +97,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateProfileCoverPicture(Long userId, MultipartFile profileCoverPicture) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				Date currentDate = new Date();
 				user.get().setLastUpdatedOn(currentDate);
@@ -145,9 +144,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateFullname(Long userId, String fullname) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				user.get().setFullname(fullname);
 				User updateUser = userRepository.saveAndFlush(user.get());
@@ -160,9 +159,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateUsername(Long userId, String username) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				user.get().setUsername(username);
 				User updateUser = userRepository.saveAndFlush(user.get());
@@ -175,9 +174,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateWebsite(Long userId, String website) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				user.get().setWebsite(website);
 				User updateUser = userRepository.saveAndFlush(user.get());
@@ -190,9 +189,9 @@ public class UserProfileUpdateServiceImpl implements UserProfileUpdateService {
 
 	@Override
 	public UserDTO updateBio(Long userId, String bio) {
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
-		if (loggedInUser.getUserId().equals(userId)) {
-			Optional<User> user = userRepository.findById(loggedInUser.getUserId());
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		if (loggedInUserDetails.getUserId().equals(userId)) {
+			Optional<User> user = userRepository.findById(loggedInUserDetails.getUserId());
 			if (user.isPresent()) {
 				user.get().setBio(bio);
 				User updateUser = userRepository.saveAndFlush(user.get());

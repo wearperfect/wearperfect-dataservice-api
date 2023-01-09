@@ -1,14 +1,21 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
+import com.amazonaws.services.s3.AmazonS3;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wearperfect.dataservice.api.dto.*;
+import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entities.Role;
+import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
+import com.wearperfect.dataservice.api.mappers.RoleMapper;
+import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.repository.*;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
+import com.wearperfect.dataservice.api.security.service.JwtUtilService;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
+import com.wearperfect.dataservice.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,37 +28,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.CityBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.CountryBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
-import com.wearperfect.dataservice.api.dto.StateBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
-import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
-import com.wearperfect.dataservice.api.entities.Role;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
-import com.wearperfect.dataservice.api.mappers.RoleMapper;
-import com.wearperfect.dataservice.api.mappers.UserMapper;
-import com.wearperfect.dataservice.api.repository.BusinessAndSupportRepository;
-import com.wearperfect.dataservice.api.repository.FollowRepository;
-import com.wearperfect.dataservice.api.repository.PostRepository;
-import com.wearperfect.dataservice.api.repository.RoleRepository;
-import com.wearperfect.dataservice.api.repository.UserRepository;
-import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
-import com.wearperfect.dataservice.api.security.service.JwtUtilService;
-import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
-import com.wearperfect.dataservice.api.service.CityService;
-import com.wearperfect.dataservice.api.service.CountryService;
-import com.wearperfect.dataservice.api.service.FileService;
-import com.wearperfect.dataservice.api.service.FollowService;
-import com.wearperfect.dataservice.api.service.StateService;
-import com.wearperfect.dataservice.api.service.UserService;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -144,12 +127,12 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 
-		WearperfectUserDetails loggedInUser = wearperfectUserDetailsService.getLoggedInUserDetails();
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
 
-		if (loggedInUser.getUserId() == userId) {
+		if (loggedInUserDetails.getUserId() == userId) {
 			userDetails.setFollowing(true);
 		} else {
-			if (followService.isUserFollowedByUserId(userId, loggedInUser.getUserId())) {
+			if (followService.isUserFollowedByUserId(userId, loggedInUserDetails.getUserId())) {
 				userDetails.setFollowing(true);
 			} else {
 				userDetails.setFollowing(false);

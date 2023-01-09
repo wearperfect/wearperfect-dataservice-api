@@ -8,11 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class WearperfectUserDetails implements UserDetails {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	Long userId;
 	String username;
 	String password;

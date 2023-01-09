@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import com.wearperfect.dataservice.api.cache.entities.BlacklistAccessToken;
 import com.wearperfect.dataservice.api.cache.service.BlacklistAccessTokenService;
+import io.jsonwebtoken.Jws;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,18 +34,11 @@ public class JwtUtilServiceImpl implements JwtUtilService {
 		HashMap<String, Object> claims = new HashMap<>();
 		claims.put("userId", userDetails.getUserId());
 		claims.put("username", userDetails.getUsername());
-		return createToken(claims, String.valueOf(userDetails.getUserId()));
+		return createToken(claims, userDetails.getUsername());
 	}
 	
 	@Override
-	public Boolean validateToken(String token) {
-
-		final Date tokenExpirationDate = extractExpiration(token);
-		Boolean isTokenNonExpired = new Date().getTime()<tokenExpirationDate.getTime();
-		if(!isTokenNonExpired){
-			System.out.println("JwtUtilServiceImpl:validateToken: AccessToken is expired and is invalid.");
-			throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Access Token has expired.");
-		}
+	public Boolean validateTokenIfBlacklisted(String token) {
 
 		final boolean isAccessTokenBlacklisted = blacklistAccessTokenService.verifyIfAccessTokenIsBlacklisted(token);
 		if(isAccessTokenBlacklisted){
@@ -59,10 +53,10 @@ public class JwtUtilServiceImpl implements JwtUtilService {
 	}
 	
 	@Override
-	public String extractUserId(String token){
+	public String extractSubject(String token){
 		return extractClaim(token, Claims::getSubject);
 	}
-	
+
 	public Date extractIssuedAt(String token){
 		return extractClaim(token, Claims::getIssuedAt);
 	}
@@ -77,12 +71,19 @@ public class JwtUtilServiceImpl implements JwtUtilService {
 	}
 	
 	private <T>T extractClaim(String token, Function<Claims, T> claimsResolver){
-		final Claims claims = extractAllClaims(token);
+		final Claims claims = extractAllClaims(token).getBody();
 		return claimsResolver.apply(claims);
 	}
-	
-	private Claims extractAllClaims(String token) {
-		return Jwts.parser().setSigningKey(new Base64Codec().encode(SECRET_KEY)).parseClaimsJws(token).getBody();
+
+	@Override
+	public Jws<Claims> extractAllClaims(String token) {
+		try{
+			//Parsing claims verifies the token internally.
+			return Jwts.parser().setSigningKey(new Base64Codec().encode(SECRET_KEY)).parseClaimsJws(token);
+		}catch (Exception exception){
+			System.out.println(exception.getMessage());
+			throw new HttpClientErrorException(HttpStatus.FORBIDDEN, exception.getMessage());
+		}
 	}
 
 }

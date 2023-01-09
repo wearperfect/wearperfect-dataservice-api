@@ -1,8 +1,12 @@
 package com.wearperfect.dataservice.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.cache.service.BlacklistAccessTokenService;
 import com.wearperfect.dataservice.api.dto.AccessTokenDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,9 @@ public class AccountController {
 
 	@Autowired
 	BlacklistAccessTokenService blacklistAccessTokenService;
+
+	@Autowired
+	WearperfectUserDetailsService wearperfectUserDetailsService;
 	
 	@PostMapping("/signin")
 	public String userSignin(@RequestBody(required = true) AuthenticationRequest authenticationRequest) {
@@ -43,14 +50,13 @@ public class AccountController {
 
 	@PostMapping("/signout")
 	public Boolean logoutUser(@RequestHeader(name="Authorization") String bearerToken) {
-		System.out.println("bearerToken:::"+bearerToken);
-		System.out.println("accessToken:::"+bearerToken.substring(7));
 		return blacklistAccessTokenService.blacklistAccessToken(bearerToken.substring(7));
 	}
 
 	@GetMapping("/me")
-	public UserDetailsDTO getLoggedInUserDetailsByAuthRequest(Authentication authentication) {
-		return userService.getUserDetailsByUsername(authentication.getName());
+	public UserDetailsDTO getLoggedInUserDetailsByAuthRequest() throws JsonProcessingException {
+		WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
+		return userService.getUserDetailsByUsername(loggedInUserDetails.getUsername());
 	}
 	
 }
