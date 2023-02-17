@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class UsernameAvailabilityDTO {
-
 	String username;
-	
 	Boolean available;
 }

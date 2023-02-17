@@ -4,26 +4,15 @@ import lombok.Data;
 
 @Data
 public class StyleDTO {
-
 	Integer id;
-
 	Integer regionId;
-
 	String name;
-
 	String desc;
-
 	String thumbnail;
-
 	String sourceLink;
-
 	Long createdBy;
-
 	Long createdOn;
-
 	Long lastUpdatedBy;
-
 	Long lastUpdatedOn;
-
 	Boolean active;
 }

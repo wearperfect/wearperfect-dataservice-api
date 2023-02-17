@@ -12,7 +12,7 @@ public interface AwsS3BucketMapper {
 
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
-	AwsS3BucketDTO mapAwsS3BucketToAwsS3BucketDto(AwsS3Bucket awsS3Bucket);
+    AwsS3BucketDTO mapAwsS3BucketToAwsS3BucketDto(AwsS3Bucket awsS3Bucket);
 	
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "timeToDateConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "timeToDateConverter")

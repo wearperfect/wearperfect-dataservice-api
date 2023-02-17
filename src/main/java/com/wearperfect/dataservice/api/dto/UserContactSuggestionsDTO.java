@@ -8,10 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserContactSuggestionsDTO {
-	
 	List<UserBasicDetailsDTO> recents;
-	
 	List<UserBasicDetailsDTO> searched;
-	
 	List<UserBasicDetailsDTO> connections;
 }

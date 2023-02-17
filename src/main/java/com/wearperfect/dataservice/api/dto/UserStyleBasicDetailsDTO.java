@@ -4,12 +4,8 @@ import lombok.Data;
 
 @Data
 public class UserStyleBasicDetailsDTO {
-
 	Long id;
-
 	Long userId;
-
 	Integer styleId;
-
 	Boolean active;
 }

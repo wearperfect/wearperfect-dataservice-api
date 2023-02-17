@@ -4,20 +4,12 @@ import lombok.Data;
 
 @Data
 public class GenderDTO {
-
 	Integer id;
-	
 	String name;
-	
 	String shortName;
-	
 	Long createdBy;
-	
 	Long createdOn;
-	
 	Long lastUpdatedBy;
-	
 	Long lastUpdatedOn;
-	
 	Boolean active;
 }

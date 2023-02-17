@@ -4,14 +4,9 @@ import lombok.Data;
 
 @Data
 public class PostHashTagDTO {
-
 	Long id;
-
 	Long postId;
-
 	Long hashTagId;
-
 	Long createdOn;
-
 	Boolean active;
 }

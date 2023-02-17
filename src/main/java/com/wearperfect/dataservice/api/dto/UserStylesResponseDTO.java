@@ -8,9 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserStylesResponseDTO {
-	
 	Long userId;
-	
 	List<StyleBasicDetailsDTO> userStyles;
 	
 }

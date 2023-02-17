@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.wearperfect.dataservice.api.dto.AddressDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.dto.AddressDTO;
 import com.wearperfect.dataservice.api.entities.Address;
 import com.wearperfect.dataservice.api.entities.User;
 import com.wearperfect.dataservice.api.mappers.AddressMapper;
