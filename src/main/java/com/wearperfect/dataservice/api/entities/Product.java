@@ -29,11 +29,14 @@ public class Product {
 	@Column(name = "features")
 	String features;
 
-	@Column(name = "user_id")
-	Long userId;
+	@Column(name = "manufactured_by_user_id")
+	Long manufacturedByUserId;
 
 	@Column(name = "product_category_id")
 	Integer productCategoryId;
+
+	@Column(name = "gender_category_id")
+	Integer genderCategoryId;
 
 	@Column(name = "available_for_sale")
 	Boolean availableForSale;

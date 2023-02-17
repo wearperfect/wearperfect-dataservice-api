@@ -43,13 +43,14 @@ public class SecurityConfig {
 				"/v3/api-docs/**",
 				"/swagger-ui",
 				"/swagger-ui/**",
-				"/login/**",
-				"/signin/**",
-				"/signup/**",
-				"/feed/**",
-				"/explore/**",
-				"/filters/**",
-				"/users/**/posts/**/comments")
+				"/v1/login/**",
+				"/v1/signin/**",
+				"/v1/signup/**",
+				"/v1/feed/**",
+				"/v1/explore/**",
+				"/v1/filters/**",
+				"/v1/users/**/posts/**/comments",
+				"/v1/products/**")
 		.permitAll()
 		.anyRequest()
 		.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
