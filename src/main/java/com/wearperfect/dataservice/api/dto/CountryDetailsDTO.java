@@ -6,14 +6,9 @@ import lombok.Data;
 
 @Data
 public class CountryDetailsDTO {
-
 	Integer id;
-
 	String name;
-
 	String shortName;
-
 	Boolean active;
-	
 	List<StateBasicDetailsDTO> states;
 }

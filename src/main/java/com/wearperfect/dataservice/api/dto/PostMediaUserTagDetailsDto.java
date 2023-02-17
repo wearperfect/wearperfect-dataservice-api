@@ -4,18 +4,11 @@ import lombok.Data;
 
 @Data
 public class PostMediaUserTagDetailsDto {
-
 	Long id;
-
 	Long postMediaId;
-
 	Long taggedUserId;
-	
 	Double tagLocationX;
-	
 	Double tagLocationY;
-
 	Long createdOn;
-	
 	UserBasicDetailsDTO taggedUserDetails;
 }

@@ -8,8 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserPostsResponseDTO {
-	
 	Long userId;
-	
 	List<PostDetailsDTO> userPosts;
 }

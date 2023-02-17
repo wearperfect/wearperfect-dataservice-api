@@ -4,10 +4,7 @@ import lombok.Data;
 
 @Data
 public class HashTagDTO {
-
 	Long id;
-
 	String tag;
-
 	Boolean active;
 }

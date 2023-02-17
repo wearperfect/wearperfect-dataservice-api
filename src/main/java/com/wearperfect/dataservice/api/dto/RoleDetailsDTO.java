@@ -6,17 +6,10 @@ import lombok.Data;
 
 @Data
 public class RoleDetailsDTO {
-	
 	Integer id;
-
 	String name;
-
 	String desc;
-	
 	Boolean switchable;
-
 	Boolean active;
-	
 	List<RoleFeatureDetailsDTO> roleFeatures;
-	
 }

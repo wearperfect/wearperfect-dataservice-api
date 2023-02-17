@@ -4,15 +4,9 @@ import lombok.Data;
 
 @Data
 public class PreferenceFilterGenderCategoryDTO {
-
 	Long id;
-
 	Long preferenceFilterId;
-
 	Integer genderCategoryId;
-	
 	GenderCategoryBasicDetailsDTO genderCategory;
-
 	Boolean active;
-	
 }

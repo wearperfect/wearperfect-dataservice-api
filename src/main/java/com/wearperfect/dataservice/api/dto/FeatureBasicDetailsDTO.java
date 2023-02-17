@@ -4,12 +4,8 @@ import lombok.Data;
 
 @Data
 public class FeatureBasicDetailsDTO {
-	
 	Integer id;
-	
 	String desc;
-	
 	Integer sequenceId;
-	
 	Boolean active;
 }

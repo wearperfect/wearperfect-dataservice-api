@@ -8,8 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserWorksResponseDTO {
-
 	Long userId;
-	
 	List<WorkDTO> userWorks;
 }

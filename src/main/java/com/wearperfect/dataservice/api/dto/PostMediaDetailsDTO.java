@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class PostMediaDetailsDTO {
-
 	Long id;
 	Long postId;
 	Integer sequenceId;

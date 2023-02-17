@@ -8,8 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserSkillsResponseDTO {
-
 	Long userId;
-
 	List<SkillBasicDetailsDTO> userSkills;
 }

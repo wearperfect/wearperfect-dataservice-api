@@ -8,10 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserFollowsResponseDTO {
-
 	Long userId;
-	
 	List<UserFollowUpDetailsDTO> followers;
-	
 	List<UserFollowUpDetailsDTO> followings;
 }
