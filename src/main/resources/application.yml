@@ -36,7 +36,7 @@ server:
   port: 8080
   sessionTimeout: 30
   servlet:
-    context-path: /wearperfect/api/v1
+    context-path: /wearperfect/api
 # Cloud
 cloud:
   aws:
