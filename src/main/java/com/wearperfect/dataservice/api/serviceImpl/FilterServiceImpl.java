@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.CategoryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ColorBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.FiltersResponseDTO;
+import com.wearperfect.dataservice.api.dto.ProductFilterResponseDTO;
 import com.wearperfect.dataservice.api.dto.GenderCategoryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.RegionBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
-import com.wearperfect.dataservice.api.entities.Category_;
-import com.wearperfect.dataservice.api.entities.Color_;
-import com.wearperfect.dataservice.api.entities.GenderCategory_;
-import com.wearperfect.dataservice.api.entities.Region_;
-import com.wearperfect.dataservice.api.mappers.CategoryMapper;
-import com.wearperfect.dataservice.api.mappers.ColorMapper;
-import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
-import com.wearperfect.dataservice.api.mappers.PreferenceFilterMapper;
-import com.wearperfect.dataservice.api.mappers.RegionMapper;
-import com.wearperfect.dataservice.api.mappers.StyleMapper;
+import com.wearperfect.dataservice.api.entity.Category_;
+import com.wearperfect.dataservice.api.entity.Color_;
+import com.wearperfect.dataservice.api.entity.GenderCategory_;
+import com.wearperfect.dataservice.api.entity.Region_;
+import com.wearperfect.dataservice.api.mapper.CategoryMapper;
+import com.wearperfect.dataservice.api.mapper.ColorMapper;
+import com.wearperfect.dataservice.api.mapper.GenderCategoryMapper;
+import com.wearperfect.dataservice.api.mapper.PreferenceFilterMapper;
+import com.wearperfect.dataservice.api.mapper.RegionMapper;
+import com.wearperfect.dataservice.api.mapper.StyleMapper;
 import com.wearperfect.dataservice.api.repository.CategoryRepository;
 import com.wearperfect.dataservice.api.repository.ColorRepository;
 import com.wearperfect.dataservice.api.repository.GenderCategoryRepository;
@@ -75,7 +75,7 @@ public class FilterServiceImpl implements FilterService {
 	StyleService styleService;
 
 	@Override
-	public FiltersResponseDTO getFilters() {
+	public ProductFilterResponseDTO getFilters() {
 
 		List<CategoryBasicDetailsDTO> categories = categoryRepository.findAll(Sort.by(Direction.ASC, Category_.NAME))
 				.stream().map(category -> categoryMapper.mapCategoryToCategoryBasicDetailsDTO(category))
@@ -94,7 +94,7 @@ public class FilterServiceImpl implements FilterService {
 
 		List<StyleBasicDetailsDTO> styles = styleService.getStyles();
 
-		return new FiltersResponseDTO(categories, colors, genderCategories, regions, styles);
+		return new ProductFilterResponseDTO(categories, colors, genderCategories, regions, styles);
 	}
 
 }

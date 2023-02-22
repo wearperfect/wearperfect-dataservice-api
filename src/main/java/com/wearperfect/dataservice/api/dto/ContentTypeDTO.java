@@ -1,6 +1,6 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.User;
 
 import lombok.Data;
 

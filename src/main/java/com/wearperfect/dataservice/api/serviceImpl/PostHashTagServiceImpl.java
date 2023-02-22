@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PostHashTagDTO;
-import com.wearperfect.dataservice.api.entities.PostHashTag;
-import com.wearperfect.dataservice.api.mappers.PostHashTagMapper;
+import com.wearperfect.dataservice.api.entity.PostHashTag;
+import com.wearperfect.dataservice.api.mapper.PostHashTagMapper;
 import com.wearperfect.dataservice.api.repository.PostHashTagRepository;
 import com.wearperfect.dataservice.api.service.PostHashTagService;
 

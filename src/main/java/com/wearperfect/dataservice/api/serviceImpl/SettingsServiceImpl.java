@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.FeatureBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.RoleDetailsDTO;
-import com.wearperfect.dataservice.api.entities.Feature;
-import com.wearperfect.dataservice.api.entities.Role;
-import com.wearperfect.dataservice.api.mappers.FeatureMapper;
-import com.wearperfect.dataservice.api.mappers.RoleMapper;
+import com.wearperfect.dataservice.api.entity.Feature;
+import com.wearperfect.dataservice.api.entity.Role;
+import com.wearperfect.dataservice.api.mapper.FeatureMapper;
+import com.wearperfect.dataservice.api.mapper.RoleMapper;
 import com.wearperfect.dataservice.api.repository.FeatureRepository;
 import com.wearperfect.dataservice.api.repository.RoleRepository;
 import com.wearperfect.dataservice.api.service.SettingsService;

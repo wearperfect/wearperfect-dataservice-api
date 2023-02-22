@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,10 +18,10 @@ import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDTO;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.entities.PostComment;
-import com.wearperfect.dataservice.api.entities.PostComment_;
-import com.wearperfect.dataservice.api.mappers.PostCommentMapper;
-import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.entity.PostComment;
+import com.wearperfect.dataservice.api.entity.PostComment_;
+import com.wearperfect.dataservice.api.mapper.PostCommentMapper;
+import com.wearperfect.dataservice.api.mapper.UserMapper;
 import com.wearperfect.dataservice.api.repository.PostCommentRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.PostCommentService;

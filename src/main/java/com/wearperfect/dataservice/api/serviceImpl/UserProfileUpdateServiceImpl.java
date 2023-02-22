@@ -2,10 +2,10 @@ package com.wearperfect.dataservice.api.serviceImpl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.exception.AccessForbiddenException;
 import com.wearperfect.dataservice.api.exception.UserNotFoundException;
-import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.mapper.UserMapper;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;

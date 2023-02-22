@@ -13,9 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.PostLikeDTO;
-import com.wearperfect.dataservice.api.entities.PostLike;
-import com.wearperfect.dataservice.api.entities.PostLike_;
-import com.wearperfect.dataservice.api.mappers.PostLikeMapper;
+import com.wearperfect.dataservice.api.entity.PostLike;
+import com.wearperfect.dataservice.api.entity.PostLike_;
+import com.wearperfect.dataservice.api.mapper.PostLikeMapper;
 import com.wearperfect.dataservice.api.repository.PostLikeRepository;
 import com.wearperfect.dataservice.api.service.PostLikeService;
 

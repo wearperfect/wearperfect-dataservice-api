@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.ColorDTO;
-import com.wearperfect.dataservice.api.entities.Color;
-import com.wearperfect.dataservice.api.entities.Color_;
-import com.wearperfect.dataservice.api.mappers.ColorMapper;
+import com.wearperfect.dataservice.api.entity.Color;
+import com.wearperfect.dataservice.api.entity.Color_;
+import com.wearperfect.dataservice.api.mapper.ColorMapper;
 import com.wearperfect.dataservice.api.repository.ColorRepository;
 import com.wearperfect.dataservice.api.service.ColorService;
 

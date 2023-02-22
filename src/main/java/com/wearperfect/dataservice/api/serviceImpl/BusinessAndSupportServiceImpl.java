@@ -2,10 +2,10 @@ package com.wearperfect.dataservice.api.serviceImpl;
 
 import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.entities.BusinessAndSupport;
-import com.wearperfect.dataservice.api.entities.BusinessAndSupport_;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.BusinessAndSupportMapper;
+import com.wearperfect.dataservice.api.entity.BusinessAndSupport;
+import com.wearperfect.dataservice.api.entity.BusinessAndSupport_;
+import com.wearperfect.dataservice.api.entity.User;
+import com.wearperfect.dataservice.api.mapper.BusinessAndSupportMapper;
 import com.wearperfect.dataservice.api.repository.BusinessAndSupportRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.BusinessAndSupportService;

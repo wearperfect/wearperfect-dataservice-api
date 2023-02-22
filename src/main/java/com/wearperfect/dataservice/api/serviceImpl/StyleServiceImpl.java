@@ -17,10 +17,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserStylesResponseDTO;
-import com.wearperfect.dataservice.api.entities.Style;
-import com.wearperfect.dataservice.api.entities.Style_;
-import com.wearperfect.dataservice.api.entities.UserStyle;
-import com.wearperfect.dataservice.api.mappers.StyleMapper;
+import com.wearperfect.dataservice.api.entity.Style;
+import com.wearperfect.dataservice.api.entity.Style_;
+import com.wearperfect.dataservice.api.entity.UserStyle;
+import com.wearperfect.dataservice.api.mapper.StyleMapper;
 import com.wearperfect.dataservice.api.repository.StyleRepository;
 import com.wearperfect.dataservice.api.repository.UserStyleRepository;
 import com.wearperfect.dataservice.api.service.StyleService;

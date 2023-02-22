@@ -1,6 +1,6 @@
 package com.wearperfect.dataservice.api.controller;
 
-import com.wearperfect.dataservice.api.dto.FiltersResponseDTO;
+import com.wearperfect.dataservice.api.dto.ProductFilterResponseDTO;
 import com.wearperfect.dataservice.api.service.FilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,7 @@ public class FilterController {
     FilterService filterService;
 
     @GetMapping(value = "/v1/filters")
-    FiltersResponseDTO getFilters() {
+    ProductFilterResponseDTO getFilters() {
         return filterService.getFilters();
     }
 }

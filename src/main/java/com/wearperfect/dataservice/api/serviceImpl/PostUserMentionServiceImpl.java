@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.PostUserMentionDTO;
-import com.wearperfect.dataservice.api.entities.PostUserMention;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.PostUserMentionMapper;
+import com.wearperfect.dataservice.api.entity.PostUserMention;
+import com.wearperfect.dataservice.api.entity.User;
+import com.wearperfect.dataservice.api.mapper.PostUserMentionMapper;
 import com.wearperfect.dataservice.api.repository.PostUserMentionRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.PostUserMentionService;

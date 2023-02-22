@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.RegionDTO;
-import com.wearperfect.dataservice.api.entities.Region;
-import com.wearperfect.dataservice.api.entities.Region_;
-import com.wearperfect.dataservice.api.mappers.RegionMapper;
+import com.wearperfect.dataservice.api.entity.Region;
+import com.wearperfect.dataservice.api.entity.Region_;
+import com.wearperfect.dataservice.api.mapper.RegionMapper;
 import com.wearperfect.dataservice.api.repository.RegionRepository;
 import com.wearperfect.dataservice.api.service.RegionService;
 

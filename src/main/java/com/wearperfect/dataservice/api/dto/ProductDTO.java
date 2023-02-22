@@ -1,13 +1,14 @@
 package com.wearperfect.dataservice.api.dto;
 
+import com.wearperfect.dataservice.api.entity.ProductStyle;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
 public class ProductDTO {
     Long id;
-    String title;
+    String name;
     String description;
     String features;
     Long manufacturedByUserId;
@@ -19,8 +20,14 @@ public class ProductDTO {
     Integer discountTypeId;
     Integer currencyId;
     Long createdBy;
-    Date createdOn;
+    Long createdOn;
     Long lastUpdatedBy;
-    Date lastUpdatedOn;
+    Long lastUpdatedOn;
     Boolean active;
+    UserBasicDetailsDTO manufacturedByUser;
+    ProductCategoryDTO productCategory;
+    GenderCategoryDTO genderCategory;
+    ColorBasicDetailsDTO color;
+    List<ProductMediaDTO> productMediaList;
+    List<ProductStyleDTO> productStyleList;
 }

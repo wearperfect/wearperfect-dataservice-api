@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.CategoryDTO;
-import com.wearperfect.dataservice.api.entities.Category;
-import com.wearperfect.dataservice.api.entities.Category_;
-import com.wearperfect.dataservice.api.mappers.CategoryMapper;
+import com.wearperfect.dataservice.api.entity.Category;
+import com.wearperfect.dataservice.api.entity.Category_;
+import com.wearperfect.dataservice.api.mapper.CategoryMapper;
 import com.wearperfect.dataservice.api.repository.CategoryRepository;
 import com.wearperfect.dataservice.api.service.CategoryService;
 

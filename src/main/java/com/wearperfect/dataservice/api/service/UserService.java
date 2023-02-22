@@ -9,7 +9,7 @@ import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
 import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.User;
 
 public interface UserService {
 

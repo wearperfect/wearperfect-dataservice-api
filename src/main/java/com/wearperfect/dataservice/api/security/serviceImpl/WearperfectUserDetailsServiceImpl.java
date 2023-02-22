@@ -3,7 +3,6 @@ package com.wearperfect.dataservice.api.security.serviceImpl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -21,8 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.entities.Role;
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.Role;
+import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;

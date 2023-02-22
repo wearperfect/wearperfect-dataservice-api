@@ -16,4 +16,5 @@ public class ProductCategoryDTO {
 	Long lastUpdatedBy;
 	Long lastUpdatedOn;
 	Boolean active;
+	CategoryDTO category;
 }

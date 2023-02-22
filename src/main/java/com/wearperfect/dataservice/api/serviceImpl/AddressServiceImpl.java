@@ -12,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.entities.Address;
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.mappers.AddressMapper;
+import com.wearperfect.dataservice.api.entity.Address;
+import com.wearperfect.dataservice.api.entity.User;
+import com.wearperfect.dataservice.api.mapper.AddressMapper;
 import com.wearperfect.dataservice.api.repository.AddressRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.AddressService;

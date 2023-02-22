@@ -9,8 +9,8 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.wearperfect.dataservice.api.entities.ContentType;
-import com.wearperfect.dataservice.api.entities.ContentType_;
+import com.wearperfect.dataservice.api.entity.ContentType;
+import com.wearperfect.dataservice.api.entity.ContentType_;
 
 public class ContentTypeDetailsSpecification {
 	

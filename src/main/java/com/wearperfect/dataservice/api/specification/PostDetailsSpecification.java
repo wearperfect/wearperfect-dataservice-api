@@ -7,8 +7,8 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.wearperfect.dataservice.api.entities.Post;
-import com.wearperfect.dataservice.api.entities.Post_;
+import com.wearperfect.dataservice.api.entity.Post;
+import com.wearperfect.dataservice.api.entity.Post_;
 
 public class PostDetailsSpecification {
 
@@ -42,7 +42,7 @@ public class PostDetailsSpecification {
 	}
 
 	/**
-	 * @param username : used to fetch posts by active user id and post id
+	 * @param userId : used to fetch posts by active user id and post id
 	 * @return user post.
 	 */
 	public static Specification<Post> postByUserIdAndPostIdPredicate(final long userId, final long postId) {

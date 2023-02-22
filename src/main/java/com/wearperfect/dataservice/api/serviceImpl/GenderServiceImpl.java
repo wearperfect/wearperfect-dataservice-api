@@ -15,12 +15,12 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.GenderCategoryDTO;
 import com.wearperfect.dataservice.api.dto.GenderDTO;
-import com.wearperfect.dataservice.api.entities.Gender;
-import com.wearperfect.dataservice.api.entities.GenderCategory;
-import com.wearperfect.dataservice.api.entities.GenderCategory_;
-import com.wearperfect.dataservice.api.entities.Gender_;
-import com.wearperfect.dataservice.api.mappers.GenderCategoryMapper;
-import com.wearperfect.dataservice.api.mappers.GenderMapper;
+import com.wearperfect.dataservice.api.entity.Gender;
+import com.wearperfect.dataservice.api.entity.GenderCategory;
+import com.wearperfect.dataservice.api.entity.GenderCategory_;
+import com.wearperfect.dataservice.api.entity.Gender_;
+import com.wearperfect.dataservice.api.mapper.GenderCategoryMapper;
+import com.wearperfect.dataservice.api.mapper.GenderMapper;
 import com.wearperfect.dataservice.api.repository.GenderCategoryRepository;
 import com.wearperfect.dataservice.api.repository.GenderRepository;
 import com.wearperfect.dataservice.api.service.GenderService;

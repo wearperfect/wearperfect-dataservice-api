@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.HashTagDTO;
-import com.wearperfect.dataservice.api.entities.HashTag;
-import com.wearperfect.dataservice.api.mappers.HashTagMapper;
+import com.wearperfect.dataservice.api.entity.HashTag;
+import com.wearperfect.dataservice.api.mapper.HashTagMapper;
 import com.wearperfect.dataservice.api.repository.HashTagRepository;
 import com.wearperfect.dataservice.api.service.HashTagService;
 

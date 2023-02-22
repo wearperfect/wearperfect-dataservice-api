@@ -17,9 +17,9 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.UserWorksResponseDTO;
 import com.wearperfect.dataservice.api.dto.WorkDTO;
-import com.wearperfect.dataservice.api.entities.Work;
-import com.wearperfect.dataservice.api.entities.Work_;
-import com.wearperfect.dataservice.api.mappers.WorkMapper;
+import com.wearperfect.dataservice.api.entity.Work;
+import com.wearperfect.dataservice.api.entity.Work_;
+import com.wearperfect.dataservice.api.mapper.WorkMapper;
 import com.wearperfect.dataservice.api.repository.WorkRepository;
 import com.wearperfect.dataservice.api.service.WorkService;
 

@@ -17,10 +17,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.SkillBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserSkillsResponseDTO;
-import com.wearperfect.dataservice.api.entities.Skill;
-import com.wearperfect.dataservice.api.entities.Skill_;
-import com.wearperfect.dataservice.api.entities.UserSkill;
-import com.wearperfect.dataservice.api.mappers.SkillMapper;
+import com.wearperfect.dataservice.api.entity.Skill;
+import com.wearperfect.dataservice.api.entity.Skill_;
+import com.wearperfect.dataservice.api.entity.UserSkill;
+import com.wearperfect.dataservice.api.mapper.SkillMapper;
 import com.wearperfect.dataservice.api.repository.SkillRepository;
 import com.wearperfect.dataservice.api.repository.UserSkillRepository;
 import com.wearperfect.dataservice.api.service.SkillService;

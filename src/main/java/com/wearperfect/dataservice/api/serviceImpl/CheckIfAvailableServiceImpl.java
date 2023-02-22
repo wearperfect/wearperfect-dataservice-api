@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wearperfect.dataservice.api.dto.UsernameAvailabilityDTO;
-import com.wearperfect.dataservice.api.entities.User;
+import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.CheckIfAvailableService;
 

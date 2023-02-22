@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.wearperfect.dataservice.api.entities.PreferenceFilter;
+import com.wearperfect.dataservice.api.entity.PreferenceFilter;
 
 @Repository
 public interface PreferenceFilterRepository extends JpaRepository<PreferenceFilter, Long>, JpaSpecificationExecutor<PreferenceFilter>{

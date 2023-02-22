@@ -1,7 +1,7 @@
 package com.wearperfect.dataservice.api.controller;
 
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.mappers.UserMapper;
+import com.wearperfect.dataservice.api.mapper.UserMapper;
 import com.wearperfect.dataservice.api.service.UserProfileUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

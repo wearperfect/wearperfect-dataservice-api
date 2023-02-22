@@ -15,9 +15,9 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.wearperfect.dataservice.api.dto.CountryBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.CountryDTO;
-import com.wearperfect.dataservice.api.entities.Country;
-import com.wearperfect.dataservice.api.entities.Country_;
-import com.wearperfect.dataservice.api.mappers.CountryMapper;
+import com.wearperfect.dataservice.api.entity.Country;
+import com.wearperfect.dataservice.api.entity.Country_;
+import com.wearperfect.dataservice.api.mapper.CountryMapper;
 import com.wearperfect.dataservice.api.repository.CountryRepository;
 import com.wearperfect.dataservice.api.service.CountryService;
 

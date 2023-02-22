@@ -5,10 +5,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.wearperfect.dataservice.api.entity.User_;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.wearperfect.dataservice.api.entities.User;
-import com.wearperfect.dataservice.api.entities.User_;
+import com.wearperfect.dataservice.api.entity.User;
 
 public class UserDetailsSpecification {
 
