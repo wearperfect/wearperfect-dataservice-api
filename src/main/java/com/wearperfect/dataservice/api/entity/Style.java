@@ -23,9 +23,6 @@ public class Style {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
-
-	@Column(name = "region_id")
-	Integer regionId;
 	
 	@Column(name = "name")
 	String name;

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -53,4 +54,7 @@ public class ProductStyle {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "style_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Style style;
+
+    @OneToMany(mappedBy = "productStyle", fetch = FetchType.LAZY, targetEntity = RegionStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<RegionStyle> regionStyles;
 }

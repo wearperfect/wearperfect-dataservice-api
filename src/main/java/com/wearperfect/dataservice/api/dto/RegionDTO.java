@@ -6,7 +6,6 @@ import lombok.Data;
 public class RegionDTO {
 	Integer id;
 	String name;
-	String shortName;
 	String desc;
 	String thumbnail;
 	String sourceLink;

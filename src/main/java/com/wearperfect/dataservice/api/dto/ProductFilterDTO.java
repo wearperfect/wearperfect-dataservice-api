@@ -6,13 +6,15 @@ import java.util.List;
 
 @Data
 public class ProductFilterDTO {
-    String searchText;
-    List<Integer> categories;
-    List<Integer> colors;
-    List<Integer> brands;
-    List<Integer> designers;
-    List<Integer> genderCategories;
-    List<Integer> productCategories;
+    String searchText; // Working
+    Boolean onlyBrands = false; // Working
+    Boolean onlyDesigners = false; // Working
+    List<Integer> categories; // Working
+    List<Integer> colors; // Working
+    List<Integer> brands; // Working
+    List<Integer> designers; // Working
+    List<Integer> genderCategories; // Working
+    List<Integer> productCategories; // Working
     List<Integer> regions;
-    List<Integer> styles;
+    List<Integer> styles; // Working
 }

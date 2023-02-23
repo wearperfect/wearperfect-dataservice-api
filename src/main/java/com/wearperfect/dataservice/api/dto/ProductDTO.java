@@ -24,7 +24,7 @@ public class ProductDTO {
     Long lastUpdatedBy;
     Long lastUpdatedOn;
     Boolean active;
-    UserBasicDetailsDTO manufacturedByUser;
+    UserDTO manufacturedByUser;
     ProductCategoryDTO productCategory;
     GenderCategoryDTO genderCategory;
     ColorBasicDetailsDTO color;

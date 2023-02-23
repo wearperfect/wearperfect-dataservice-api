@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class StyleDTO {
 	Integer id;
-	Integer regionId;
 	String name;
 	String desc;
 	String thumbnail;

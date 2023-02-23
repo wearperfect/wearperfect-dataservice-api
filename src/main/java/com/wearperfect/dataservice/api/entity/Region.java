@@ -27,9 +27,6 @@ public class Region {
 	@Column(name = "name")
 	String name;
 	
-	@Column(name = "short_name")
-	String shortName;
-	
 	@Column(name = "desc")
 	String desc;
 	
