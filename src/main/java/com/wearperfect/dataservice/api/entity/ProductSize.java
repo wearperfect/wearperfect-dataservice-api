@@ -2,22 +2,25 @@ package com.wearperfect.dataservice.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "product_category_sizes", schema = "wearperfect")
-public class ProductCategorySize {
+@Table(name = "product_sizes", schema = "wearperfect")
+public class ProductSize {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @NotNull
     @Column(name = "manufacturer_id", nullable = false)
@@ -44,7 +47,7 @@ public class ProductCategorySize {
     @Column(name = "uk_size")
     private Double ukSize;
 
-    @Size(max = 1024)
+    @Size(max = 4096)
     @Column(name = "`desc`", length = 4096)
     private String desc;
 
@@ -59,12 +62,17 @@ public class ProductCategorySize {
     @Column(name = "last_updated_on")
     private Instant lastUpdatedOn;
 
-    @NotNull
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 
     @Column(name = "last_updated_by")
     private Long lastUpdatedBy;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Product product;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)

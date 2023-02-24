@@ -1,8 +1,12 @@
 package com.wearperfect.dataservice.api.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.util.List;
+
+@Getter
+@Setter
 public class ProductCategoryDTO {
 	Integer id;
 	String name;
@@ -17,4 +21,5 @@ public class ProductCategoryDTO {
 	Long lastUpdatedOn;
 	Boolean active;
 	CategoryDTO category;
+	List<ProductCategorySizeDTO> productCategorySizes;
 }

@@ -53,4 +53,7 @@ public class ProductCategory {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Category.class)
 	@JoinColumn(name="category_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Category category;
+
+	@OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY, targetEntity = ProductCategorySize.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductCategorySize> productCategorySizes;
 }

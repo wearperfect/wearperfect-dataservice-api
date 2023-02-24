@@ -87,4 +87,7 @@ public class Product {
 
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductStyle> productStyleList;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductSize.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductSize> productSizes;
 }

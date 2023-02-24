@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entity.ProductStyle;
 import lombok.Data;
 
 import java.util.List;
@@ -30,4 +29,5 @@ public class ProductDTO {
     ColorBasicDetailsDTO color;
     List<ProductMediaDTO> productMediaList;
     List<ProductStyleDTO> productStyleList;
+    List<ProductSizeBasicDetailsDTO> productSizes;
 }
