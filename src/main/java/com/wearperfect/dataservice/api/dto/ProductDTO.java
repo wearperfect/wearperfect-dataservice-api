@@ -29,5 +29,5 @@ public class ProductDTO {
     ColorBasicDetailsDTO color;
     List<ProductMediaDTO> productMediaList;
     List<ProductStyleDTO> productStyleList;
-    List<ProductSizeBasicDetailsDTO> productSizes;
+    List<ProductSizeDTO> productSizes;
 }

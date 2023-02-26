@@ -5,19 +5,22 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "product_category_sizes", schema = "wearperfect")
+@Table(name = "product_category_sizes")
 public class ProductCategorySize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @NotNull
+    @Column(name = "product_id", nullable = false, length = 200)
+    private Integer productId;
 
     @NotNull
     @Column(name = "manufacturer_id", nullable = false)
@@ -32,19 +35,10 @@ public class ProductCategorySize {
     private Integer genderCategoryId;
 
     @NotNull
-    @Size(max = 16)
-    @Column(name = "size", nullable = false, length = 200)
-    private String size;
+    @Column(name = "size_id", nullable = false, length = 200)
+    private Integer sizeId;
 
-    @Size(max = 16)
-    @Column(name = "us_size")
-    private Double usSize;
-
-    @Size(max = 16)
-    @Column(name = "uk_size")
-    private Double ukSize;
-
-    @Size(max = 1024)
+    @javax.validation.constraints.Size(max = 1024)
     @Column(name = "`desc`", length = 4096)
     private String desc;
 
@@ -67,6 +61,11 @@ public class ProductCategorySize {
     private Long lastUpdatedBy;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Product product;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
     @JoinColumn(name = "product_category_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private ProductCategory productCategory;
@@ -80,4 +79,12 @@ public class ProductCategorySize {
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
     @JoinColumn(name = "manufacturer_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private User manufacturer;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
+    @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Size size;
+
+    @OneToMany(mappedBy = "productSize", fetch = FetchType.LAZY, targetEntity = ProductMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductMeasurement> productMeasurements;
 }

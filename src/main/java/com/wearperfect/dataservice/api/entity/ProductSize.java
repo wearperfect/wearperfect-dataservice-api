@@ -2,25 +2,25 @@ package com.wearperfect.dataservice.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "product_sizes", schema = "wearperfect")
+@Table(name = "product_sizes")
 public class ProductSize {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @NotNull
+    @Column(name = "product_id", nullable = false, length = 200)
+    private Integer productId;
 
     @NotNull
     @Column(name = "manufacturer_id", nullable = false)
@@ -35,19 +35,10 @@ public class ProductSize {
     private Integer genderCategoryId;
 
     @NotNull
-    @Size(max = 16)
-    @Column(name = "size", nullable = false, length = 200)
-    private String size;
+    @Column(name = "size_id", nullable = false, length = 200)
+    private Integer sizeId;
 
-    @Size(max = 16)
-    @Column(name = "us_size")
-    private Double usSize;
-
-    @Size(max = 16)
-    @Column(name = "uk_size")
-    private Double ukSize;
-
-    @Size(max = 4096)
+    @javax.validation.constraints.Size(max = 1024)
     @Column(name = "`desc`", length = 4096)
     private String desc;
 
@@ -62,6 +53,7 @@ public class ProductSize {
     @Column(name = "last_updated_on")
     private Instant lastUpdatedOn;
 
+    @NotNull
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 
@@ -70,7 +62,6 @@ public class ProductSize {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Product product;
 
@@ -88,4 +79,12 @@ public class ProductSize {
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
     @JoinColumn(name = "manufacturer_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private User manufacturer;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
+    @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Size size;
+
+    @OneToMany(mappedBy = "productSize", fetch = FetchType.LAZY, targetEntity = ProductMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductMeasurement> productMeasurements;
 }
