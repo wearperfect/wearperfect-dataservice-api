@@ -1,15 +1,20 @@
 package com.wearperfect.dataservice.api.mapper;
 
+import com.wearperfect.dataservice.api.dto.ProductBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ProductDTO;
 import com.wearperfect.dataservice.api.entity.Product;
+import com.wearperfect.dataservice.api.entity.ProductMedia;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(uses= {UtilityMapper.class, ProductCategoryMapper.class, GenderCategoryMapper.class, UserMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses= {UtilityMapper.class, ProductCategoryMapper.class, GenderCategoryMapper.class, ColorMapper.class,
+        UserMapper.class, ProductStyleMapper.class, ProductMediaMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
-    @Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
-    @Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
     ProductDTO mapProductToProductDto(Product product);
+
+    Product mapProductDtoToProduct(ProductDTO productDTO);
+
+    ProductBasicDetailsDTO mapProductToProductBasicDetailsDTO(Product product);
 }

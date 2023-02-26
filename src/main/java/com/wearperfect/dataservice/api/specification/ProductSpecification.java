@@ -36,7 +36,7 @@ public class ProductSpecification {
                         (productFilters.getOnlyBrands() == false && productFilters.getOnlyDesigners() == false) ||
                         (productFilters.getOnlyBrands() == true && productFilters.getOnlyDesigners() == true))
                         && (null != productFilters.getBrands() && productFilters.getBrands().size() > 0)) {
-                    Expression<Long> brand = root.get(Product_.MANUFACTURED_BY_USER_ID);
+                    Expression<Long> brand = root.get(Product_.MANUFACTURER_ID);
                     Predicate brandPredicate = brand.in(productFilters.getBrands());
                     filterOrPredicates.add(brandPredicate);
                 }
@@ -44,7 +44,7 @@ public class ProductSpecification {
                         (productFilters.getOnlyBrands() == false && productFilters.getOnlyDesigners() == false) ||
                         (productFilters.getOnlyBrands() == true && productFilters.getOnlyDesigners() == true))
                         && (null != productFilters.getDesigners() && productFilters.getDesigners().size() > 0)){
-                    Expression<Long> designer = root.get(Product_.MANUFACTURED_BY_USER_ID);
+                    Expression<Long> designer = root.get(Product_.MANUFACTURER_ID);
                     Predicate designerPredicate = designer.in(productFilters.getDesigners());
                     filterOrPredicates.add(designerPredicate);
                 }

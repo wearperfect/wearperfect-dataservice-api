@@ -3,6 +3,7 @@ package com.wearperfect.dataservice.api.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class Product {
 	@Column(name = "features")
 	String features;
 
-	@Column(name = "manufactured_by_user_id")
-	Long manufacturedByUserId;
+	@Column(name = "manufacturer_id")
+	Long manufacturerId;
 
 	@Column(name = "product_category_id")
 	Integer productCategoryId;
@@ -55,20 +56,20 @@ public class Product {
 	Long createdBy;
 
 	@Column(name = "created_on")
-	Date createdOn;
+	Instant createdOn;
 
 	@Column(name = "last_updated_by")
 	Long lastUpdatedBy;
 
 	@Column(name = "last_updated_on")
-	Date lastUpdatedOn;
+	Instant lastUpdatedOn;
 
 	@Column(name = "active")
 	Boolean active;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-	@JoinColumn(name="manufactured_by_user_id", referencedColumnName = "id", insertable = false, updatable = false)
-	User manufacturedByUser;
+	@JoinColumn(name="manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
+	User manufacturer;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
 	@JoinColumn(name="product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -87,7 +88,12 @@ public class Product {
 
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductStyle> productStyleList;
-
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductSize.class, cascade = CascadeType.ALL, orphanRemoval = true)
-	List<ProductSize> productSizes;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
+	@JoinColumns({
+			@JoinColumn(name="manufacturer_id", referencedColumnName="manufacturer_id", insertable = false, updatable = false, nullable = false),
+			@JoinColumn(name="product_category_id", referencedColumnName="product_category_id", insertable = false, updatable = false, nullable = false),
+			@JoinColumn(name="gender_category_id", referencedColumnName="gender_category_id", insertable = false, updatable = false, nullable = false)
+	})
+	ProductCategorySizeChart productCategorySizeChart;
 }

@@ -1,12 +1,15 @@
 package com.wearperfect.dataservice.api.controller;
 
-import com.wearperfect.dataservice.api.dto.ProductDTO;
-import com.wearperfect.dataservice.api.dto.ProductFilterDTO;
+import com.wearperfect.dataservice.api.dto.*;
+import com.wearperfect.dataservice.api.entity.ProductCategorySizeChart;
+import com.wearperfect.dataservice.api.mapper.ProductCategorySizeChartMapper;
+import com.wearperfect.dataservice.api.repository.ProductCategorySizeChartRepository;
 import com.wearperfect.dataservice.api.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
@@ -15,12 +18,22 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/v1/products")
-    List<ProductDTO> getProducts(){
+    List<ProductBasicDetailsDTO> getProducts(){
         return productService.getProducts(null, 0, 0);
     }
 
+    @GetMapping("/v1/products/{productId}")
+    ProductBasicDetailsDTO getProductById(@PathVariable(name = "productId") Long productId){
+        return productService.getProductById(productId);
+    }
+
+    @GetMapping("/v1/products/size-charts")
+    List<ProductCategorySizeChartBasicDetailsDTO> getProductSizeCharts(){
+        return productService.getProductSizeCharts();
+    }
+
     @GetMapping("/v1/products/search/{searchText}")
-    List<ProductDTO> searchProducts(
+    List<ProductBasicDetailsDTO> searchProducts(
             @PathVariable(name = "searchText") String searchText,
             @RequestParam(name = "page") Integer page,
             @RequestParam(name = "size") Integer size
@@ -29,7 +42,7 @@ public class ProductController {
     }
 
     @PostMapping("/v1/products/filter")
-    List<ProductDTO> filterProducts(
+    List<ProductBasicDetailsDTO> filterProducts(
             @RequestBody ProductFilterDTO productFilters,
             @RequestParam(name = "page") Integer page,
             @RequestParam(name = "size") Integer size

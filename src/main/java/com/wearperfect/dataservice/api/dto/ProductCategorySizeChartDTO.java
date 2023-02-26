@@ -4,18 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
-public class ProductMeasurementLabelDTO {
+public class ProductCategorySizeChartDTO {
     private Integer id;
-    private String name;
-    private Short sequence;
+    private Long manufacturerId;
     private Integer productCategoryId;
     private Integer genderCategoryId;
+    private String desc;
     private Boolean active;
     private Instant createdOn;
-    private Long createdBy;
     private Instant lastUpdatedOn;
+    private Long createdBy;
     private Long lastUpdatedBy;
+    private List<ProductCategorySizeDTO> productCategorySizes;
 }

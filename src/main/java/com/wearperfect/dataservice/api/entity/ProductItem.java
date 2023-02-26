@@ -49,7 +49,7 @@ public class ProductItem {
     private Product product;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductSize.class)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySize.class)
     @JoinColumn(name = "product_category_size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private ProductSize productSize;
+    private ProductCategorySize productCategorySize;
 }

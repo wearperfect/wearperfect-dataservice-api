@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,8 @@ public class ProductMeasurement {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "product_size_id")
-    private Long productSizeId;
+    @Column(name = "product_category_size_id")
+    private Long productCategorySizeId;
 
     @Column(name = "product_measurement_label_id", nullable = false)
     private Integer productMeasurementLabelId;
@@ -50,12 +51,14 @@ public class ProductMeasurement {
     @Column(name = "last_updated_on", nullable = false)
     private Instant lastUpdatedOn;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductSize.class)
-    @JoinColumn(name = "product_size_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
-    private ProductSize productSize;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySize.class)
+    @JoinColumn(name = "product_category_size_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+    @JsonIgnore
+    private ProductCategorySize productCategorySize;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductMeasurementLabel.class)
     @JoinColumn(name = "product_measurement_label_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+    @JsonIgnore
     private ProductMeasurementLabel productMeasurementLabel;
 }

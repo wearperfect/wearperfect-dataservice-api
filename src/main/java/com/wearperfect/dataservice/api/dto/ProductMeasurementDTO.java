@@ -18,6 +18,5 @@ public class ProductMeasurementDTO {
     private Instant createdOn;
     private Long lastUpdatedBy;
     private Instant lastUpdatedOn;
-    private ProductSizeDTO productSize;
     private ProductMeasurementLabelDTO productMeasurementLabel;
 }

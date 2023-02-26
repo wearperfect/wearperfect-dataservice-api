@@ -19,27 +19,15 @@ public class ProductCategorySize {
     private Long id;
 
     @NotNull
-    @Column(name = "product_id", nullable = false, length = 200)
-    private Integer productId;
-
-    @NotNull
-    @Column(name = "manufacturer_id", nullable = false)
-    private Long manufacturerId;
-
-    @NotNull
-    @Column(name = "product_category_id", nullable = false)
-    private Integer productCategoryId;
-
-    @NotNull
-    @Column(name = "gender_category_id", nullable = false)
-    private Integer genderCategoryId;
+    @Column(name = "product_category_size_chart_id", nullable = false)
+    private Integer productCategorySizeChartId;
 
     @NotNull
     @Column(name = "size_id", nullable = false, length = 200)
     private Integer sizeId;
 
     @javax.validation.constraints.Size(max = 1024)
-    @Column(name = "`desc`", length = 4096)
+    @Column(name = "desc", length = 4096)
     private String desc;
 
     @NotNull
@@ -61,30 +49,15 @@ public class ProductCategorySize {
     private Long lastUpdatedBy;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
-    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
+    @JoinColumn(name = "product_category_size_chart_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private ProductCategorySizeChart productCategorySizeChart;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
-    @JoinColumn(name = "product_category_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private ProductCategory productCategory;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
-    @JoinColumn(name = "gender_category_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private GenderCategory genderCategory;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-    @JoinColumn(name = "manufacturer_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private User manufacturer;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Size.class)
     @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Size size;
 
-    @OneToMany(mappedBy = "productSize", fetch = FetchType.LAZY, targetEntity = ProductMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productCategorySize", fetch = FetchType.LAZY, targetEntity = ProductMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductMeasurement> productMeasurements;
 }
