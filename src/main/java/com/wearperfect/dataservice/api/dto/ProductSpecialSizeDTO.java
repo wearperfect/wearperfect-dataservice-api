@@ -1,24 +1,20 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entity.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.List;
 
 @Getter
 @Setter
-public class ProductCategorySizeDTO {
+public class ProductSpecialSizeDTO {
     private Long id;
-    private Integer productCategorySizeChartId;
-    private Integer sizeId;
+    private Short sizeId;
+    private Long productSpecialSizeChartId;
     private String desc;
     private Boolean active;
     private Instant createdOn;
     private Instant lastUpdatedOn;
     private Long createdBy;
     private Long lastUpdatedBy;
-    private Size size;
-    private List<ProductCategorySizeMeasurementDTO> productMeasurements;
 }

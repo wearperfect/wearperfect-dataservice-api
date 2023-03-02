@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,22 +10,23 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "product_measurements")
-public class ProductMeasurement {
+@Table(name = "product_special_size_measurements")
+public class ProductSpecialSizeMeasurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "product_category_size_id")
-    private Long productCategorySizeId;
+    @NotNull
+    @Column(name = "product_special_size_id", nullable = false)
+    private Long productSpecialSizeId;
 
+    @NotNull
     @Column(name = "product_measurement_label_id", nullable = false)
     private Integer productMeasurementLabelId;
 
-    @NotNull
-    @Column(name = "product_measurement_unit_id", nullable = false)
-    private Integer productMeasurementUnitId;
+    @Column(name = "product_measurement_unit_id")
+    private Byte productMeasurementUnitId;
 
     @NotNull
     @Column(name = "value", nullable = false)
@@ -47,18 +47,16 @@ public class ProductMeasurement {
     @Column(name = "last_updated_by")
     private Long lastUpdatedBy;
 
-    @NotNull
-    @Column(name = "last_updated_on", nullable = false)
+    @Column(name = "last_updated_on")
     private Instant lastUpdatedOn;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySize.class)
-    @JoinColumn(name = "product_category_size_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
-    @JsonIgnore
-    private ProductCategorySize productCategorySize;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductSpecialSize.class)
+    @JoinColumn(name = "product_special_size_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private ProductSpecialSize productSpecialSize;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductMeasurementLabel.class)
-    @JoinColumn(name = "product_measurement_label_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
-    @JsonIgnore
+    @JoinColumn(name = "product_measurement_label_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private ProductMeasurementLabel productMeasurementLabel;
 }

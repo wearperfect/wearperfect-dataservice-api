@@ -79,10 +79,18 @@ compileJava {
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', '$buildDir/generated/sources/annotationProcessor/java/']
+            srcDirs = ['src/main/java', '$buildDir/generated/sources/annotationProcessor/java/', 'scripts']
         }
     }
 }
+
+
+task copyExample(type: Copy) {
+	from '.'
+	include 'deploy/**'
+	into "${buildDir}/"
+}
+
 
 /*sourceSets.configureEach { sourceSet ->
   tasks.named(sourceSet.compileJavaTaskName).configure {

@@ -3,14 +3,14 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-public class ProductCategorySizeBasicDetailsDTO {
+public class ProductInventoryItemBasicDetailsDTO {
     private Long id;
-    private String desc;
+    private Long productId;
+    private Integer sizeId;
+    private Integer warehouseId;
+    private Integer quantityInStock;
     private Boolean active;
     private SizeBasicDetailsDTO size;
-    private List<ProductCategorySizeMeasurementBasicDetailsDTO> productCategorySizeMeasurements;
 }

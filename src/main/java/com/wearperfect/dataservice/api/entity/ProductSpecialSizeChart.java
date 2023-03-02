@@ -5,13 +5,15 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "product_items")
-public class ProductItem {
+@Table(name = "product_special_size_charts")
+public class ProductSpecialSizeChart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -21,9 +23,9 @@ public class ProductItem {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @NotNull
-    @Column(name = "size_id", nullable = false)
-    private Integer sizeId;
+    @Size(max = 512)
+    @Column(name = "`desc`", length = 512)
+    private String desc;
 
     @NotNull
     @Column(name = "active", nullable = false)
@@ -44,12 +46,10 @@ public class ProductItem {
     private Long lastUpdatedBy;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
-    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
+    @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Product product;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
-    @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private Size size;
+    @OneToMany(mappedBy = "productSpecialSizeChart", fetch = FetchType.LAZY, targetEntity = ProductSpecialSize.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductSpecialSize> productSpecialSizes;
 }

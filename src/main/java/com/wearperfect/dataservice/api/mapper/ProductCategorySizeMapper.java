@@ -6,7 +6,7 @@ import com.wearperfect.dataservice.api.entity.ProductCategorySize;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(uses = { UtilityMapper.class, ProductMeasurementMapper.class, SizeMapper.class, UserMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(uses = { UtilityMapper.class, ProductCategorySizeMeasurementMapper.class, SizeMapper.class, UserMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductCategorySizeMapper {
 
     ProductCategorySizeDTO mapProductCategorySizeToProductCategorySizeDto(ProductCategorySize productCategorySize);

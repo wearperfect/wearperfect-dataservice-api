@@ -1,5 +1,8 @@
 package com.wearperfect.dataservice.api.dto;
 
+import com.wearperfect.dataservice.api.entity.ProductCategorySizeChart;
+import com.wearperfect.dataservice.api.entity.ProductSpecialSize;
+import com.wearperfect.dataservice.api.entity.ProductSpecialSizeChart;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,11 +24,14 @@ public class ProductBasicDetailsDTO {
     Date createdOn;
     Date lastUpdatedOn;
     Boolean active;
+    CurrencyBasicDetailsDTO currency;
     UserBasicDetailsDTO manufacturer;
     ProductCategoryBasicDetailsDTO productCategory;
     GenderCategoryBasicDetailsDTO genderCategory;
     ColorBasicDetailsDTO color;
     List<ProductMediaBasicDetailsDTO> productMediaList;
-    List<ProductStyleDTO> productStyleList;
+    List<ProductStyleBasicDetailsDTO> productStyles;
+    List<ProductInventoryItemBasicDetailsDTO> productInventoryItems;
     ProductCategorySizeChartBasicDetailsDTO productCategorySizeChart;
+    ProductSpecialSizeChartBasicDetailsDTO productSpecialSizeChart;
 }

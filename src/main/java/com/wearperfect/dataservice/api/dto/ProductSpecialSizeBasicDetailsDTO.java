@@ -7,10 +7,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductCategorySizeBasicDetailsDTO {
+public class ProductSpecialSizeBasicDetailsDTO {
     private Long id;
+    private Short sizeId;
+    private Long productSpecialSizeChartId;
     private String desc;
     private Boolean active;
     private SizeBasicDetailsDTO size;
-    private List<ProductCategorySizeMeasurementBasicDetailsDTO> productCategorySizeMeasurements;
+    private List<ProductSpecialSizeMeasurementBasicDetailsDTO> productSpecialSizeMeasurements;
 }

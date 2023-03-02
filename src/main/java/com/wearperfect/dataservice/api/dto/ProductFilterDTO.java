@@ -17,4 +17,5 @@ public class ProductFilterDTO {
     List<Integer> productCategories; // Working
     List<Integer> regions;
     List<Integer> styles; // Working
+    List<Short> sizes; // Working
 }

@@ -15,7 +15,7 @@ public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Short id;
 
     @javax.validation.constraints.Size(max = 32)
     @NotNull
@@ -29,6 +29,10 @@ public class Size {
     @javax.validation.constraints.Size(max = 32)
     @Column(name = "uk_size", length = 32)
     private String ukSize;
+
+    @javax.validation.constraints.Size(max = 32)
+    @Column(name = "eu_size", length = 32)
+    private String euSize;
 
     @NotNull
     @Column(name = "active", nullable = false)

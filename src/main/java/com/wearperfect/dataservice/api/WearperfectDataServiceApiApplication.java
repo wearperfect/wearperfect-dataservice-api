@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.wearperfect.dataservice.api" })
 @EnableJpaRepositories(basePackages = { "com.wearperfect.dataservice.api.repository" })
-public class WearperfectDataserviceApiApplication {
+public class WearperfectDataServiceApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WearperfectDataserviceApiApplication.class, args);
+		SpringApplication.run(WearperfectDataServiceApiApplication.class, args);
 	}
 }

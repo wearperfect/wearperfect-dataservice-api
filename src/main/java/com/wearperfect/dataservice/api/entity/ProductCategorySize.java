@@ -54,10 +54,10 @@ public class ProductCategorySize {
     private ProductCategorySizeChart productCategorySizeChart;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Size.class)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
     @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Size size;
 
-    @OneToMany(mappedBy = "productCategorySize", fetch = FetchType.LAZY, targetEntity = ProductMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductMeasurement> productMeasurements;
+    @OneToMany(mappedBy = "productCategorySize", fetch = FetchType.LAZY, targetEntity = ProductCategorySizeMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductCategorySizeMeasurement> productCategorySizeMeasurements;
 }

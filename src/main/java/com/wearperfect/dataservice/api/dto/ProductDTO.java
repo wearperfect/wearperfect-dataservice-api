@@ -1,11 +1,9 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -28,11 +26,4 @@ public class ProductDTO {
     Long lastUpdatedBy;
     Date lastUpdatedOn;
     Boolean active;
-    UserBasicDetailsDTO manufacturer;
-    ProductCategoryDTO productCategory;
-    GenderCategoryBasicDetailsDTO genderCategory;
-    ColorBasicDetailsDTO color;
-    List<ProductMediaDTO> productMediaList;
-    List<ProductStyleDTO> productStyleList;
-    ProductCategorySizeChartDTO productCategorySizeChart;
 }

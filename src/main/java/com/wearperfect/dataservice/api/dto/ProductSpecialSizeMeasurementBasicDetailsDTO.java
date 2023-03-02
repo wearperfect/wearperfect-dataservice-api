@@ -5,8 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductMeasurementBasicDetailsDTO {
-    private Integer id;
+public class ProductSpecialSizeMeasurementBasicDetailsDTO {
+    private Long id;
+    private Long productSpecialSizeId;
+    private Integer productMeasurementLabelId;
+    private Byte productMeasurementUnitId;
     private Float value;
     private Boolean active;
     private ProductMeasurementLabelBasicDetailsDTO productMeasurementLabel;

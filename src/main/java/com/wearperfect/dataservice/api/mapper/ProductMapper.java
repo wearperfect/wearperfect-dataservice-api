@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(uses= {UtilityMapper.class, ProductCategoryMapper.class, GenderCategoryMapper.class, ColorMapper.class,
-        UserMapper.class, ProductStyleMapper.class, ProductMediaMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+        UserMapper.class, ProductStyleMapper.class, ProductMediaMapper.class, CurrencyMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
     ProductDTO mapProductToProductDto(Product product);

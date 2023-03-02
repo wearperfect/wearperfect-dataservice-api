@@ -70,17 +70,23 @@ public class ProductSpecification {
                     filterAndPredicates.add(genderCategoryIdPredicate);
                 }
                 if(null != productFilters.getStyles() && productFilters.getStyles().size()>0){
-                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLE_LIST);
+                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLES);
                     Expression<Integer> productStyle = productProductStyleJoin.get(ProductStyle_.STYLE_ID);
                     Predicate productStylePredicate = productStyle.in(productFilters.getStyles());
                     filterAndPredicates.add(productStylePredicate);
                 }
                 if(null != productFilters.getRegions() && productFilters.getRegions().size()>0){
-                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLE_LIST);
+                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLES);
                     Join<ProductStyle, RegionStyle> productStyleRegionStyleJoin = productProductStyleJoin.join(ProductStyle_.REGION_STYLES);
                     Expression<Integer> region = productStyleRegionStyleJoin.get(RegionStyle_.REGION_ID);
                     Predicate regionPredicate = region.in(productFilters.getRegions());
                     filterAndPredicates.add(regionPredicate);
+                }
+                if(null != productFilters.getSizes() && productFilters.getSizes().size()>0){
+                    Join<Product, ProductInventoryItem> productProductInventoryItemJoin = root.join(Product_.PRODUCT_INVENTORY_ITEMS);
+                    Expression<Short> size = productProductInventoryItemJoin.get(ProductInventoryItem_.SIZE_ID);
+                    Predicate sizePredicate = size.in(productFilters.getSizes());
+                    filterAndPredicates.add(sizePredicate);
                 }
                 return cq.where(cb.and(
                         cb.and(filterAndPredicates.toArray(new Predicate[] {})),

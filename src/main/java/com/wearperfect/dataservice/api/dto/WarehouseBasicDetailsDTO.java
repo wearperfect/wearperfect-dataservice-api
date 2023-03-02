@@ -5,12 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SizeBasicDetailsDTO {
-    private Long id;
-    private String size;
-    private String usSize;
-    private String ukSize;
-    private String euSize;
+public class WarehouseBasicDetailsDTO {
+    private Short id;
+    private String name;
     private String desc;
+    private Long addressId;
     private Boolean active;
 }

@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public class ProductMeasurementDTO {
+public class ProductCategorySizeMeasurementDTO {
     private Integer id;
     private Long productCategorySizeId;
     private Integer productMeasurementLabelId;

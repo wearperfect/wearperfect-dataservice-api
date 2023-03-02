@@ -7,16 +7,15 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public class SizeDTO {
+public class ProductInventoryItemDTO {
     private Long id;
-    private String size;
-    private String usSize;
-    private String ukSize;
-    private String euSize;
-    private String desc;
+    private Long productId;
+    private Integer sizeId;
+    private Integer warehouseId;
+    private Integer quantityInStock;
     private Boolean active;
-    private Instant createdOn;
-    private Instant lastUpdatedOn;
     private Long createdBy;
+    private Instant createdOn;
     private Long lastUpdatedBy;
+    private Instant lastUpdatedOn;
 }

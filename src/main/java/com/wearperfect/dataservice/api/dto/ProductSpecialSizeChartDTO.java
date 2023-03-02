@@ -7,14 +7,11 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public class SizeDTO {
+public class ProductSpecialSizeChartDTO {
     private Long id;
-    private String size;
-    private String usSize;
-    private String ukSize;
-    private String euSize;
+    private Long productId;
     private String desc;
-    private Boolean active;
+    private Boolean active = false;
     private Instant createdOn;
     private Instant lastUpdatedOn;
     private Long createdBy;

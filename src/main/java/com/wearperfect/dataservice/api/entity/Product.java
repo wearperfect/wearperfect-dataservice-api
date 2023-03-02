@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -83,12 +82,10 @@ public class Product {
 	@JoinColumn(name="color_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Color color;
 
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductMedia.class, cascade = CascadeType.ALL, orphanRemoval = true)
-	List<ProductMedia> productMediaList;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Currency.class)
+	@JoinColumn(name="currency_id", referencedColumnName = "id", insertable = false, updatable = false)
+	Currency currency;
 
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
-	List<ProductStyle> productStyleList;
-	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
 	@JoinColumns({
 			@JoinColumn(name="manufacturer_id", referencedColumnName="manufacturer_id", insertable = false, updatable = false, nullable = false),
@@ -96,4 +93,16 @@ public class Product {
 			@JoinColumn(name="gender_category_id", referencedColumnName="gender_category_id", insertable = false, updatable = false, nullable = false)
 	})
 	ProductCategorySizeChart productCategorySizeChart;
+
+	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductSpecialSizeChart.class, mappedBy = "product")
+	ProductSpecialSizeChart productSpecialSizeChart;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductMedia.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductMedia> productMediaList;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductStyle> productStyles;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductInventoryItem.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductInventoryItem> productInventoryItems;
 }
