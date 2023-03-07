@@ -11,7 +11,7 @@ public class ProductSpecialSizeMeasurementDTO {
     private Long id;
     private Long productSpecialSizeId;
     private Integer productMeasurementLabelId;
-    private Byte productMeasurementUnitId;
+    private Byte measurementUnitId;
     private Float value;
     private Boolean active = false;
     private Long createdBy;

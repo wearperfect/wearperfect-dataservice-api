@@ -32,21 +32,21 @@ public class ProductSpecification {
                     Predicate searchTextPredicate = cb.like(cb.upper(searchText), "%"+productFilters.getSearchText().toUpperCase()+"%");
                     filterAndPredicates.add(searchTextPredicate);
                 }
-                if ((productFilters.getOnlyBrands() == true ||
-                        (productFilters.getOnlyBrands() == false && productFilters.getOnlyDesigners() == false) ||
-                        (productFilters.getOnlyBrands() == true && productFilters.getOnlyDesigners() == true))
-                        && (null != productFilters.getBrands() && productFilters.getBrands().size() > 0)) {
-                    Expression<Long> brand = root.get(Product_.MANUFACTURER_ID);
-                    Predicate brandPredicate = brand.in(productFilters.getBrands());
-                    filterOrPredicates.add(brandPredicate);
+                if (null != productFilters.getManufacturerCategories() && productFilters.getManufacturerCategories().size() > 0) {
+                    Join<Product, User> productManufacturerJoin = root.join(Product_.MANUFACTURER);
+                    Expression<Long> role = productManufacturerJoin.get(User_.ROLE_ID);
+                    Predicate manufacturerRolePredicate = role.in(productFilters.getManufacturerCategories());
+                    filterAndPredicates.add(manufacturerRolePredicate);
                 }
-                if((productFilters.getOnlyDesigners() == true ||
-                        (productFilters.getOnlyBrands() == false && productFilters.getOnlyDesigners() == false) ||
-                        (productFilters.getOnlyBrands() == true && productFilters.getOnlyDesigners() == true))
-                        && (null != productFilters.getDesigners() && productFilters.getDesigners().size() > 0)){
-                    Expression<Long> designer = root.get(Product_.MANUFACTURER_ID);
-                    Predicate designerPredicate = designer.in(productFilters.getDesigners());
-                    filterOrPredicates.add(designerPredicate);
+                if(null != productFilters.getBrands() && productFilters.getBrands().size() > 0){
+                    Expression<Long> brandId = root.get(Product_.MANUFACTURER_ID);
+                    Predicate brandIdPredicate = brandId.in(productFilters.getBrands());
+                    filterOrPredicates.add(brandIdPredicate);
+                }
+                if(null != productFilters.getDesigners() && productFilters.getDesigners().size() > 0){
+                    Expression<Long> designerId = root.get(Product_.MANUFACTURER_ID);
+                    Predicate designerIdPredicate = designerId.in(productFilters.getDesigners());
+                    filterOrPredicates.add(designerIdPredicate);
                 }
                 if(null != productFilters.getCategories() && productFilters.getCategories().size()>0){
                     Join<Product, ProductCategory> productProductCategoryJoin = root.join(Product_.PRODUCT_CATEGORY);
@@ -93,7 +93,6 @@ public class ProductSpecification {
                         cb.or(filterOrPredicates.toArray(new Predicate[] {}))
                 )).getRestriction();
             }
-
         };
 
     }

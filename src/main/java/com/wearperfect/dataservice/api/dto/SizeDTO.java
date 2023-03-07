@@ -13,7 +13,7 @@ public class SizeDTO {
     private String usSize;
     private String ukSize;
     private String euSize;
-    private String desc;
+    private Integer sequenceId;
     private Boolean active;
     private Instant createdOn;
     private Instant lastUpdatedOn;

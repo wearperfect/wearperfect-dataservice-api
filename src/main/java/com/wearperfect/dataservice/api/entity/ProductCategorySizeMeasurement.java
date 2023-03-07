@@ -25,8 +25,8 @@ public class ProductCategorySizeMeasurement {
     private Integer productMeasurementLabelId;
 
     @NotNull
-    @Column(name = "product_measurement_unit_id", nullable = false)
-    private Integer productMeasurementUnitId;
+    @Column(name = "measurement_unit_id", nullable = false)
+    private Byte measurementUnitId;
 
     @NotNull
     @Column(name = "value", nullable = false)
@@ -61,4 +61,9 @@ public class ProductCategorySizeMeasurement {
     @JoinColumn(name = "product_measurement_label_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
     @JsonIgnore
     private ProductMeasurementLabel productMeasurementLabel;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = MeasurementUnit.class)
+    @JoinColumn(name = "measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+    @JsonIgnore
+    private MeasurementUnit measurementUnit;
 }

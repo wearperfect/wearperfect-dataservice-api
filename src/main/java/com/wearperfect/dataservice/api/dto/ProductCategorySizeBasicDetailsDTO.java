@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class ProductCategorySizeBasicDetailsDTO {
     private Long id;
+    private Integer productCategorySizeChartId;
     private String desc;
     private Boolean active;
     private SizeBasicDetailsDTO size;

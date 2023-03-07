@@ -7,7 +7,9 @@ import lombok.Setter;
 @Setter
 public class ProductCategorySizeMeasurementBasicDetailsDTO {
     private Integer id;
+    private Long productCategorySizeId;
     private Float value;
     private Boolean active;
     private ProductMeasurementLabelBasicDetailsDTO productMeasurementLabel;
+    private MeasurementUnitBasicDetailsDTO measurementUnit;
 }

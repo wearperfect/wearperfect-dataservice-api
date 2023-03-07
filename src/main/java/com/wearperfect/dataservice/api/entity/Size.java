@@ -35,6 +35,10 @@ public class Size {
     private String euSize;
 
     @NotNull
+    @Column(name = "sequence_id", nullable = false)
+    private Integer sequenceId;
+
+    @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 

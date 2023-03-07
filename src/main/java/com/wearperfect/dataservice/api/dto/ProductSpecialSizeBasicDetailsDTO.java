@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 public class ProductSpecialSizeBasicDetailsDTO {
     private Long id;
-    private Short sizeId;
     private Long productSpecialSizeChartId;
     private String desc;
     private Boolean active;

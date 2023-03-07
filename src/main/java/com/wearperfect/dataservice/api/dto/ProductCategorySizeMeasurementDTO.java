@@ -11,7 +11,7 @@ public class ProductCategorySizeMeasurementDTO {
     private Integer id;
     private Long productCategorySizeId;
     private Integer productMeasurementLabelId;
-    private Integer productMeasurementUnitId;
+    private Byte measurementUnitId;
     private Float value;
     private Boolean active;
     private Long createdBy;
@@ -19,4 +19,5 @@ public class ProductCategorySizeMeasurementDTO {
     private Long lastUpdatedBy;
     private Instant lastUpdatedOn;
     private ProductMeasurementLabelDTO productMeasurementLabel;
+    private MeasurementUnitBasicDetailsDTO measurementUnit;
 }
