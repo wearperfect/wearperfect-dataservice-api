@@ -42,12 +42,6 @@ public class Product {
 	@Column(name = "price")
 	Float price;
 
-	@Column(name = "discount")
-	Integer discount;
-
-	@Column(name = "discount_type_id")
-	Integer discountTypeId;
-
 	@Column(name = "currency_id")
 	Integer currencyId;
 

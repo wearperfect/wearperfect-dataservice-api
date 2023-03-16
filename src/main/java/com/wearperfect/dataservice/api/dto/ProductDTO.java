@@ -3,6 +3,7 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -18,12 +19,10 @@ public class ProductDTO {
     Integer colorId;
     Boolean availableForSale;
     Float price;
-    Integer discount;
-    Integer discountTypeId;
     Integer currencyId;
     Long createdBy;
-    Date createdOn;
+    Instant createdOn;
     Long lastUpdatedBy;
-    Date lastUpdatedOn;
+    Instant lastUpdatedOn;
     Boolean active;
 }

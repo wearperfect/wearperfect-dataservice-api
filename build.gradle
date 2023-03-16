@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id "java"
 	id "org.sonarqube" version "3.4.0.2513"
+	id 'application'
 }
 
 group = "com.wearperfect.dataservice.api"
@@ -84,13 +85,45 @@ sourceSets {
     }
 }
 
-
-task copyExample(type: Copy) {
+task copyDeployDir(type: Copy) {
 	from '.'
 	include 'deploy/**'
 	into "${buildDir}/"
 }
 
+task appBuild{
+	//dependsOn copyDeployDir
+	doLast {
+		println "Wearperfect API Build Complete"
+	}
+}
+
+build.dependsOn([appBuild])
+
+distTar{
+	from('.') {
+		include('deploy/**')
+	}
+	from('build') {
+		include('/libs/**')
+	}
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+bootDistTar{
+	from('.') {
+		include('deploy/**')
+	}
+}
+distZip{
+	from('.') {
+		include('deploy/**')
+	}
+}
+bootDistZip{
+	from('.') {
+		include('deploy/**')
+	}
+}
 
 /*sourceSets.configureEach { sourceSet ->
   tasks.named(sourceSet.compileJavaTaskName).configure {

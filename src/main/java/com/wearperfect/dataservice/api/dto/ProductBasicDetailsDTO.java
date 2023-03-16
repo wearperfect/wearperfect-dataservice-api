@@ -1,12 +1,9 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entity.ProductCategorySizeChart;
-import com.wearperfect.dataservice.api.entity.ProductSpecialSize;
-import com.wearperfect.dataservice.api.entity.ProductSpecialSizeChart;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -18,11 +15,9 @@ public class ProductBasicDetailsDTO {
     String features;
     Boolean availableForSale;
     Float price;
-    Integer discount;
-    Integer discountTypeId;
     Integer currencyId;
-    Date createdOn;
-    Date lastUpdatedOn;
+    Instant createdOn;
+    Instant lastUpdatedOn;
     Boolean active;
     CurrencyBasicDetailsDTO currency;
     UserBasicDetailsDTO manufacturer;

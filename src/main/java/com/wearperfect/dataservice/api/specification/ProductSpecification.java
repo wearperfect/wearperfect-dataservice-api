@@ -88,10 +88,14 @@ public class ProductSpecification {
                     Predicate sizePredicate = size.in(productFilters.getSizes());
                     filterAndPredicates.add(sizePredicate);
                 }
-                return cq.where(cb.and(
-                        cb.and(filterAndPredicates.toArray(new Predicate[] {})),
-                        cb.or(filterOrPredicates.toArray(new Predicate[] {}))
-                )).getRestriction();
+                if(filterOrPredicates.size()>0){
+                    return cq.where(cb.and(
+                            cb.and(filterAndPredicates.toArray(new Predicate[] {})),
+                            cb.or(filterOrPredicates.toArray(new Predicate[] {}))
+                    )).getRestriction();
+                }else{
+                    return cq.where(cb.and(filterAndPredicates.toArray(new Predicate[] {}))).getRestriction();
+                }
             }
         };
 
