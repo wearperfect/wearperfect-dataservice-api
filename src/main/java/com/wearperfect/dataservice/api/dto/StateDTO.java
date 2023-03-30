@@ -1,8 +1,11 @@
 package com.wearperfect.dataservice.api.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class StateDTO {
 	Integer id;
 	String name;

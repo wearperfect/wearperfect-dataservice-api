@@ -29,4 +29,6 @@ public class ProductBasicDetailsDTO {
     List<ProductInventoryItemBasicDetailsDTO> productInventoryItems;
     ProductCategorySizeChartBasicDetailsDTO productCategorySizeChart;
     ProductSpecialSizeChartBasicDetailsDTO productSpecialSizeChart;
+    ProductDiscountBasicDetailsDTO productDiscount;
+    List<ProductDiscountCouponBasicDetailsDTO> productDiscountCoupons;
 }

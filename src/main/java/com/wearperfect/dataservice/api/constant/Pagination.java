@@ -2,7 +2,7 @@ package com.wearperfect.dataservice.api.constant;
 
 public interface Pagination {
 
-	public enum PageNumber {
+	enum PageNumber {
 
 		DEFAULT(0);
 
@@ -17,7 +17,7 @@ public interface Pagination {
 		}
 	}
 
-	public enum PageSize {
+	enum PageSize {
 
 		DEFAULT(15),
 		USERS(50),

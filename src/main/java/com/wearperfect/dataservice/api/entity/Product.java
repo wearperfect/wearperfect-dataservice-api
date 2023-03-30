@@ -99,4 +99,10 @@ public class Product {
 
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductInventoryItem.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductInventoryItem> productInventoryItems;
+
+	@OneToOne(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductDiscount.class)
+	private ProductDiscount productDiscount;
+
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductDiscountCoupon.class, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<ProductDiscountCoupon> productDiscountCoupons;
 }
