@@ -3,8 +3,8 @@ package com.wearperfect.dataservice.api.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ProductCategorySize {
     @Column(name = "size_id", nullable = false, length = 200)
     private Integer sizeId;
 
-    @javax.validation.constraints.Size(max = 1024)
+    @jakarta.validation.constraints.Size(max = 1024)
     @Column(name = "desc", length = 4096)
     private String desc;
 

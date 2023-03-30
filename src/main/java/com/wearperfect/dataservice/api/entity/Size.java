@@ -1,10 +1,10 @@
 package com.wearperfect.dataservice.api.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import java.time.Instant;
 
 @Getter
@@ -17,20 +17,20 @@ public class Size {
     @Column(name = "id", nullable = false)
     private Short id;
 
-    @javax.validation.constraints.Size(max = 32)
+    @jakarta.validation.constraints.Size(max = 32)
     @NotNull
     @Column(name = "size", nullable = false, length = 32)
     private String size;
 
-    @javax.validation.constraints.Size(max = 32)
+    @jakarta.validation.constraints.Size(max = 32)
     @Column(name = "us_size", length = 32)
     private String usSize;
 
-    @javax.validation.constraints.Size(max = 32)
+    @jakarta.validation.constraints.Size(max = 32)
     @Column(name = "uk_size", length = 32)
     private String ukSize;
 
-    @javax.validation.constraints.Size(max = 32)
+    @jakarta.validation.constraints.Size(max = 32)
     @Column(name = "eu_size", length = 32)
     private String euSize;
 

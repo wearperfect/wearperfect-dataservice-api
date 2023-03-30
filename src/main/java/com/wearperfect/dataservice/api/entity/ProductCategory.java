@@ -1,9 +1,8 @@
 package com.wearperfect.dataservice.api.entity;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.Data;
 

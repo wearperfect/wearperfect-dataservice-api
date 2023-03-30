@@ -1,12 +1,13 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
+import com.wearperfect.dataservice.api.dto.UserWorksResponseDTO;
+import com.wearperfect.dataservice.api.dto.WorkDTO;
+import com.wearperfect.dataservice.api.entity.Work;
+import com.wearperfect.dataservice.api.entity.Work_;
+import com.wearperfect.dataservice.api.mapper.WorkMapper;
+import com.wearperfect.dataservice.api.repository.WorkRepository;
+import com.wearperfect.dataservice.api.service.WorkService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,13 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wearperfect.dataservice.api.dto.UserWorksResponseDTO;
-import com.wearperfect.dataservice.api.dto.WorkDTO;
-import com.wearperfect.dataservice.api.entity.Work;
-import com.wearperfect.dataservice.api.entity.Work_;
-import com.wearperfect.dataservice.api.mapper.WorkMapper;
-import com.wearperfect.dataservice.api.repository.WorkRepository;
-import com.wearperfect.dataservice.api.service.WorkService;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

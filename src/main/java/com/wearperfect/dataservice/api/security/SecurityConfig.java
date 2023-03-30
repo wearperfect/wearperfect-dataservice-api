@@ -1,7 +1,7 @@
 package com.wearperfect.dataservice.api.security;
 
-import java.util.Arrays;
-
+import com.wearperfect.dataservice.api.security.filters.JWTRequestFilter;
+import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.wearperfect.dataservice.api.security.filters.JWTRequestFilter;
-import com.wearperfect.dataservice.api.security.service.WearperfectUserDetailsService;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -38,8 +37,8 @@ public class SecurityConfig {
 		.disable()
 		.cors()
 		.and()
-		.authorizeRequests()
-		.antMatchers(
+		.authorizeHttpRequests()
+		.requestMatchers(
 				"/v3/api-docs/**",
 				"/swagger-ui",
 				"/swagger-ui/**",
@@ -49,7 +48,6 @@ public class SecurityConfig {
 				"/v1/feed/**",
 				"/v1/explore/**",
 				"/v1/filters/**",
-				"/v1/users/**/posts/**/comments",
 				"/v1/products/**")
 		.permitAll()
 		.anyRequest()

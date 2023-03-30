@@ -1,16 +1,5 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Service;
-
 import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
@@ -20,15 +9,20 @@ import com.wearperfect.dataservice.api.entity.PostComment_;
 import com.wearperfect.dataservice.api.entity.Post_;
 import com.wearperfect.dataservice.api.mapper.PostCommentMapper;
 import com.wearperfect.dataservice.api.mapper.PostMapper;
-import com.wearperfect.dataservice.api.repository.FollowRepository;
-import com.wearperfect.dataservice.api.repository.PostCommentRepository;
-import com.wearperfect.dataservice.api.repository.PostLikeRepository;
-import com.wearperfect.dataservice.api.repository.PostRepository;
-import com.wearperfect.dataservice.api.repository.PostSaveRepository;
+import com.wearperfect.dataservice.api.repository.*;
 import com.wearperfect.dataservice.api.service.FeedService;
 import com.wearperfect.dataservice.api.service.FollowService;
 import com.wearperfect.dataservice.api.service.PostLikeService;
 import com.wearperfect.dataservice.api.service.PostSaveService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

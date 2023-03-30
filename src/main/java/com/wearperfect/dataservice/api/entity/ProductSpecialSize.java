@@ -1,10 +1,10 @@
 package com.wearperfect.dataservice.api.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ProductSpecialSize {
     @Column(name = "product_special_size_chart_id", nullable = false)
     private Long productSpecialSizeChartId;
 
-    @javax.validation.constraints.Size(max = 512)
+    @jakarta.validation.constraints.Size(max = 512)
     @Column(name = "`desc`", length = 512)
     private String desc;
 

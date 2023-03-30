@@ -7,14 +7,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wearperfect.dataservice.api.service.FileService;
 import com.wearperfect.dataservice.api.service.UtilService;
+
+import javax.imageio.ImageIO;
 
 @Service
 public class FileServiceImpl implements FileService {

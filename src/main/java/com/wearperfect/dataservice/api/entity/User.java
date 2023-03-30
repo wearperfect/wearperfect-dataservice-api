@@ -1,23 +1,11 @@
 package com.wearperfect.dataservice.api.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.data.annotation.Transient;
 
-import lombok.Data;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -146,5 +134,5 @@ public class User {
 	private BusinessAndSupport businessAndSupport;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, targetEntity = PreferenceFilterUser.class)
-	List<PreferenceFilterUser> preferenceFilterUsers;
+	private List<PreferenceFilterUser> preferenceFilterUsers;
 }

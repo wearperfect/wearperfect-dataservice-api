@@ -1,9 +1,8 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wearperfect.dataservice.api.constant.StorePanelCode;
-import com.wearperfect.dataservice.api.dto.StorePanelBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StoreLatestContentDTO;
+import com.wearperfect.dataservice.api.dto.StorePanelBasicDetailsDTO;
 import com.wearperfect.dataservice.api.entity.StoreCollection;
 import com.wearperfect.dataservice.api.entity.StorePanel;
 import com.wearperfect.dataservice.api.mapper.StoreCollectionMapper;
@@ -11,13 +10,11 @@ import com.wearperfect.dataservice.api.mapper.StorePanelMapper;
 import com.wearperfect.dataservice.api.repository.StoreCollectionRepository;
 import com.wearperfect.dataservice.api.repository.StorePanelRepository;
 import com.wearperfect.dataservice.api.service.StoreCollectionService;
-import com.wearperfect.dataservice.api.specification.StorePanelSpecification;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 

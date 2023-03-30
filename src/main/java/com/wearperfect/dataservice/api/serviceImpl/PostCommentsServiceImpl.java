@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import com.wearperfect.dataservice.api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

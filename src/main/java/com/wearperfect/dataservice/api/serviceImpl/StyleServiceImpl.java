@@ -1,20 +1,5 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-
 import com.wearperfect.dataservice.api.dto.StyleBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserStylesResponseDTO;
 import com.wearperfect.dataservice.api.entity.Style;
@@ -24,6 +9,19 @@ import com.wearperfect.dataservice.api.mapper.StyleMapper;
 import com.wearperfect.dataservice.api.repository.StyleRepository;
 import com.wearperfect.dataservice.api.repository.UserStyleRepository;
 import com.wearperfect.dataservice.api.service.StyleService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

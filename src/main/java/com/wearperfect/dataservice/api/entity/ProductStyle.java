@@ -1,15 +1,14 @@
 package com.wearperfect.dataservice.api.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -55,6 +54,6 @@ public class ProductStyle {
     @JoinColumn(name = "style_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Style style;
 
-    @OneToMany(mappedBy = "productStyle", fetch = FetchType.LAZY, targetEntity = RegionStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<RegionStyle> regionStyles;
+//    @OneToMany(mappedBy = "productStyle", fetch = FetchType.LAZY, targetEntity = RegionStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
+//    List<RegionStyle> regionStyles;
 }

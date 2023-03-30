@@ -1,13 +1,5 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wearperfect.dataservice.api.dto.FeatureBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.RoleDetailsDTO;
 import com.wearperfect.dataservice.api.entity.Feature;
@@ -17,6 +9,12 @@ import com.wearperfect.dataservice.api.mapper.RoleMapper;
 import com.wearperfect.dataservice.api.repository.FeatureRepository;
 import com.wearperfect.dataservice.api.repository.RoleRepository;
 import com.wearperfect.dataservice.api.service.SettingsService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

@@ -4,7 +4,7 @@ import com.wearperfect.dataservice.api.dto.ProductFilterDTO;
 import com.wearperfect.dataservice.api.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,13 +75,13 @@ public class ProductSpecification {
                     Predicate productStylePredicate = productStyle.in(productFilters.getStyles());
                     filterAndPredicates.add(productStylePredicate);
                 }
-                if(null != productFilters.getRegions() && productFilters.getRegions().size()>0){
-                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLES);
-                    Join<ProductStyle, RegionStyle> productStyleRegionStyleJoin = productProductStyleJoin.join(ProductStyle_.REGION_STYLES);
-                    Expression<Integer> region = productStyleRegionStyleJoin.get(RegionStyle_.REGION_ID);
-                    Predicate regionPredicate = region.in(productFilters.getRegions());
-                    filterAndPredicates.add(regionPredicate);
-                }
+//                if(null != productFilters.getRegions() && productFilters.getRegions().size()>0){
+//                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLES);
+//                    Join<ProductStyle, RegionStyle> productStyleRegionStyleJoin = productProductStyleJoin.join(ProductStyle_.REGION_STYLES);
+//                    Expression<Integer> region = productStyleRegionStyleJoin.get(RegionStyle_.REGION_ID);
+//                    Predicate regionPredicate = region.in(productFilters.getRegions());
+//                    filterAndPredicates.add(regionPredicate);
+//                }
                 if(null != productFilters.getSizes() && productFilters.getSizes().size()>0){
                     Join<Product, ProductInventoryItem> productProductInventoryItemJoin = root.join(Product_.PRODUCT_INVENTORY_ITEMS);
                     Expression<Short> size = productProductInventoryItemJoin.get(ProductInventoryItem_.SIZE_ID);

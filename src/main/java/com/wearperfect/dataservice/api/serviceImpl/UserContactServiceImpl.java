@@ -1,25 +1,9 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Service;
-
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserContactMessagesDTO;
 import com.wearperfect.dataservice.api.dto.UserContactSuggestionsDTO;
-import com.wearperfect.dataservice.api.entity.Follow;
-import com.wearperfect.dataservice.api.entity.Follow_;
-import com.wearperfect.dataservice.api.entity.User;
-import com.wearperfect.dataservice.api.entity.UserContact;
-import com.wearperfect.dataservice.api.entity.UserContact_;
+import com.wearperfect.dataservice.api.entity.*;
 import com.wearperfect.dataservice.api.mapper.MessageMapper;
 import com.wearperfect.dataservice.api.mapper.UserContactMapper;
 import com.wearperfect.dataservice.api.mapper.UserMapper;
@@ -29,6 +13,16 @@ import com.wearperfect.dataservice.api.repository.UserContactRepository;
 import com.wearperfect.dataservice.api.repository.UserRepository;
 import com.wearperfect.dataservice.api.service.MessageService;
 import com.wearperfect.dataservice.api.service.UserContactService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional

@@ -3,8 +3,8 @@ package com.wearperfect.dataservice.api.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ProductCategorySizeChart implements Serializable {
     @Column(name = "gender_category_id", nullable = false)
     private Integer genderCategoryId;
 
-    @javax.validation.constraints.Size(max = 1024)
+    @jakarta.validation.constraints.Size(max = 1024)
     @Column(name = "desc", length = 4096)
     private String desc;
 
