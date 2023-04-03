@@ -17,28 +17,18 @@ public class UserDetailsSpecification {
 	 * @return list of patient details.
 	 */	
 	public static Specification<User> userMobileOrEmailOrUsernamePredicate(final String username) {
-
 		   return new Specification<User>() {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-				
-								
 				Predicate userMobileOrEmailOrUsernamePredicate=cq.where(
 						cb.or(
 						cb.equal(root.get(User_.phone), username),
 			    		cb.equal(root.get(User_.email), username.toLowerCase()),
 			    		cb.equal(root.get(User_.username), username.toLowerCase()))
 						).getRestriction();
-							    
 				return userMobileOrEmailOrUsernamePredicate;
 			}
-			   
 		};
 	   
 	}
@@ -48,18 +38,10 @@ public class UserDetailsSpecification {
 	 * @return list of patient details.
 	 */	
 	public static Specification<User> userMobileOrEmailOrUsernameAndPasswordPredicate(final String username, final String password) {
-
 		   return new Specification<User>() {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-				
-								
 				Predicate userMobileOrEmailOrUsernameAndPasswordPredicate=cq.where(
 						cb.or(
 						cb.equal(root.get(User_.phone), username),
@@ -68,12 +50,10 @@ public class UserDetailsSpecification {
 			    		),
 						cb.and(cb.equal(root.get(User_.password), password.toLowerCase()))
 						).getRestriction();
-							    
 				return userMobileOrEmailOrUsernameAndPasswordPredicate;
 			}
 			   
 		};
 	   
 	}
-	
 }

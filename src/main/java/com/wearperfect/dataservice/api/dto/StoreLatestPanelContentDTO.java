@@ -7,12 +7,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class StoreLatestContentDTO {
-    StorePanelBasicDetailsDTO featured;
-    StorePanelBasicDetailsDTO whatsHot;
-    StorePanelBasicDetailsDTO seasonal;
-    StorePanelBasicDetailsDTO festive;
-    StorePanelBasicDetailsDTO latest;
+public class StoreLatestPanelContentDTO {
+    List<StoreCollectionBasicDetailsDTO> featuredCollections;
+    List<StoreCollectionBasicDetailsDTO> groupedCollections;
+    List<StoreCollectionBasicDetailsDTO> isolatedCollections;
     List<UserBasicDetailsDTO> newlyLaunchedBrands;
     List<UserBasicDetailsDTO> newlyLaunchedDesigners;
 }

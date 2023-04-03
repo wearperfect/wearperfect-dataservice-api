@@ -18,8 +18,9 @@ public class RegionStyle {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "product_style_id", nullable = false)
-    private Integer productStyleId;
+    @NotNull
+    @Column(name = "style_id", nullable = false)
+    private Integer styleId;
 
     @Column(name = "region_id", nullable = false)
     private Integer regionId;
@@ -59,12 +60,12 @@ public class RegionStyle {
     private Long lastUpdatedBy;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Style.class)
-    @JoinColumn(name = "product_style_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
-    private ProductStyle productStyle;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Region.class)
     @JoinColumn(name = "region_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Region region;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Style.class)
+    @JoinColumn(name = "style_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Style style;
 }

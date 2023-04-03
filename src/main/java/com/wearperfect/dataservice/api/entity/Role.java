@@ -21,6 +21,9 @@ public class Role {
 	
 	@Column(name="desc")
 	String desc;
+
+	@Column(name="code")
+	String code;
 	
 	@Column(name="switchable", nullable = false)
 	Boolean switchable;

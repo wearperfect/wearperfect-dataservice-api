@@ -6,6 +6,8 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.BatchSize;
+
 import java.time.Instant;
 import java.util.List;
 

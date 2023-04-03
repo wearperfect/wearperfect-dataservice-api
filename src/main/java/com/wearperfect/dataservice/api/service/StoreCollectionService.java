@@ -1,8 +1,12 @@
 package com.wearperfect.dataservice.api.service;
 
-import com.wearperfect.dataservice.api.dto.StoreLatestContentDTO;
-import com.wearperfect.dataservice.api.dto.StorePanelBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.ProductBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.StoreLatestPanelContentDTO;
+
+import java.util.List;
 
 public interface StoreCollectionService {
-    StorePanelBasicDetailsDTO getStoreLatestContent();
+    StoreLatestPanelContentDTO getStoreLatestContent();
+
+    List<ProductBasicDetailsDTO> getStoreCollectionProducts(Integer collectionId);
 }

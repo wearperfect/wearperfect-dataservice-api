@@ -77,7 +77,7 @@ public class ProductSpecification {
                 }
 //                if(null != productFilters.getRegions() && productFilters.getRegions().size()>0){
 //                    Join<Product, ProductStyle> productProductStyleJoin = root.join(Product_.PRODUCT_STYLES);
-//                    Join<ProductStyle, RegionStyle> productStyleRegionStyleJoin = productProductStyleJoin.join(ProductStyle_.REGION_STYLES);
+//                    Join<ProductStyle, RegionStyle> productStyleRegionStyleJoin = productProductStyleJoin.join(ProductStyle_.STYLE_ID);
 //                    Expression<Integer> region = productStyleRegionStyleJoin.get(RegionStyle_.REGION_ID);
 //                    Predicate regionPredicate = region.in(productFilters.getRegions());
 //                    filterAndPredicates.add(regionPredicate);
