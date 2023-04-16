@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.wearperfect.dataservice.api.constant.Pagination;
 import com.wearperfect.dataservice.api.dto.PostCommentDetailsDTO;
 import com.wearperfect.dataservice.api.dto.PostDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserProfileDTO;
 import com.wearperfect.dataservice.api.entity.Post;
 import com.wearperfect.dataservice.api.entity.PostComment;
 import com.wearperfect.dataservice.api.entity.PostComment_;
@@ -72,13 +72,13 @@ public class ExploreServiceImpl implements ExploreService{
 	}
 
 	@Override
-	public List<UserDetailsDTO> exploreDesigners() {
+	public List<UserProfileDTO> exploreDesigners() {
 		List<User> users = userRepository.findAll();
 		return users.stream().map(user->userMapper.mapUserToUserDetailsDto(user)).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UserDetailsDTO> exploreBrands() {
+	public List<UserProfileDTO> exploreBrands() {
 		List<User> users = userRepository.findAll();
 		return users.stream().map(user->userMapper.mapUserToUserDetailsDto(user)).collect(Collectors.toList());
 	}

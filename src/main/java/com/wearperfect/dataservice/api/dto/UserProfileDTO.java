@@ -3,7 +3,7 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Data;
 
 @Data
-public class UserDetailsDTO {
+public class UserProfileDTO {
 	private Long id;
 	private String username;
 	private String fullname;

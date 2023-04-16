@@ -6,7 +6,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserProfileDTO;
 import com.wearperfect.dataservice.api.dto.UserFollowUpDetailsDTO;
 import com.wearperfect.dataservice.api.entity.User;
 
@@ -34,7 +34,7 @@ public interface UserMapper {
 	@Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "dateToTimeConverter")
 	@Mapping(source = "dob", target = "dob", qualifiedByName = "dateToTimeConverter")
-	UserDetailsDTO mapUserToUserDetailsDto(User user);
+	UserProfileDTO mapUserToUserDetailsDto(User user);
 	
 	@Mapping(source = "id", target = "userId")
 	UserFollowUpDetailsDTO mapUserToUserFollowUpDetailsDto(User user);

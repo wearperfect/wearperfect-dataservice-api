@@ -8,16 +8,16 @@ import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserProfileDTO;
 import com.wearperfect.dataservice.api.entity.User;
 
 public interface UserService {
 
 	List<UserDTO> getUsers(String realm);
 	
-	UserDetailsDTO getUserDetailsById(Long userId);
+	UserProfileDTO getUserDetailsById(Long userId);
 
-	UserDetailsDTO getUserDetailsByUsername(String username);
+	UserProfileDTO getUserDetailsByUsername(String username);
 	
 	UserDTO createUser(User user);
 
@@ -27,7 +27,7 @@ public interface UserService {
 
 	UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture);
 
-	UserDetailsDTO updateUserIntroductionDetails(Long userId, UserDTO userDto);
+	UserProfileDTO updateUserIntroductionDetails(Long userId, UserDTO userDto);
 
 	BusinessAndSupportDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
 
@@ -35,6 +35,6 @@ public interface UserService {
 
 	String changeUserPassword(Long userId, PasswordResetDTO passwordResetDto);
 	
-	UserDetailsDTO changeUserRole(Long userId, Integer roleId);
+	UserProfileDTO changeUserRole(Long userId, Integer roleId);
 	
 }

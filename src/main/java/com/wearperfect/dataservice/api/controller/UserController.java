@@ -3,7 +3,7 @@ package com.wearperfect.dataservice.api.controller;
 import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
 import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserProfileDTO;
 import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.mapper.UserMapper;
 import com.wearperfect.dataservice.api.service.UserService;
@@ -28,12 +28,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/v1/users/{userId}")
-    public UserDetailsDTO getUserById(@PathVariable(name = "userId") Long userId) {
+    public UserProfileDTO getUserById(@PathVariable(name = "userId") Long userId) {
         return userService.getUserDetailsById(userId);
     }
 
     @GetMapping(value = "/v1/users/u/{username}")
-    public UserDetailsDTO getUserByUsername(@PathVariable(name = "username") String username) {
+    public UserProfileDTO getUserByUsername(@PathVariable(name = "username") String username) {
         return userService.getUserDetailsByUsername(username);
     }
 
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/v1/users/{userId}/role/switch/to/{roleId}")
-    public UserDetailsDTO changeUserRole(@PathVariable(name = "userId") Long userId, @PathVariable(name = "roleId") Integer roleId) {
+    public UserProfileDTO changeUserRole(@PathVariable(name = "userId") Long userId, @PathVariable(name = "roleId") Integer roleId) {
         return userService.changeUserRole(userId, roleId);
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/v1/users/{userId}/profile/introdetails")
-    public UserDetailsDTO updateUserIntroductionDetails(@PathVariable(name = "userId") Long userId, @RequestBody(required = true) UserDTO userDto) {
+    public UserProfileDTO updateUserIntroductionDetails(@PathVariable(name = "userId") Long userId, @RequestBody(required = true) UserDTO userDto) {
         return userService.updateUserIntroductionDetails(userId, userDto);
     }
 

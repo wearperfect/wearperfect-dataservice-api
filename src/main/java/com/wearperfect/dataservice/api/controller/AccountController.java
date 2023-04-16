@@ -5,7 +5,7 @@ import com.wearperfect.dataservice.api.cache.service.BlacklistAccessTokenService
 import com.wearperfect.dataservice.api.dto.AccessTokenDTO;
 import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
 import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
+import com.wearperfect.dataservice.api.dto.UserProfileDTO;
 import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.mapper.UserMapper;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
@@ -51,7 +51,7 @@ public class AccountController {
     }
 
     @GetMapping("/v1/me")
-    public UserDetailsDTO getLoggedInUserDetailsByAuthRequest() throws JsonProcessingException {
+    public UserProfileDTO getLoggedInUserDetailsByAuthRequest() throws JsonProcessingException {
         WearperfectUserPrincipal loggedInUserDetails = wearperfectUserDetailsService.getLoggedInUserDetails();
         return userService.getUserDetailsByUsername(loggedInUserDetails.getUsername());
     }

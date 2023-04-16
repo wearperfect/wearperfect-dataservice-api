@@ -2,7 +2,6 @@ package com.wearperfect.dataservice.api.serviceImpl;
 
 import com.wearperfect.dataservice.api.constant.UserRoleCode;
 import com.wearperfect.dataservice.api.dto.UserBasicDetailsDTO;
-import com.wearperfect.dataservice.api.dto.UserDetailsDTO;
 import com.wearperfect.dataservice.api.entity.User;
 import com.wearperfect.dataservice.api.entity.User_;
 import com.wearperfect.dataservice.api.mapper.UserMapper;

@@ -118,9 +118,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailsDTO getUserDetailsById(Long userId) {
+	public UserProfileDTO getUserDetailsById(Long userId) {
 		Optional<User> user = userRepository.findById(userId);
-		UserDetailsDTO userDetails;
+		UserProfileDTO userDetails;
 		if (user.isPresent()) {
 			userDetails = userMapper.mapUserToUserDetailsDto(user.get());
 		} else {
@@ -258,9 +258,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailsDTO getUserDetailsByUsername(String username) {
+	public UserProfileDTO getUserDetailsByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
-		UserDetailsDTO userDetails;
+		UserProfileDTO userDetails;
 		if (user.isPresent()) {
 			userDetails = userMapper.mapUserToUserDetailsDto(user.get());
 		} else {
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailsDTO updateUserIntroductionDetails(Long userId, UserDTO userDto) {
+	public UserProfileDTO updateUserIntroductionDetails(Long userId, UserDTO userDto) {
 		User user = userMapper.mapUserDtoToUser(userDto);
 
 		if (null == user.getId() || !userId.equals(user.getId())) {
@@ -289,7 +289,7 @@ public class UserServiceImpl implements UserService {
 			existingUserDetails.get().setCountryId(user.getCountryId());
 			existingUserDetails.get().setLastUpdatedOn(new Date());
 			userRepository.saveAndFlush(existingUserDetails.get());
-			UserDetailsDTO updatedUserDto = userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
+			UserProfileDTO updatedUserDto = userMapper.mapUserToUserDetailsDto(existingUserDetails.get());
 			if (null != userDto.getCityId()) {
 				CityBasicDetailsDTO city = cityService.getCityDetailsByCityId(userDto.getCityId());
 				updatedUserDto.setCity(city);
@@ -372,7 +372,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailsDTO changeUserRole(Long userId, Integer roleId) {
+	public UserProfileDTO changeUserRole(Long userId, Integer roleId) {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isPresent()) {
 			Optional<Role> role = roleRepository.findById(roleId);
@@ -384,7 +384,7 @@ public class UserServiceImpl implements UserService {
 				user.get().setRoleId(roleId);
 				userRepository.save(user.get());
 			}
-			UserDetailsDTO userDetails = userMapper.mapUserToUserDetailsDto(user.get());
+			UserProfileDTO userDetails = userMapper.mapUserToUserDetailsDto(user.get());
 			userDetails.setRole(roleMapper.mapRoleToRoleBasicDetailsDto(role.get()));
 			return userDetails;
 		} else {

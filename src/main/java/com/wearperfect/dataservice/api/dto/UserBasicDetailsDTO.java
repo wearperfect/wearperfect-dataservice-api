@@ -7,6 +7,7 @@ public class UserBasicDetailsDTO {
 	private Long id;
 	private String username;
 	private String fullname;
+	private String bio;
 	private String profilePicture;
 	private String profileCoverPicture;
 	private Boolean verified;
