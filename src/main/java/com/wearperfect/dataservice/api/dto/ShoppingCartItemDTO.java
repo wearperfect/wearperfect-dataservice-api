@@ -20,6 +20,7 @@ public class ShoppingCartItemDTO {
     private Integer discountCouponId;
     private Instant createdOn;
     private Instant lastUpdatedOn;
-    private ProductBasicDetailsDTO product;
     private Boolean active;
+    private ProductBasicDetailsDTO product;
+    private SizeBasicDetailsDTO size;
 }

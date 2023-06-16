@@ -43,11 +43,15 @@ public class ShoppingCartItem {
     @Column(name = "last_updated_on")
     private Instant lastUpdatedOn;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
-    @JoinColumn(name="product_id", referencedColumnName = "id", insertable = false, updatable = false)
-    Product product;
-
     @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
+    @JoinColumn(name="product_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
+    @JoinColumn(name = "size_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Size size;
 }
