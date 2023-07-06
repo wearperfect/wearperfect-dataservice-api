@@ -2,6 +2,7 @@ package com.wearperfect.dataservice.api.serviceImpl;
 
 import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartDTO;
+import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartDetailsDTO;
 import com.wearperfect.dataservice.api.entity.ProductCategorySizeChart;
 import com.wearperfect.dataservice.api.mapper.ProductCategorySizeChartMapper;
 import com.wearperfect.dataservice.api.repository.ProductCategorySizeChartRepository;
@@ -36,10 +37,10 @@ public class ProductCategorySizeChartServiceImpl implements ProductCategorySizeC
     }
 
     @Override
-    public ProductCategorySizeChartBasicDetailsDTO getProductCategorySizeChartById(Integer productCategorySizeChartId) {
+    public ProductCategorySizeChartDetailsDTO getProductCategorySizeChartById(Integer productCategorySizeChartId) {
         Optional<ProductCategorySizeChart> productCategorySizeChart = productCategorySizeChartRepository.findById(productCategorySizeChartId);
         if(productCategorySizeChart.isPresent()){
-            return productCategorySizeChartMapper.mapProductCategorySizeChartToProductCategorySizeChartBasicDetailsDto(productCategorySizeChart.get());
+            return productCategorySizeChartMapper.mapProductCategorySizeChartToProductCategorySizeChartDetailsDto(productCategorySizeChart.get());
         } else {
             throw new EntityNotFoundException("Requested Size Chart is not found.");
         }

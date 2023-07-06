@@ -53,6 +53,26 @@ public class ProductCategorySizeChart implements Serializable {
     @Column(name = "last_updated_by")
     private Long lastUpdatedBy;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    User manufacturer;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
+    @JoinColumn(name="product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    ProductCategory productCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
+    @JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    GenderCategory genderCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="created_by", referencedColumnName = "id", insertable = false, updatable = false)
+    User createdByUser;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
+    User lastUpdatedByUser;
+
     @OneToMany(mappedBy = "productCategorySizeChart", fetch = FetchType.LAZY, targetEntity = ProductCategorySize.class, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductCategorySize> productCategorySizes;
 }

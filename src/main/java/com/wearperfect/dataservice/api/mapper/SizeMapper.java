@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.mapper;
 
+import com.wearperfect.dataservice.api.dto.SizeBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.SizeDTO;
 import com.wearperfect.dataservice.api.entity.Size;
 import org.mapstruct.Mapper;
@@ -9,6 +10,8 @@ import org.mapstruct.ReportingPolicy;
 public interface SizeMapper {
 
     SizeDTO mapSizeToSizeDto(Size size);
+
+    SizeBasicDetailsDTO mapSizeToSizeBasicDetailsDTO(Size size);
 
     Size mapSizeDtoToSize(SizeDTO sizeDTO);
 }

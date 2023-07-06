@@ -2,6 +2,7 @@ package com.wearperfect.dataservice.api.controller;
 
 import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartDTO;
+import com.wearperfect.dataservice.api.dto.ProductCategorySizeChartDetailsDTO;
 import com.wearperfect.dataservice.api.dto.UserSkillsResponseDTO;
 import com.wearperfect.dataservice.api.service.ProductCategorySizeChartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ProductCategorySizeChartController {
     }
 
     @GetMapping(path = "/v1/productCategorySizeCharts/{productCategorySizeChartId}")
-    ProductCategorySizeChartBasicDetailsDTO getProductCategorySizeChartById(@PathVariable(name = "productCategorySizeChartId", required = true) Integer productCategorySizeChartId) {
+    ProductCategorySizeChartDetailsDTO getProductCategorySizeChartById(@PathVariable(name = "productCategorySizeChartId", required = true) Integer productCategorySizeChartId) {
         return productCategorySizeChartService.getProductCategorySizeChartById(productCategorySizeChartId);
     }
 
