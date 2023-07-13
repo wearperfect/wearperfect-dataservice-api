@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductBasicDetailsDTO {
+public class ProductDetailsDTO {
     Long id;
     String name;
     String description;

@@ -77,7 +77,7 @@ public class StoreCollectionServiceImpl implements StoreCollectionService {
     }
 
     @Override
-    public List<ProductBasicDetailsDTO> getStoreCollectionProducts(Integer collectionId) {
+    public List<ProductDetailsDTO> getStoreCollectionProducts(Integer collectionId) {
          List<StoreCollectionProduct> storeCollectionProducts = storeCollectionProductRepository.findByStoreCollectionId(
                  collectionId,
                 PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Sort.Direction.DESC, Post_.CREATED_ON))

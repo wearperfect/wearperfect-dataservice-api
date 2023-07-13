@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductBasicDetailsDTO> getProducts(ProductFilterDTO productFilter, Integer page, Integer size);
+    List<ProductDetailsDTO> getProducts(ProductFilterDTO productFilter, Integer page, Integer size);
 
-    List<ProductBasicDetailsDTO> searchProducts(String searchText, Integer page, Integer size);
+    List<ProductDetailsDTO> searchProducts(String searchText, Integer page, Integer size);
 
-    List<ProductBasicDetailsDTO> filterProducts(ProductFilterDTO productFilters, Integer page, Integer size);
+    List<ProductDetailsDTO> filterProducts(ProductFilterDTO productFilters, Integer page, Integer size);
 
-    ProductBasicDetailsDTO getProductById(Long productId);
+    ProductDetailsDTO getProductById(Long productId);
 
     List<ProductCategorySizeChartBasicDetailsDTO> getProductSizeCharts();
 }

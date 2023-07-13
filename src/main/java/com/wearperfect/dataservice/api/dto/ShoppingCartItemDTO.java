@@ -21,6 +21,6 @@ public class ShoppingCartItemDTO {
     private Instant createdOn;
     private Instant lastUpdatedOn;
     private Boolean active;
-    private ProductBasicDetailsDTO product;
+    private ProductDetailsDTO product;
     private SizeBasicDetailsDTO size;
 }

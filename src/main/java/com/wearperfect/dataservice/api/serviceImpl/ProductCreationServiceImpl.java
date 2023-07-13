@@ -1,6 +1,6 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import com.wearperfect.dataservice.api.dto.ProductBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.ProductDetailsDTO;
 import com.wearperfect.dataservice.api.repository.ProductRepository;
 import com.wearperfect.dataservice.api.service.ProductCreationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class ProductCreationServiceImpl implements ProductCreationService {
     ProductRepository productRepository;
 
     @Override
-    public ProductBasicDetailsDTO createProduct(ProductBasicDetailsDTO productBasicDetailsDTO) {
+    public ProductDetailsDTO createProduct(ProductDetailsDTO productDetailsDTO) {
         // Save Product
         // Save Product Media
         // Save Product Category Size Chart if not present

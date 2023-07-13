@@ -18,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,13 +42,13 @@ public class ProductServiceImpl implements ProductService {
     EntityManager em;
 
     @Override
-    public List<ProductBasicDetailsDTO> getProducts(ProductFilterDTO productFilter, Integer page, Integer size) {
+    public List<ProductDetailsDTO> getProducts(ProductFilterDTO productFilter, Integer page, Integer size) {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> productMapper.mapProductToProductBasicDetailsDTO(product)).collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductBasicDetailsDTO> searchProducts(String searchText, Integer page, Integer size) {
+    public List<ProductDetailsDTO> searchProducts(String searchText, Integer page, Integer size) {
         // This searches substring content in sequential order only.
         List<Product> products = productRepository.findByNameContainingIgnoreCase(
                 searchText,
@@ -63,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductBasicDetailsDTO> filterProducts(ProductFilterDTO productFilters, Integer page, Integer size) {
+    public List<ProductDetailsDTO> filterProducts(ProductFilterDTO productFilters, Integer page, Integer size) {
         List<Product> products = productRepository.findAll(
                 ProductSpecification.filterProducts(productFilters),
                 PageRequest.of(
@@ -74,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductBasicDetailsDTO getProductById(Long productId) {
+    public ProductDetailsDTO getProductById(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
         if(product.isPresent()){
             return productMapper.mapProductToProductBasicDetailsDTO(product.get());

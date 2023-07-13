@@ -24,6 +24,18 @@ public class ProductSpecialSizeChart {
     private Long productId;
 
     @NotNull
+    @Column(name = "manufacturer_id", nullable = false)
+    private Long manufacturerId;
+
+    @NotNull
+    @Column(name = "product_category_id", nullable = false)
+    private Integer productCategoryId;
+
+    @NotNull
+    @Column(name = "gender_category_id", nullable = false)
+    private Integer genderCategoryId;
+
+    @NotNull
     @Column(name = "primary_measurement_unit_id", nullable = false)
     private Long primaryMeasurementUnitId;
 
@@ -53,6 +65,18 @@ public class ProductSpecialSizeChart {
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    User manufacturer;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
+    @JoinColumn(name="product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    ProductCategory productCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
+    @JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    GenderCategory genderCategory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = MeasurementUnit.class)
     @JoinColumn(name="primary_measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false)

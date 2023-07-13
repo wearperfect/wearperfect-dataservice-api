@@ -1,6 +1,6 @@
 package com.wearperfect.dataservice.api.controller;
 
-import com.wearperfect.dataservice.api.dto.ProductBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.ProductDetailsDTO;
 import com.wearperfect.dataservice.api.dto.StoreLatestPanelContentDTO;
 import com.wearperfect.dataservice.api.service.StoreCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class StoreCollectionController {
     }
 
     @GetMapping("/v1/store/collections/{collectionId}/products")
-    List<ProductBasicDetailsDTO> getStoreCollectionProducts(@PathVariable(name = "collectionId") Integer collectionId){
+    List<ProductDetailsDTO> getStoreCollectionProducts(@PathVariable(name = "collectionId") Integer collectionId){
         return storeCollectionService.getStoreCollectionProducts(collectionId);
     }
 }

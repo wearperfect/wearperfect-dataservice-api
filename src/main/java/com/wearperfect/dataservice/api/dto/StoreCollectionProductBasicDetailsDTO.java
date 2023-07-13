@@ -8,5 +8,5 @@ import lombok.Setter;
 public class StoreCollectionProductBasicDetailsDTO {
     private Long id;
     private Boolean active = false;
-    private ProductBasicDetailsDTO product;
+    private ProductDetailsDTO product;
 }

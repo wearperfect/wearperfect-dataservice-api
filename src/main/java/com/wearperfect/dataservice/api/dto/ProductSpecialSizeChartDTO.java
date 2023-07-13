@@ -10,6 +10,9 @@ import java.time.Instant;
 public class ProductSpecialSizeChartDTO {
     private Long id;
     private Long productId;
+    private Long manufacturerId;
+    private Integer productCategoryId;
+    private Integer genderCategoryId;
     private Short primaryMeasurementUnitId;
     private String desc;
     private Boolean active = false;

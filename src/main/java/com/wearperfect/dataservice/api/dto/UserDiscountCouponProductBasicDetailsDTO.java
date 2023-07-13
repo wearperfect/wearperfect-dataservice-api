@@ -9,5 +9,5 @@ public class UserDiscountCouponProductBasicDetailsDTO {
     private Long id;
     private Boolean active = false;
     private UserDiscountCouponBasicDetailsDTO userDiscountCoupon;
-    private ProductBasicDetailsDTO product;
+    private ProductDetailsDTO product;
 }
