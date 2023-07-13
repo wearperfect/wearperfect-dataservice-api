@@ -13,4 +13,5 @@ public class ProductSpecialSizeChartBasicDetailsDTO {
     private String desc;
     private Boolean active;
     private List<ProductSpecialSizeBasicDetailsDTO> productSpecialSizes;
+    private MeasurementUnitBasicDetailsDTO primaryMeasurementUnit;
 }

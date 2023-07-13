@@ -23,6 +23,10 @@ public class ProductSpecialSizeChart {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
+    @NotNull
+    @Column(name = "primary_measurement_unit_id", nullable = false)
+    private Long primaryMeasurementUnitId;
+
     @Size(max = 512)
     @Column(name = "`desc`", length = 512)
     private String desc;
@@ -49,6 +53,18 @@ public class ProductSpecialSizeChart {
     @OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = MeasurementUnit.class)
+    @JoinColumn(name="primary_measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    MeasurementUnit primaryMeasurementUnit;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="created_by", referencedColumnName = "id", insertable = false, updatable = false)
+    User createdByUser;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name="last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
+    User lastUpdatedByUser;
 
     @OneToMany(mappedBy = "productSpecialSizeChart", fetch = FetchType.LAZY, targetEntity = ProductSpecialSize.class, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductSpecialSize> productSpecialSizes;

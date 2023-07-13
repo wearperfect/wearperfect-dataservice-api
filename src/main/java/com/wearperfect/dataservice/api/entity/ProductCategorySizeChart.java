@@ -31,6 +31,10 @@ public class ProductCategorySizeChart implements Serializable {
     @Column(name = "gender_category_id", nullable = false)
     private Integer genderCategoryId;
 
+    @NotNull
+    @Column(name = "primary_measurement_unit_id", nullable = false)
+    private Short primaryMeasurementUnitId;
+
     @jakarta.validation.constraints.Size(max = 1024)
     @Column(name = "desc", length = 4096)
     private String desc;
@@ -64,6 +68,10 @@ public class ProductCategorySizeChart implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
     @JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
     GenderCategory genderCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = MeasurementUnit.class)
+    @JoinColumn(name="primary_measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    MeasurementUnit primaryMeasurementUnit;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
     @JoinColumn(name="created_by", referencedColumnName = "id", insertable = false, updatable = false)

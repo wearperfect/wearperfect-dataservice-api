@@ -20,5 +20,5 @@ public class ProductCategorySizeDTO {
     private Long createdBy;
     private Long lastUpdatedBy;
     private SizeBasicDetailsDTO size;
-    private List<ProductCategorySizeMeasurementDTO> productMeasurements;
+    private List<ProductCategorySizeMeasurementDTO> productCategorySizeMeasurements;
 }

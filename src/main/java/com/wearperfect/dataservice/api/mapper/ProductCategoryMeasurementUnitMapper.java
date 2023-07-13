@@ -1,0 +1,16 @@
+package com.wearperfect.dataservice.api.mapper;
+
+import com.wearperfect.dataservice.api.dto.ProductCategoryMeasurementUnitBasicDetailsDTO;
+import com.wearperfect.dataservice.api.dto.ProductCategoryMeasurementUnitDTO;
+import com.wearperfect.dataservice.api.entity.ProductCategoryMeasurementUnit;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+
+@Mapper(uses = {UtilityMapper.class, ProductCategoryMapper.class, MeasurementUnitMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ProductCategoryMeasurementUnitMapper {
+    ProductCategoryMeasurementUnit mapProductCategoryMeasurementDtoUnitToProductCategoryMeasurementUnit(ProductCategoryMeasurementUnitDTO productCategoryMeasurementUnitDTO);
+
+    ProductCategoryMeasurementUnitDTO mapProductCategoryMeasurementUnitToProductCategoryMeasurementUnitDto(ProductCategoryMeasurementUnit productCategoryMeasurementUnit);
+
+    ProductCategoryMeasurementUnitBasicDetailsDTO mapProductCategoryMeasurementUnitToProductCategoryMeasurementUnitBasicDetailsDto(ProductCategoryMeasurementUnit productCategoryMeasurementUnit);
+}

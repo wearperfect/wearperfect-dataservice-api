@@ -1,6 +1,7 @@
 package com.wearperfect.dataservice.api.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -11,45 +12,48 @@ import lombok.Data;
 @Table(name = "product_categories")
 public class ProductCategory {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id;
 
-	@Column(name = "name")
-	String name;
+    @Column(name = "name")
+    String name;
 
-	@Column(name = "desc")
-	String desc;
+    @Column(name = "desc")
+    String desc;
 
-	@Column(name = "thumbnail")
-	String thumbnail;
+    @Column(name = "thumbnail")
+    String thumbnail;
 
-	@Column(name = "source_link")
-	String sourceLink;
+    @Column(name = "source_link")
+    String sourceLink;
 
-	@Column(name = "category_id")
-	Integer categoryId;
-	
-	@Column(name = "sequence")
-	Integer sequence;
+    @Column(name = "category_id")
+    Integer categoryId;
 
-	@Column(name = "created_by")
-	Long createdBy;
+    @Column(name = "sequence")
+    Integer sequence;
 
-	@Column(name = "created_on")
-	Date createdOn;
+    @Column(name = "created_by")
+    Long createdBy;
 
-	@Column(name = "last_updated_by")
-	Long lastUpdatedBy;
+    @Column(name = "created_on")
+    Date createdOn;
 
-	@Column(name = "last_updated_on")
-	Date lastUpdatedOn;
+    @Column(name = "last_updated_by")
+    Long lastUpdatedBy;
 
-	@Column(name = "active")
-	Boolean active;
+    @Column(name = "last_updated_on")
+    Date lastUpdatedOn;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Category.class)
-	@JoinColumn(name="category_id", referencedColumnName = "id", insertable = false, updatable = false)
-	Category category;
+    @Column(name = "active")
+    Boolean active;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Category.class)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    Category category;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productCategory", targetEntity = ProductCategoryMeasurementUnit.class, orphanRemoval = true)
+    List<ProductCategoryMeasurementUnit> productCategoryMeasurementUnits;
 }

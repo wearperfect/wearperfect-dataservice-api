@@ -13,6 +13,7 @@ public class ProductCategorySizeChartDTO {
     private Long manufacturerId;
     private Integer productCategoryId;
     private Integer genderCategoryId;
+    private Short primaryMeasurementUnitId;
     private String desc;
     private Boolean active;
     private Instant createdOn;

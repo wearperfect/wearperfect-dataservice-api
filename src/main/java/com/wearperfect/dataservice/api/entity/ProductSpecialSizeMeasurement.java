@@ -34,6 +34,18 @@ public class ProductSpecialSizeMeasurement {
     private Float value;
 
     @NotNull
+    @Column(name = "from_value", nullable = false)
+    private Float fromValue;
+
+    @NotNull
+    @Column(name = "to_value", nullable = false)
+    private Float toValue;
+
+    @NotNull
+    @Column(name = "ranged", nullable = false)
+    private Boolean ranged = false;
+
+    @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 

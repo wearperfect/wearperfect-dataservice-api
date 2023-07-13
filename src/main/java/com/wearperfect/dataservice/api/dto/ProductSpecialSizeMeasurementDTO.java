@@ -13,6 +13,9 @@ public class ProductSpecialSizeMeasurementDTO {
     private Integer productMeasurementLabelId;
     private Byte measurementUnitId;
     private Float value;
+    private Float fromValue;
+    private Float toValue;
+    private Boolean ranged;
     private Boolean active = false;
     private Long createdBy;
     private Instant createdOn;
