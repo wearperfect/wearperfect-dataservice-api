@@ -16,6 +16,7 @@ public class ProductDTO {
     Long manufacturerId;
     Integer productCategoryId;
     Integer genderCategoryId;
+    Integer productCategorySizeChartId;
     Integer colorId;
     Boolean availableForSale;
     Float price;

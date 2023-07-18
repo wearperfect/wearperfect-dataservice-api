@@ -20,6 +20,15 @@ public class ProductCategorySizeChart implements Serializable {
     private Integer id;
 
     @NotNull
+    @jakarta.validation.constraints.Size(max = 256)
+    @Column(name = "name", length = 256)
+    private String name;
+
+    @jakarta.validation.constraints.Size(max = 512)
+    @Column(name = "description", length = 512)
+    private String description;
+
+    @NotNull
     @Column(name = "manufacturer_id", nullable = false)
     private Long manufacturerId;
 
@@ -34,10 +43,6 @@ public class ProductCategorySizeChart implements Serializable {
     @NotNull
     @Column(name = "primary_measurement_unit_id", nullable = false)
     private Short primaryMeasurementUnitId;
-
-    @jakarta.validation.constraints.Size(max = 1024)
-    @Column(name = "desc", length = 4096)
-    private String desc;
 
     @NotNull
     @Column(name = "active", nullable = false)

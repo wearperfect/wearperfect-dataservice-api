@@ -1,12 +1,14 @@
 package com.wearperfect.dataservice.api.entity;
 
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="products")
 public class Product {
@@ -32,6 +34,9 @@ public class Product {
 
 	@Column(name = "gender_category_id")
 	Integer genderCategoryId;
+
+	@Column(name = "product_category_size_chart_id")
+	Integer productCategorySizeChartId;
 
 	@Column(name = "color_id")
 	Integer colorId;
@@ -80,16 +85,17 @@ public class Product {
 	@JoinColumn(name="currency_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Currency currency;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
-	@JoinColumns({
-			@JoinColumn(name="manufacturer_id", referencedColumnName="manufacturer_id", insertable = false, updatable = false, nullable = false),
-			@JoinColumn(name="product_category_id", referencedColumnName="product_category_id", insertable = false, updatable = false, nullable = false),
-			@JoinColumn(name="gender_category_id", referencedColumnName="gender_category_id", insertable = false, updatable = false, nullable = false)
-	})
-	ProductCategorySizeChart productCategorySizeChart;
+//	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
+//	@JoinColumns({
+//			@JoinColumn(name="manufacturer_id", referencedColumnName="manufacturer_id", insertable = false, updatable = false, nullable = false),
+//			@JoinColumn(name="product_category_id", referencedColumnName="product_category_id", insertable = false, updatable = false, nullable = false),
+//			@JoinColumn(name="gender_category_id", referencedColumnName="gender_category_id", insertable = false, updatable = false, nullable = false)
+//	})
+//	ProductCategorySizeChart productCategorySizeChart;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductSpecialSizeChart.class, mappedBy = "product")
-	ProductSpecialSizeChart productSpecialSizeChart;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
+	@JoinColumn(name="product_category_size_chart_id", referencedColumnName = "id", insertable = false, updatable = false)
+	ProductCategorySizeChart productCategorySizeChart;
 
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductMedia.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductMedia> productMediaList;

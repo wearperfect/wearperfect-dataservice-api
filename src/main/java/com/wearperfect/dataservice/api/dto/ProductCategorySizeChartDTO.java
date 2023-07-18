@@ -10,11 +10,12 @@ import java.util.List;
 @Setter
 public class ProductCategorySizeChartDTO {
     private Integer id;
+    private String name;
+    private String description;
     private Long manufacturerId;
     private Integer productCategoryId;
     private Integer genderCategoryId;
     private Short primaryMeasurementUnitId;
-    private String desc;
     private Boolean active;
     private Instant createdOn;
     private Instant lastUpdatedOn;
