@@ -12,6 +12,4 @@ public class ProductCategorySizeChartBasicDetailsDTO {
     private String name;
     private String description;
     private Boolean active;
-    private List<ProductCategorySizeBasicDetailsDTO> productCategorySizes;
-    private MeasurementUnitBasicDetailsDTO primaryMeasurementUnit;
 }
