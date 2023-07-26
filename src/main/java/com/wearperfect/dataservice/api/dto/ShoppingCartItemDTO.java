@@ -18,7 +18,9 @@ public class ShoppingCartItemDTO {
     private Integer sizeId;
     private Short quantity;
     private Integer discountCouponId;
+    private Long createdBy;
     private Instant createdOn;
+    private Long lastUpdatedBy;
     private Instant lastUpdatedOn;
     private Boolean active;
     private ProductDetailsDTO product;
