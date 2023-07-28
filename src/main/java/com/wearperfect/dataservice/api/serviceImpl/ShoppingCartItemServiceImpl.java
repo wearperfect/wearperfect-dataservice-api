@@ -9,6 +9,7 @@ import com.wearperfect.dataservice.api.repository.ShoppingCartItemRepository;
 import com.wearperfect.dataservice.api.service.ShoppingCartItemService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -89,21 +92,23 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         try {
             ShoppingCartItem shoppingCartItem = shoppingCartItemMapper.mapShoppingCartItemDtoToShoppingCartItem(shoppingCartItemDTO);
             if (shoppingCartItem.getQuantity() == 0) {
-                shoppingCartItemRepository.delete(shoppingCartItem);
+                deleteShoppingCartItemById(shoppingCartItem.getId());
             } else {
                 shoppingCartItem = shoppingCartItemRepository.save(shoppingCartItem);
             }
+//            Hibernate.initialize(shoppingCartItem.getProduct());
+//            Hibernate.initialize(shoppingCartItem.getSize());
             return shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDto(shoppingCartItem);
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart.");
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart. "+e.getMessage());
         }
     }
 
     @Override
     public Long deleteShoppingCartItemById(Long shoppingCartItemId) {
         try {
-            ShoppingCartItem addedShoppingCartItem = shoppingCartItemRepository.removeById(shoppingCartItemId);
-            return addedShoppingCartItem.getId();
+            shoppingCartItemRepository.deleteById(shoppingCartItemId);
+            return shoppingCartItemId;
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart.");
         }

@@ -3,6 +3,8 @@ package com.wearperfect.dataservice.api.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.Instant;
 import java.util.List;
@@ -65,22 +67,27 @@ public class Product {
 	@Column(name = "active")
 	Boolean active;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
 	@JoinColumn(name="manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
 	User manufacturer;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
 	@JoinColumn(name="product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
 	ProductCategory productCategory;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
 	@JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
 	GenderCategory genderCategory;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Color.class)
 	@JoinColumn(name="color_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Color color;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Currency.class)
 	@JoinColumn(name="currency_id", referencedColumnName = "id", insertable = false, updatable = false)
 	Currency currency;
@@ -93,19 +100,24 @@ public class Product {
 //	})
 //	ProductCategorySizeChart productCategorySizeChart;
 
+	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategorySizeChart.class)
 	@JoinColumn(name="product_category_size_chart_id", referencedColumnName = "id", insertable = false, updatable = false)
 	ProductCategorySizeChart productCategorySizeChart;
 
+	@Fetch(FetchMode.JOIN)
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductMedia.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductMedia> productMediaList;
 
+	@Fetch(FetchMode.JOIN)
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductStyle.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductStyle> productStyles;
 
+	@Fetch(FetchMode.JOIN)
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductInventoryItem.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	List<ProductInventoryItem> productInventoryItems;
 
+	@Fetch(FetchMode.JOIN)
 	@OneToOne(mappedBy = "product", fetch = FetchType.LAZY, targetEntity = ProductDiscount.class)
 	private ProductDiscount productDiscount;
 

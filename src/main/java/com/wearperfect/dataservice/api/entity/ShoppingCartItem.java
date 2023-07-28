@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
@@ -15,6 +18,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "shopping_cart_items")
+@EntityListeners(AuditingEntityListener.class)
 public class ShoppingCartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,10 +66,12 @@ public class ShoppingCartItem {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
+    @Fetch(value = FetchMode.JOIN)
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Product.class)
     @JoinColumn(name="product_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Product product;
 
+    @Fetch(value = FetchMode.JOIN)
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Size.class)
     @JoinColumn(name = "size_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Size size;
