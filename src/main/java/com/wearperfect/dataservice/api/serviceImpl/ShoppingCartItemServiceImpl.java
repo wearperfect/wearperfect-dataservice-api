@@ -1,15 +1,15 @@
 package com.wearperfect.dataservice.api.serviceImpl;
 
-import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
-import com.wearperfect.dataservice.api.dto.ShoppingCartItemDTO;
+import com.wearperfect.dataservice.api.dto.*;
 import com.wearperfect.dataservice.api.entity.ShoppingCartItem;
 import com.wearperfect.dataservice.api.entity.ShoppingCartItem_;
 import com.wearperfect.dataservice.api.mapper.ShoppingCartItemMapper;
 import com.wearperfect.dataservice.api.repository.ShoppingCartItemRepository;
+import com.wearperfect.dataservice.api.service.ProductService;
 import com.wearperfect.dataservice.api.service.ShoppingCartItemService;
+import com.wearperfect.dataservice.api.service.SizeService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,11 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,8 +30,14 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Autowired
     private ShoppingCartItemMapper shoppingCartItemMapper;
 
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    SizeService sizeService;
+
     @Override
-    public PageableResponseDTO<ShoppingCartItemDTO> getShoppingCartItems(Long userId, Integer page, Integer size) {
+    public PageableResponseDTO<ShoppingCartItemDetailsDTO> getShoppingCartItems(Long userId, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, ShoppingCartItem_.CREATED_ON));
         Page<ShoppingCartItem> shoppingCartItemList;
         if (userId != null) {
@@ -43,11 +46,11 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         } else {
             shoppingCartItemList = shoppingCartItemRepository.findAll(pageRequest);
         }
-        List<ShoppingCartItemDTO> shoppingCartItemDTOList = shoppingCartItemList.getContent().stream()
-                .map(item -> shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDto(item))
+        List<ShoppingCartItemDetailsDTO> shoppingCartItemDetailsDTOList = shoppingCartItemList.getContent().stream()
+                .map(item -> shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDetailsDto(item))
                 .toList();
-        PageableResponseDTO<ShoppingCartItemDTO> pageableResponseDTO = new PageableResponseDTO<>();
-        pageableResponseDTO.setList(shoppingCartItemDTOList);
+        PageableResponseDTO<ShoppingCartItemDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
+        pageableResponseDTO.setList(shoppingCartItemDetailsDTOList);
         pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
                 shoppingCartItemList.getSize(),
                 shoppingCartItemList.getNumber(),
@@ -83,7 +86,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             shoppingCartItem = shoppingCartItemRepository.save(shoppingCartItem);
             return shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDto(shoppingCartItem);
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in adding item to shopping cart."+e.getMessage());
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in adding item to shopping cart." + e.getMessage());
         }
     }
 
@@ -96,11 +99,9 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             } else {
                 shoppingCartItem = shoppingCartItemRepository.save(shoppingCartItem);
             }
-//            Hibernate.initialize(shoppingCartItem.getProduct());
-//            Hibernate.initialize(shoppingCartItem.getSize());
             return shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDto(shoppingCartItem);
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart. "+e.getMessage());
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart. " + e.getMessage());
         }
     }
 
