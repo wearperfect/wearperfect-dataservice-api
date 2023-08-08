@@ -39,23 +39,23 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Override
     public PageableResponseDTO<ShoppingCartItemDetailsDTO> getShoppingCartItems(Long userId, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, ShoppingCartItem_.CREATED_ON));
-        Page<ShoppingCartItem> shoppingCartItemList;
+        Page<ShoppingCartItem> shoppingCartItemPage;
         if (userId != null) {
-            shoppingCartItemList = shoppingCartItemRepository
+            shoppingCartItemPage = shoppingCartItemRepository
                     .findByUserId(userId, pageRequest);
         } else {
-            shoppingCartItemList = shoppingCartItemRepository.findAll(pageRequest);
+            shoppingCartItemPage = shoppingCartItemRepository.findAll(pageRequest);
         }
-        List<ShoppingCartItemDetailsDTO> shoppingCartItemDetailsDTOList = shoppingCartItemList.getContent().stream()
+        List<ShoppingCartItemDetailsDTO> shoppingCartItemDetailsDTOList = shoppingCartItemPage.getContent().stream()
                 .map(item -> shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDetailsDto(item))
                 .toList();
         PageableResponseDTO<ShoppingCartItemDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
         pageableResponseDTO.setList(shoppingCartItemDetailsDTOList);
         pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
-                shoppingCartItemList.getSize(),
-                shoppingCartItemList.getNumber(),
-                shoppingCartItemList.getTotalElements(),
-                shoppingCartItemList.getTotalPages()
+                shoppingCartItemPage.getSize(),
+                shoppingCartItemPage.getNumber(),
+                shoppingCartItemPage.getTotalElements(),
+                shoppingCartItemPage.getTotalPages()
         ));
         return pageableResponseDTO;
     }
@@ -66,7 +66,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         if (shoppingCartItem.isPresent()) {
             return shoppingCartItemMapper.mapShoppingCartItemToShoppingCartItemDto(shoppingCartItem.get());
         } else {
-            throw new EntityNotFoundException("Shopping cart item by ID " + shoppingCartItem + " not found.");
+            throw new EntityNotFoundException("Shopping cart item by ID " + shoppingCartItemId + " not found.");
         }
     }
 
@@ -111,7 +111,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             shoppingCartItemRepository.deleteById(shoppingCartItemId);
             return shoppingCartItemId;
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in updating item in shopping cart.");
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in removing item in shopping cart item by ID "+shoppingCartItemId+".");
         }
     }
 }
