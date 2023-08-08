@@ -1,10 +1,12 @@
 package com.wearperfect.dataservice.api.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -63,29 +65,30 @@ public class ProductCategorySizeChart implements Serializable {
     private Long lastUpdatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-    @JoinColumn(name="manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "manufacturer_id", referencedColumnName = "id", insertable = false, updatable = false)
     User manufacturer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = ProductCategory.class)
-    @JoinColumn(name="product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_category_id", referencedColumnName = "id", insertable = false, updatable = false)
     ProductCategory productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = GenderCategory.class)
-    @JoinColumn(name="gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "gender_category_id", referencedColumnName = "id", insertable = false, updatable = false)
     GenderCategory genderCategory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = MeasurementUnit.class)
-    @JoinColumn(name="primary_measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "primary_measurement_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     MeasurementUnit primaryMeasurementUnit;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-    @JoinColumn(name="created_by", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "created_by", referencedColumnName = "id", insertable = false, updatable = false)
     User createdByUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
-    @JoinColumn(name="last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "last_updated_by", referencedColumnName = "id", insertable = false, updatable = false)
     User lastUpdatedByUser;
 
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "productCategorySizeChart", fetch = FetchType.LAZY, targetEntity = ProductCategorySize.class, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductCategorySize> productCategorySizes;
 }

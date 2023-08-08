@@ -1,5 +1,6 @@
 package com.wearperfect.dataservice.api.mapper;
 
+import com.wearperfect.dataservice.api.dto.ProductBasicDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ProductDetailsDTO;
 import com.wearperfect.dataservice.api.dto.ProductDTO;
 import com.wearperfect.dataservice.api.entity.Product;
@@ -14,5 +15,7 @@ public interface ProductMapper {
 
     Product mapProductDtoToProduct(ProductDTO productDTO);
 
-    ProductDetailsDTO mapProductToProductBasicDetailsDTO(Product product);
+    ProductDetailsDTO mapProductToProductDetailsDTO(Product product);
+
+    ProductBasicDetailsDTO mapProductToProductBasicDetailsDTO(Product product);
 }

@@ -83,7 +83,7 @@ public class StoreCollectionServiceImpl implements StoreCollectionService {
                 PageRequest.of(0, Pagination.PageSize.POSTS.getValue(), Sort.by(Sort.Direction.DESC, Post_.CREATED_ON))
         );
         return storeCollectionProducts.stream().map(
-                storeCollectionProduct -> productMapper.mapProductToProductBasicDetailsDTO(storeCollectionProduct.getProduct())
+                storeCollectionProduct -> productMapper.mapProductToProductDetailsDTO(storeCollectionProduct.getProduct())
         ).collect(Collectors.toList());
     }
 

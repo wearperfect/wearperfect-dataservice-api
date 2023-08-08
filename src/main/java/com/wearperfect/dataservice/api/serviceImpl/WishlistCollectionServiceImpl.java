@@ -3,8 +3,8 @@ package com.wearperfect.dataservice.api.serviceImpl;
 import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDetailsDTO;
-import com.wearperfect.dataservice.api.entity.ShoppingCartItem_;
 import com.wearperfect.dataservice.api.entity.WishlistCollection;
+import com.wearperfect.dataservice.api.entity.WishlistCollection_;
 import com.wearperfect.dataservice.api.mapper.WishlistCollectionMapper;
 import com.wearperfect.dataservice.api.repository.WishlistCollectionRepository;
 import com.wearperfect.dataservice.api.service.WishlistCollectionService;
@@ -38,7 +38,7 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
 
     @Override
     public PageableResponseDTO<WishlistCollectionDetailsDTO> getWishlistCollections(Long userId, Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, ShoppingCartItem_.CREATED_ON));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, WishlistCollection_.CREATED_ON));
         Page<WishlistCollection> wishlistCollectionPage;
         if (userId != null) {
             wishlistCollectionPage = wishlistCollectionRepository

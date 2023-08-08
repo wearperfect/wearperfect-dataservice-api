@@ -11,13 +11,14 @@ public class ProductBasicDetailsDTO {
     Long id;
     String name;
     String description;
+    String manufacturerName;
+    Long manufacturerId;
     Boolean availableForSale;
+    Boolean outOfStock = false;
     Float price;
     Boolean active;
     CurrencyBasicDetailsDTO currency;
-    UserBasicDetailsDTO manufacturer;
-    List<ProductMediaBasicDetailsDTO> productMediaList;
-    List<ProductInventoryItemBasicDetailsDTO> productInventoryItems;
+    ProductMediaBasicDetailsDTO thumbnail;
     ProductDiscountBasicDetailsDTO productDiscount;
-    List<ProductDiscountCouponBasicDetailsDTO> productDiscountCoupons;
+    Boolean productDiscountCouponsAvailable;
 }

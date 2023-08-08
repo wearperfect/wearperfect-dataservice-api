@@ -58,9 +58,8 @@ public class WishlistCollection {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.LAZY, targetEntity = WishlistCollectionProduct.class)
     @JoinColumn(name="wishlist_collection_id", referencedColumnName = "id", insertable = false, updatable = false)
     private List<WishlistCollectionProduct> wishlistCollectionProducts;
-
 }

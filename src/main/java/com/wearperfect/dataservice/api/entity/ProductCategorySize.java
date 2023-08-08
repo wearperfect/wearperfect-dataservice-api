@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -58,6 +61,7 @@ public class ProductCategorySize {
     @JoinColumn(name = "size_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Size size;
 
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "productCategorySize", fetch = FetchType.LAZY, targetEntity = ProductCategorySizeMeasurement.class, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductCategorySizeMeasurement> productCategorySizeMeasurements;
 }

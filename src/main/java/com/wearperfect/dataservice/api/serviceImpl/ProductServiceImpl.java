@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDetailsDTO> getProducts(ProductFilterDTO productFilter, Integer page, Integer size) {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> productMapper.mapProductToProductBasicDetailsDTO(product)).collect(Collectors.toList());
+        return products.stream().map(product -> productMapper.mapProductToProductDetailsDTO(product)).collect(Collectors.toList());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
                         size != null? size : Pagination.PageSize.PRODUCTS.getValue())
         );
         // While returning group products by category and product category
-        return products.stream().map(product -> productMapper.mapProductToProductBasicDetailsDTO(product)).collect(Collectors.toList());
+        return products.stream().map(product -> productMapper.mapProductToProductDetailsDTO(product)).collect(Collectors.toList());
     }
 
     @Override
@@ -68,14 +68,14 @@ public class ProductServiceImpl implements ProductService {
                         page != null? page : Pagination.PageNumber.DEFAULT.getValue(),
                         size != null? size : Pagination.PageSize.PRODUCTS.getValue())
         ).getContent();
-        return products.stream().map(product -> productMapper.mapProductToProductBasicDetailsDTO(product)).collect(Collectors.toList());
+        return products.stream().map(product -> productMapper.mapProductToProductDetailsDTO(product)).collect(Collectors.toList());
     }
 
     @Override
     public ProductDetailsDTO getProductById(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
         if(product.isPresent()){
-            return productMapper.mapProductToProductBasicDetailsDTO(product.get());
+            return productMapper.mapProductToProductDetailsDTO(product.get());
         }else{
             throw new EntityNotFoundException();
         }

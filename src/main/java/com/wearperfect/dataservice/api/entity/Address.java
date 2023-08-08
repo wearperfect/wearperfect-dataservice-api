@@ -5,8 +5,11 @@ import java.util.Date;
 import jakarta.persistence.*;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "addresses")
 public class Address {
@@ -78,6 +81,4 @@ public class Address {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Country.class)
 	@JoinColumn(name="country_id", referencedColumnName = "id", updatable = false, insertable = false)
 	Country countryDetails;
-	
-	
 }
