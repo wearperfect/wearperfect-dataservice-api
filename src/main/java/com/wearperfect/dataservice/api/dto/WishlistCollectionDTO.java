@@ -15,5 +15,5 @@ public class WishlistCollectionDTO {
     private Instant createdOn;
     private Long lastUpdatedBy;
     private Instant lastUpdatedOn;
-    private Boolean active = false;
+    private Boolean active = true;
 }

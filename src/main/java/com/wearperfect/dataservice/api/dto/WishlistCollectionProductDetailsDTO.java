@@ -3,18 +3,31 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 public class WishlistCollectionProductDetailsDTO {
-    private Long id;
-    private Long wishlistCollectionId;
-    private Long productId;
-    private Instant createdOn;
-    private Long createdBy;
-    private Instant lastUpdatedOn;
-    private Long lastUpdatedBy;
-    private Boolean active;
-    private ProductBasicDetailsDTO product;
+    Long id;
+    Long productId;
+    String productName;
+    String productDescription;
+    Long productManufacturerId;
+    String productManufacturerName;
+    Boolean productAvailableForSale;
+    Boolean productOutOfStock;
+    Float productPrice;
+    Integer productPriceCurrencyId;
+    String productPriceCurrencyName;
+    String productPriceCurrencyShortName;
+    Integer productPriceCurrencyCountryId;
+    String productThumbnail;
+    String productThumbnailTitle;
+    String productThumbnailDescription;
+    Integer productThumbnailContentTypeId;
+    String productThumbnailContentTypeExtension;
+    String productThumbnailContentType;
+    Float productDiscountValue;
+    String productDiscountTypeName;
+    Boolean productDiscountActive;
+    Boolean productDiscountCouponsAvailable;
+    Boolean active;
 }

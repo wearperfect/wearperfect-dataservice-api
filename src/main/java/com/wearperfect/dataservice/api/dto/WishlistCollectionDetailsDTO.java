@@ -1,6 +1,5 @@
 package com.wearperfect.dataservice.api.dto;
 
-import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct;
 import lombok.Getter;
 import lombok.Setter;
 
