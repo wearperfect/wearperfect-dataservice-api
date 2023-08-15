@@ -10,7 +10,7 @@ import java.time.Instant;
 public class WishlistCollectionProductDTO {
     private Long id;
     private Long wishlistCollectionId;
-    private Long productId;
+    private Long wishlistProductId;
     private Instant createdOn;
     private Long createdBy;
     private Instant lastUpdatedOn;

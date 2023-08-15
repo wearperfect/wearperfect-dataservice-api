@@ -7,14 +7,13 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public class WishlistCollectionProductDetailsDTO {
+public class WishlistProductDTO {
     private Long id;
-    private Long wishlistCollectionId;
-    private Long wishlistProductId;
+    private Long productId;
+    private Long userId;
     private Instant createdOn;
     private Long createdBy;
     private Instant lastUpdatedOn;
     private Long lastUpdatedBy;
-    private Boolean active = true;
-    private WishlistProductDetailsDTO wishlistProduct;
+    private Boolean active;
 }

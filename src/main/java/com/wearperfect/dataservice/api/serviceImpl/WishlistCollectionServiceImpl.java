@@ -47,7 +47,16 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
             wishlistCollectionPage = wishlistCollectionRepository.findAll(pageRequest);
         }
         List<WishlistCollectionDetailsDTO> wishlistCollectionDetailsDTOList = wishlistCollectionPage.getContent().stream()
-                .map(item -> wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDetailsDto(item))
+                .map(wishlistCollection -> {
+                    if(wishlistCollection.getCoverWishlistProduct() == null &&
+                            wishlistCollection.getWishlistCollectionProducts() != null &&
+                            !wishlistCollection.getWishlistCollectionProducts().isEmpty()){
+                        wishlistCollection.setCoverWishlistProduct(
+                                wishlistCollection.getWishlistCollectionProducts().get(0).getWishlistProduct()
+                        );
+                    }
+                    return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDetailsDto(wishlistCollection);
+                })
                 .toList();
         PageableResponseDTO<WishlistCollectionDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
         pageableResponseDTO.setList(wishlistCollectionDetailsDTOList);

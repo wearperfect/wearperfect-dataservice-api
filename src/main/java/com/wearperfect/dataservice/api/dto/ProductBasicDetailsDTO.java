@@ -3,7 +3,7 @@ package com.wearperfect.dataservice.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -11,14 +11,28 @@ public class ProductBasicDetailsDTO {
     Long id;
     String name;
     String description;
-    String manufacturerName;
     Long manufacturerId;
+    String manufacturerName;
     Boolean availableForSale;
-    Boolean outOfStock = false;
+    Boolean outOfStock;
     Float price;
-    Boolean active;
-    CurrencyBasicDetailsDTO currency;
-    ProductMediaBasicDetailsDTO thumbnail;
-    ProductDiscountBasicDetailsDTO productDiscount;
+    Integer priceCurrencyId;
+    String priceCurrencyName;
+    String priceCurrencyShortName;
+    Integer priceCurrencyCountryId;
+    String thumbnail;
+    String thumbnailTitle;
+    String thumbnailDescription;
+    Integer thumbnailContentTypeId;
+    String thumbnailContentTypeExtension;
+    String thumbnailContentType;
+    Float productDiscountValue;
+    String productDiscountTypeName;
+    Boolean productDiscountActive;
     Boolean productDiscountCouponsAvailable;
+    Instant createdOn;
+    Long createdBy;
+    Instant lastUpdatedOn;
+    Long lastUpdatedBy;
+    Boolean active;
 }

@@ -11,7 +11,6 @@ import com.wearperfect.dataservice.api.mapper.ProductMediaMapper;
 import com.wearperfect.dataservice.api.mapper.WishlistCollectionProductMapper;
 import com.wearperfect.dataservice.api.repository.WishlistCollectionProductRepository;
 import com.wearperfect.dataservice.api.service.WishlistCollectionProductService;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -37,21 +36,14 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
 
     ProductMapper productMapper;
 
-    EntityManager em;
-
-    Comparator<com.wearperfect.dataservice.api.entity.ProductMedia> productMediaSequenceComparator =
-            Comparator.comparingInt(ProductMedia::getSequenceId);
-
     public WishlistCollectionProductServiceImpl(WishlistCollectionProductRepository wishlistCollectionProductRepository,
                                                 WishlistCollectionProductMapper wishlistCollectionProductMapper,
                                                 ProductMediaMapper productMediaMapper,
-                                                ProductMapper productMapper,
-                                                EntityManager em) {
+                                                ProductMapper productMapper) {
         this.wishlistCollectionProductRepository = wishlistCollectionProductRepository;
         this.wishlistCollectionProductMapper = wishlistCollectionProductMapper;
         this.productMediaMapper = productMediaMapper;
         this.productMapper = productMapper;
-        this.em = em;
     }
 
     @Override

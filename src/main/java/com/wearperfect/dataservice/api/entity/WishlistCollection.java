@@ -36,6 +36,9 @@ public class WishlistCollection {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "cover_wishlist_product_id", nullable = false)
+    private Long coverWishlistProductId;
+
     @NotNull
     @CreatedBy
     @Column(name = "created_by", nullable = false)
@@ -57,6 +60,10 @@ public class WishlistCollection {
     @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active = true;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = WishlistProduct.class)
+    @JoinColumn(name = "cover_wishlist_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private WishlistProduct coverWishlistProduct;
 
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.LAZY, targetEntity = WishlistCollectionProduct.class)

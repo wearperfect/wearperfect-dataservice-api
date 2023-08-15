@@ -12,10 +12,11 @@ public class WishlistCollectionDetailsDTO {
     private Long id;
     private String name;
     private Long userId;
+    private Long coverWishlistProductId;
     private Long createdBy;
     private Instant createdOn;
     private Long lastUpdatedBy;
     private Instant lastUpdatedOn;
     private Boolean active = false;
-    private List<WishlistCollectionProductDetailsDTO> wishlistCollectionProducts;
+    private WishlistProductDetailsDTO coverWishlistProduct;
 }

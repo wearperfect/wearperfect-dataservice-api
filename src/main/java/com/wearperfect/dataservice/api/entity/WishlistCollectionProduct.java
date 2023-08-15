@@ -30,8 +30,8 @@ public class WishlistCollectionProduct {
     private Long wishlistCollectionId;
 
     @NotNull
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @Column(name = "wishlist_product_id", nullable = false)
+    private Long wishlistProductId;
 
     @NotNull
     @CreatedDate
@@ -55,7 +55,7 @@ public class WishlistCollectionProduct {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
-    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
-    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = WishlistProduct.class)
+    @JoinColumn(name = "wishlist_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private WishlistProduct wishlistProduct;
 }
