@@ -97,9 +97,15 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
     @Override
     public WishlistCollectionDTO updateWishlistCollection(WishlistCollectionDTO wishlistCollectionDTO) {
         try {
-            WishlistCollection wishlistCollection = wishlistCollectionMapper.mapWishlistCollectionDtoToWishlistCollection(wishlistCollectionDTO);
-            wishlistCollection = wishlistCollectionRepository.save(wishlistCollection);
-            return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDto(wishlistCollection);
+            Optional<WishlistCollection> optionalWishlistCollection = wishlistCollectionRepository.findById(wishlistCollectionDTO.getId());
+            if (optionalWishlistCollection.isPresent()) {
+                WishlistCollection wishlistCollection = optionalWishlistCollection.get();
+                wishlistCollectionMapper.updateWishlistCollectionFromWishlistCollectionDTO(wishlistCollectionDTO, wishlistCollection);
+                wishlistCollection = wishlistCollectionRepository.save(wishlistCollection);
+                return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDto(wishlistCollection);
+            } else {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Collection doesn't exist with ID " + wishlistCollectionDTO.getId());
+            }
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in Updating wishlist collection." + e.getMessage());
         }

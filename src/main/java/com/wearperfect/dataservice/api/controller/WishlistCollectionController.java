@@ -3,7 +3,9 @@ package com.wearperfect.dataservice.api.controller;
 import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDetailsDTO;
+import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
 import com.wearperfect.dataservice.api.service.WishlistCollectionService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,7 +32,10 @@ public class WishlistCollectionController {
     }
 
     @PostMapping(path = "/v1/wishlistCollections")
-    WishlistCollectionDTO addItemToShoppingCart(@RequestBody WishlistCollectionDTO wishlistCollectionDTO) {
+    WishlistCollectionDTO addItemToShoppingCart(
+            @AuthenticationPrincipal WearperfectUserPrincipal authenticationPrincipal,
+            @RequestBody WishlistCollectionDTO wishlistCollectionDTO) {
+        System.out.println("authenticationPrincipal:::"+authenticationPrincipal.getUserId());
         return wishlistCollectionService.createWishlistCollection(wishlistCollectionDTO);
     }
 

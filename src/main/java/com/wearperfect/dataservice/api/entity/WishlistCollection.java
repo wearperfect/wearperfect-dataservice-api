@@ -7,13 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -21,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "wishlist_collections")
 @EntityListeners(AuditingEntityListener.class)
-public class WishlistCollection {
+public class WishlistCollection extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -38,28 +33,6 @@ public class WishlistCollection {
 
     @Column(name = "cover_wishlist_product_id", nullable = false)
     private Long coverWishlistProductId;
-
-    @NotNull
-    @CreatedBy
-    @Column(name = "created_by", nullable = false)
-    private Long createdBy;
-
-    @NotNull
-    @CreatedDate
-    @Column(name = "created_on", nullable = false)
-    private Instant createdOn;
-
-    @LastModifiedBy
-    @Column(name = "last_updated_by")
-    private Long lastUpdatedBy;
-
-    @LastModifiedDate
-    @Column(name = "last_updated_on")
-    private Instant lastUpdatedOn;
-
-    @NotNull
-    @Column(name = "active", nullable = false)
-    private Boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = WishlistProduct.class)
     @JoinColumn(name = "cover_wishlist_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
