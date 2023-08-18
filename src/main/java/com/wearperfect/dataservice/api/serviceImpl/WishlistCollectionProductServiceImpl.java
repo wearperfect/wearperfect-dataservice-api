@@ -4,12 +4,14 @@ import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDetailsDTO;
 import com.wearperfect.dataservice.api.entity.ProductMedia;
+import com.wearperfect.dataservice.api.entity.WishlistCollection;
 import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct;
 import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct_;
 import com.wearperfect.dataservice.api.mapper.ProductMapper;
 import com.wearperfect.dataservice.api.mapper.ProductMediaMapper;
 import com.wearperfect.dataservice.api.mapper.WishlistCollectionProductMapper;
 import com.wearperfect.dataservice.api.repository.WishlistCollectionProductRepository;
+import com.wearperfect.dataservice.api.repository.WishlistCollectionRepository;
 import com.wearperfect.dataservice.api.service.WishlistCollectionProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,8 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
 
     WishlistCollectionProductRepository wishlistCollectionProductRepository;
 
+    WishlistCollectionRepository wishlistCollectionRepository;
+
     WishlistCollectionProductMapper wishlistCollectionProductMapper;
 
     ProductMediaMapper productMediaMapper;
@@ -37,10 +42,12 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
     ProductMapper productMapper;
 
     public WishlistCollectionProductServiceImpl(WishlistCollectionProductRepository wishlistCollectionProductRepository,
+                                                WishlistCollectionRepository wishlistCollectionRepository,
                                                 WishlistCollectionProductMapper wishlistCollectionProductMapper,
                                                 ProductMediaMapper productMediaMapper,
                                                 ProductMapper productMapper) {
         this.wishlistCollectionProductRepository = wishlistCollectionProductRepository;
+        this.wishlistCollectionRepository = wishlistCollectionRepository;
         this.wishlistCollectionProductMapper = wishlistCollectionProductMapper;
         this.productMediaMapper = productMediaMapper;
         this.productMapper = productMapper;
@@ -48,7 +55,12 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
 
     @Override
     public PageableResponseDTO<WishlistCollectionProductDetailsDTO> getWishlistCollectionProducts(Long wishlistCollectionId, Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, WishlistCollectionProduct_.CREATED_ON));
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, WishlistCollectionProduct_.CREATED_ON)
+                        .and(Sort.by(Sort.Direction.DESC, WishlistCollectionProduct_.LAST_UPDATED_ON))
+        );
         Page<WishlistCollectionProduct> wishlistCollectionProductPage;
         if (wishlistCollectionId != null) {
             wishlistCollectionProductPage = wishlistCollectionProductRepository
@@ -74,9 +86,9 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
 
     @Override
     public WishlistCollectionProductDetailsDTO getWishlistCollectionProductById(Long wishlistCollectionProductId) {
-        Optional<WishlistCollectionProduct> wishlistCollectionProduct = wishlistCollectionProductRepository.findById(wishlistCollectionProductId);
-        if (wishlistCollectionProduct.isPresent()) {
-            return wishlistCollectionProductMapper.mapWishlistCollectionProductToWishlistCollectionProductDetailsDto(wishlistCollectionProduct.get());
+        Optional<WishlistCollectionProduct> optionalWishlistCollectionProduct = wishlistCollectionProductRepository.findById(wishlistCollectionProductId);
+        if (optionalWishlistCollectionProduct.isPresent()) {
+            return wishlistCollectionProductMapper.mapWishlistCollectionProductToWishlistCollectionProductDetailsDto(optionalWishlistCollectionProduct.get());
         } else {
             throw new EntityNotFoundException("Wishlist Collection Product by ID " + wishlistCollectionProductId + " not found.");
         }
@@ -85,9 +97,18 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
     @Override
     public WishlistCollectionProductDTO createWishlistCollectionProduct(WishlistCollectionProductDTO wishlistCollectionProductDTO) {
         try {
-            WishlistCollectionProduct wishlistCollectionProduct = wishlistCollectionProductMapper.mapWishlistCollectionProductDtoToWishlistCollectionProduct(wishlistCollectionProductDTO);
-            wishlistCollectionProduct = wishlistCollectionProductRepository.save(wishlistCollectionProduct);
-            return wishlistCollectionProductMapper.mapWishlistCollectionProductToWishlistCollectionProductDto(wishlistCollectionProduct);
+            Optional<WishlistCollection> optionalWishlistCollection = wishlistCollectionRepository.findById(wishlistCollectionProductDTO.getWishlistCollectionId());
+            if(optionalWishlistCollection.isPresent()){
+                WishlistCollectionProduct wishlistCollectionProduct = wishlistCollectionProductMapper.mapWishlistCollectionProductDtoToWishlistCollectionProduct(wishlistCollectionProductDTO);
+                wishlistCollectionProduct = wishlistCollectionProductRepository.save(wishlistCollectionProduct);
+                WishlistCollection wishlistCollection = optionalWishlistCollection.get();
+                wishlistCollection.setLastUpdatedOn(Instant.now());
+                wishlistCollection.setLastUpdatedBy(wishlistCollectionProduct.getCreatedBy());
+                wishlistCollectionRepository.save(wishlistCollection);
+                return wishlistCollectionProductMapper.mapWishlistCollectionProductToWishlistCollectionProductDto(wishlistCollectionProduct);
+            } else {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Wishlist Collection with ID " + wishlistCollectionProductDTO.getWishlistCollectionId() + " not found.");
+            }
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in adding wishlist collection product by ID " + wishlistCollectionProductDTO.getId() + "." + e.getMessage());
         }

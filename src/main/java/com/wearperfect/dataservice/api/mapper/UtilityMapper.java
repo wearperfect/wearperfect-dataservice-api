@@ -26,4 +26,22 @@ public interface UtilityMapper {
 			return null;
 		}
 	}
+
+	@Named(value = "instantToEpochSecondConverter")
+	default Long instantToEpochSecondConverter(Instant instant) {
+		if (null != instant) {
+			return instant.getEpochSecond();
+		} else {
+			return null;
+		}
+	}
+
+	@Named(value = "epochSecondToInstantConverter")
+	default Instant epochSecondToInstantConverter(Long epochSecond) {
+		if (null != epochSecond) {
+			return Instant.ofEpochSecond(epochSecond);
+		} else {
+			return null;
+		}
+	}
 }

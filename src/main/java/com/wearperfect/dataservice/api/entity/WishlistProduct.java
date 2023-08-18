@@ -6,6 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "wishlist_products")
+@EntityListeners(AuditingEntityListener.class)
 public class WishlistProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +35,20 @@ public class WishlistProduct {
     private Long userId;
 
     @NotNull
+    @CreatedDate
     @Column(name = "created_on", nullable = false)
     private Instant createdOn;
 
     @NotNull
+    @CreatedBy
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 
+    @LastModifiedDate
     @Column(name = "last_updated_on")
     private Instant lastUpdatedOn;
 
+    @LastModifiedBy
     @Column(name = "last_updated_by")
     private Long lastUpdatedBy;
 

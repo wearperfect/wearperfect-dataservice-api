@@ -14,9 +14,9 @@ public class WishlistCollectionDetailsDTO {
     private Long userId;
     private Long coverWishlistProductId;
     private Long createdBy;
-    private Instant createdOn;
+    private Long createdOn;
     private Long lastUpdatedBy;
-    private Instant lastUpdatedOn;
+    private Long lastUpdatedOn;
     private Boolean active = false;
     private WishlistProductDetailsDTO coverWishlistProduct;
 }

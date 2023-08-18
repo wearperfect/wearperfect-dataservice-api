@@ -38,7 +38,12 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
 
     @Override
     public PageableResponseDTO<WishlistCollectionDetailsDTO> getWishlistCollections(Long userId, Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, WishlistCollection_.CREATED_ON));
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, WishlistCollection_.CREATED_ON).
+                        and(Sort.by(Sort.Direction.DESC, WishlistCollection_.LAST_UPDATED_ON))
+        );
         Page<WishlistCollection> wishlistCollectionPage;
         if (userId != null) {
             wishlistCollectionPage = wishlistCollectionRepository
@@ -48,16 +53,15 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
         }
         List<WishlistCollectionDetailsDTO> wishlistCollectionDetailsDTOList = wishlistCollectionPage.getContent().stream()
                 .map(wishlistCollection -> {
-                    if(wishlistCollection.getCoverWishlistProduct() == null &&
+                    if (wishlistCollection.getCoverWishlistProduct() == null &&
                             wishlistCollection.getWishlistCollectionProducts() != null &&
-                            !wishlistCollection.getWishlistCollectionProducts().isEmpty()){
+                            !wishlistCollection.getWishlistCollectionProducts().isEmpty()) {
                         wishlistCollection.setCoverWishlistProduct(
                                 wishlistCollection.getWishlistCollectionProducts().get(0).getWishlistProduct()
                         );
                     }
                     return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDetailsDto(wishlistCollection);
-                })
-                .toList();
+                }).toList();
         PageableResponseDTO<WishlistCollectionDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
         pageableResponseDTO.setList(wishlistCollectionDetailsDTOList);
         pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
@@ -107,7 +111,7 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
             wishlistCollectionRepository.deleteById(wishlistCollectionId);
             return wishlistCollectionId;
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in removing item in wishlist collection by ID "+wishlistCollectionId+".");
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in removing item in wishlist collection by ID " + wishlistCollectionId + ".");
         }
     }
 }
