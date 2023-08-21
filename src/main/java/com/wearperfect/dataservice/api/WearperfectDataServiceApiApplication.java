@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -21,7 +22,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 )
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.wearperfect.dataservice.api.repository"})
+@EnableJpaRepositories(
+        basePackages = {"com.wearperfect.dataservice.api.repository"},
+        repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class
+)
 public class WearperfectDataServiceApiApplication {
 
     public static void main(String[] args) {

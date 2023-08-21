@@ -101,7 +101,7 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
             if (optionalWishlistCollection.isPresent()) {
                 WishlistCollection wishlistCollection = optionalWishlistCollection.get();
                 wishlistCollectionMapper.updateWishlistCollectionFromWishlistCollectionDTO(wishlistCollectionDTO, wishlistCollection);
-                wishlistCollection = wishlistCollectionRepository.save(wishlistCollection);
+                wishlistCollection = wishlistCollectionRepository.saveAndFlush(wishlistCollection);
                 return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDto(wishlistCollection);
             } else {
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Collection doesn't exist with ID " + wishlistCollectionDTO.getId());

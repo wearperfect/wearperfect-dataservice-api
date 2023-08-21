@@ -8,7 +8,7 @@ spring:
       max-request-size: 50MB
   profiles:
     active: development
-# Database
+  # Database
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wearperfect
@@ -16,6 +16,9 @@ spring:
     password: Test!234
 # JPA properties
   jpa:
+    properties:
+      generate_statistics: true
+      use_sql_comments: true
     hibernate:
       ddl-auto: none
       dialect: org.hibernate.dialect.MySQLDialect

@@ -7,12 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
 
 @Getter
 @Setter
+@Audited
 @Entity
 @Table(name = "wishlist_collections")
 @EntityListeners(AuditingEntityListener.class)
@@ -34,10 +37,12 @@ public class WishlistCollection extends Auditable {
     @Column(name = "cover_wishlist_product_id", nullable = false)
     private Long coverWishlistProductId;
 
+    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = WishlistProduct.class)
     @JoinColumn(name = "cover_wishlist_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private WishlistProduct coverWishlistProduct;
 
+    @NotAudited
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.LAZY, targetEntity = WishlistCollectionProduct.class)
     @JoinColumn(name="wishlist_collection_id", referencedColumnName = "id", insertable = false, updatable = false)
