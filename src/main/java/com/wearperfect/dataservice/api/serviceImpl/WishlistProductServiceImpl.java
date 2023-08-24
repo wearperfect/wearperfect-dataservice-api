@@ -64,20 +64,24 @@ public class WishlistProductServiceImpl implements WishlistProductService {
                         size != null ? size : Pagination.PageSize.PRODUCTS.getValue(),
                         Sort.by(Sort.Direction.DESC, WishlistCollectionProduct_.CREATED_ON)
                 ));
-        List<WishlistProductDetailsDTO> wishlistProductDetailsDTOList = wishlistProductPage
-                .getContent()
-                .stream()
-                .map(item -> wishlistProductMapper.mapWishlistProductToWishlistProductDetailsDto(item))
-                .toList();
-        PageableResponseDTO<WishlistProductDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
-        pageableResponseDTO.setList(wishlistProductDetailsDTOList);
-        pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
-                wishlistProductPage.getSize(),
-                wishlistProductPage.getNumber(),
-                wishlistProductPage.getTotalElements(),
-                wishlistProductPage.getTotalPages()
-        ));
-        return pageableResponseDTO;
+        return getWishlistPageableResponseDTO(wishlistProductPage);
+    }
+
+    @Override
+    public Optional<WishlistProductDTO> findByUserIdAndProductId(Long userId, Long productId) {
+        Optional<WishlistProduct> optionalWishlistProduct = wishlistProductRepository.findByUserIdAndProductId(userId, productId);
+        if (optionalWishlistProduct.isPresent()) {
+            WishlistProductDTO wishlistProductDTO = wishlistProductMapper.mapWishlistProductToWishlistProductDto(optionalWishlistProduct.get());
+            return Optional.of(wishlistProductDTO);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<WishlistProductDTO> getWishlistProductsByUserIdAndProductIdList(Long userId, List<Long> productIdList) {
+        List<WishlistProduct> wishlistProductList = wishlistProductRepository.findByUserIdAndProductIdIn(userId, productIdList);
+        return wishlistProductList.stream().map(wishlistProductMapper::mapWishlistProductToWishlistProductDto).toList();
     }
 
     @Override
@@ -121,5 +125,22 @@ public class WishlistProductServiceImpl implements WishlistProductService {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error in removing item in wishlist product by ID " + wishlistProductId + ". " + e.getMessage());
         }
+    }
+
+    private PageableResponseDTO<WishlistProductDetailsDTO> getWishlistPageableResponseDTO(Page<WishlistProduct> wishlistProductPage) {
+        List<WishlistProductDetailsDTO> wishlistProductDetailsDTOList = wishlistProductPage
+                .getContent()
+                .stream()
+                .map(item -> wishlistProductMapper.mapWishlistProductToWishlistProductDetailsDto(item))
+                .toList();
+        PageableResponseDTO<WishlistProductDetailsDTO> pageableResponseDTO = new PageableResponseDTO<>();
+        pageableResponseDTO.setList(wishlistProductDetailsDTOList);
+        pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
+                wishlistProductPage.getSize(),
+                wishlistProductPage.getNumber(),
+                wishlistProductPage.getTotalElements(),
+                wishlistProductPage.getTotalPages()
+        ));
+        return pageableResponseDTO;
     }
 }

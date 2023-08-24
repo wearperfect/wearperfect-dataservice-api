@@ -25,6 +25,10 @@ public interface WishlistCollectionMapper {
 
     @Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "instantToEpochSecondConverter")
     @Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "instantToEpochSecondConverter")
+    void updateWishlistCollectionDTOFromWishlistCollection(@MappingTarget WishlistCollectionDTO wishlistCollectionDTO, WishlistCollection wishlistCollection);
+
+    @Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "instantToEpochSecondConverter")
+    @Mapping(source = "lastUpdatedOn", target = "lastUpdatedOn", qualifiedByName = "instantToEpochSecondConverter")
     WishlistCollectionDTO mapWishlistCollectionToWishlistCollectionDto(WishlistCollection wishlistCollection);
 
     @Mapping(source = "createdOn", target = "createdOn", qualifiedByName = "instantToEpochSecondConverter")

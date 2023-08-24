@@ -3,6 +3,7 @@ package com.wearperfect.dataservice.api.security.serviceImpl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -60,6 +61,17 @@ public class WearperfectUserDetailsServiceImpl implements WearperfectUserDetails
 			throw new RuntimeException(e);
 		}
 		return (WearperfectUserPrincipal) authentication.getPrincipal();
+	}
+
+	@Override
+	public Optional<WearperfectUserPrincipal> getOptionalLoggedInUserDetails() throws UsernameNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		ObjectMapper mapper = new ObjectMapper();
+		if(authentication != null && authentication.isAuthenticated()){
+			return Optional.of(((WearperfectUserPrincipal) authentication.getPrincipal()));
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Role role) {

@@ -19,6 +19,7 @@ public class ProductDetailsDTO {
     Instant createdOn;
     Instant lastUpdatedOn;
     Boolean active;
+    Long wishlistProductId;
     CurrencyBasicDetailsDTO currency;
     UserBasicDetailsDTO manufacturer;
     ProductCategoryBasicDetailsDTO productCategory;

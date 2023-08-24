@@ -15,7 +15,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Audited
 @Entity
 @Table(name = "wishlist_collections")
 @EntityListeners(AuditingEntityListener.class)

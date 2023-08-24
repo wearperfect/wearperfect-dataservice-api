@@ -1,10 +1,11 @@
 package com.wearperfect.dataservice.api.security.service;
 
+import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
 import com.wearperfect.dataservice.api.security.models.WearperfectUserPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.wearperfect.dataservice.api.security.models.WearperfectUserDetails;
+import java.util.Optional;
 
 public interface WearperfectUserDetailsService extends UserDetailsService{
 
@@ -12,4 +13,5 @@ public interface WearperfectUserDetailsService extends UserDetailsService{
 
 	WearperfectUserPrincipal getLoggedInUserDetails() throws UsernameNotFoundException;
 
+    Optional<WearperfectUserPrincipal> getOptionalLoggedInUserDetails() throws UsernameNotFoundException;
 }
