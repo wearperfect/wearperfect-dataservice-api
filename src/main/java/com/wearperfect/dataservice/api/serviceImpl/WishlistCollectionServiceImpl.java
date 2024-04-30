@@ -4,6 +4,7 @@ import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionDetailsDTO;
 import com.wearperfect.dataservice.api.entity.WishlistCollection;
+import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct;
 import com.wearperfect.dataservice.api.entity.WishlistCollection_;
 import com.wearperfect.dataservice.api.mapper.WishlistCollectionMapper;
 import com.wearperfect.dataservice.api.repository.WishlistCollectionRepository;
@@ -53,12 +54,20 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
         }
         List<WishlistCollectionDetailsDTO> wishlistCollectionDetailsDTOList = wishlistCollectionPage.getContent().stream()
                 .map(wishlistCollection -> {
-                    if (wishlistCollection.getCoverWishlistProduct() == null &&
+                    // Set default Cover Wishlist Collection Product if coverWishlistCollectionProduct is NULL
+                    if (wishlistCollection.getCoverWishlistCollectionProduct() == null &&
                             wishlistCollection.getWishlistCollectionProducts() != null &&
                             !wishlistCollection.getWishlistCollectionProducts().isEmpty()) {
-                        wishlistCollection.setCoverWishlistProduct(
-                                wishlistCollection.getWishlistCollectionProducts().get(0).getWishlistProduct()
-                        );
+                        List<WishlistCollectionProduct> activeWishlistCollectionProductList = wishlistCollection
+                                .getWishlistCollectionProducts()
+                                .stream()
+                                //.filter(wishlistCollectionProduct -> wishlistCollectionProduct.getWishlistProduct().getActive())
+                                .toList();
+                        if (!activeWishlistCollectionProductList.isEmpty()) {
+                            wishlistCollection.setCoverWishlistCollectionProduct(
+                                    activeWishlistCollectionProductList.get(0)
+                            );
+                        }
                     }
                     return wishlistCollectionMapper.mapWishlistCollectionToWishlistCollectionDetailsDto(wishlistCollection);
                 }).toList();
@@ -118,6 +127,22 @@ public class WishlistCollectionServiceImpl implements WishlistCollectionService 
             return wishlistCollectionId;
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in removing item in wishlist collection by ID " + wishlistCollectionId + ".");
+        }
+    }
+
+    @Override
+    public void removeCoverWishlistCollectionProductByWishlistProductIdFromAllWishlistCollections(Long wishlistProductId) {
+        try {
+            List<WishlistCollection> wishlistCollectionList = wishlistCollectionRepository.getByCoverWishlistCollectionProductLinkedWishListProductId(wishlistProductId);
+            wishlistCollectionList.forEach(wishlistCollection -> {
+                wishlistCollection.setCoverWishlistCollectionProductId(null);
+            });
+            wishlistCollectionRepository.saveAll(wishlistCollectionList);
+        } catch (Exception e) {
+            throw new HttpClientErrorException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    String.format("Error in removing CoverWishlistCollectionProduct by %s WishlistProductId from all WishlistCollections.", wishlistProductId)
+            );
         }
     }
 }

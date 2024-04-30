@@ -9,6 +9,6 @@ public class WishlistCollectionDetailsDTO extends AuditableDTO {
     private Long id;
     private String name;
     private Long userId;
-    private Long coverWishlistProductId;
-    private WishlistProductDetailsDTO coverWishlistProduct;
+    private Long coverWishlistCollectionProductId;
+    private WishlistCollectionProductDetailsDTO coverWishlistCollectionProduct;
 }

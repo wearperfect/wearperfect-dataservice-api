@@ -10,6 +10,8 @@ import com.wearperfect.dataservice.api.mapper.ProductMapper;
 import com.wearperfect.dataservice.api.mapper.ProductMediaMapper;
 import com.wearperfect.dataservice.api.mapper.WishlistProductMapper;
 import com.wearperfect.dataservice.api.repository.WishlistProductRepository;
+import com.wearperfect.dataservice.api.service.WishlistCollectionProductService;
+import com.wearperfect.dataservice.api.service.WishlistCollectionService;
 import com.wearperfect.dataservice.api.service.WishlistProductService;
 import com.wearperfect.dataservice.api.specification.WishlistProductSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,30 +37,28 @@ public class WishlistProductServiceImpl implements WishlistProductService {
 
     ProductMapper productMapper;
 
+    WishlistCollectionService wishlistCollectionService;
+
+    WishlistCollectionProductService wishlistCollectionProductService;
+
     public WishlistProductServiceImpl(WishlistProductRepository wishlistProductRepository,
                                       WishlistProductMapper wishlistProductMapper,
                                       ProductMediaMapper productMediaMapper,
-                                      ProductMapper productMapper) {
+                                      ProductMapper productMapper,
+                                      WishlistCollectionService wishlistCollectionService,
+                                      WishlistCollectionProductService wishlistCollectionProductService) {
         this.wishlistProductRepository = wishlistProductRepository;
         this.wishlistProductMapper = wishlistProductMapper;
         this.productMediaMapper = productMediaMapper;
         this.productMapper = productMapper;
+        this.wishlistCollectionService = wishlistCollectionService;
+        this.wishlistCollectionProductService = wishlistCollectionProductService;
     }
 
     @Override
     public PageableResponseDTO<WishlistProductDetailsDTO> getWishlistProducts(Long userId, Long wishlistCollectionId, Integer page, Integer size) {
-//                Page<WishlistProduct> wishlistProductPage = wishlistProductRepository.findByUserIdAndWishlistCollectionId(
-//                userId,
-//                wishlistCollectionId,
-//                PageRequest.of(
-//                        page != null ? page : Pagination.PageNumber.DEFAULT.getValue(),
-//                        size != null ? size : Pagination.PageSize.PRODUCTS.getValue(),
-//                        Sort.by(Sort.Direction.DESC, WishlistCollectionProduct_.CREATED_ON)
-//                )
-//        );
-        Page<WishlistProduct> wishlistProductPage;
-        wishlistProductPage = wishlistProductRepository.findAll(
-                WishlistProductSpecification.wishlistProductsByUserIdAndWishlistCollectionId(userId, wishlistCollectionId),
+        Page<WishlistProduct> wishlistProductPage = wishlistProductRepository.findAll(
+                WishlistProductSpecification.wishlistProductsByUserIdAndWishlistCollectionIdAndActive(userId, wishlistCollectionId, Boolean.TRUE),
                 PageRequest.of(
                         page != null ? page : Pagination.PageNumber.DEFAULT.getValue(),
                         size != null ? size : Pagination.PageSize.PRODUCTS.getValue(),
@@ -97,8 +97,10 @@ public class WishlistProductServiceImpl implements WishlistProductService {
     @Override
     public WishlistProductDTO createWishlistProduct(WishlistProductDTO wishlistProductDTO) {
         try {
-            WishlistProduct wishlistProduct = wishlistProductMapper.mapWishlistProductDtoToWishlistProduct(wishlistProductDTO);
-            wishlistProduct = wishlistProductRepository.save(wishlistProduct);
+            Optional<WishlistProduct> optionalWishlistProduct = wishlistProductRepository.findByUserIdAndProductId(wishlistProductDTO.getUserId(), wishlistProductDTO.getProductId());
+            WishlistProduct wishlistProduct = optionalWishlistProduct.orElseGet(() -> wishlistProductMapper.mapWishlistProductDtoToWishlistProduct(wishlistProductDTO));
+            wishlistProduct.setActive(true);
+            wishlistProduct = wishlistProductRepository.saveAndFlush(wishlistProduct);
             return wishlistProductMapper.mapWishlistProductToWishlistProductDto(wishlistProduct);
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in adding wishlist product by ID " + wishlistProductDTO.getId() + "." + e.getMessage());
@@ -109,7 +111,7 @@ public class WishlistProductServiceImpl implements WishlistProductService {
     public WishlistProductDTO updateWishlistProduct(WishlistProductDTO wishlistProductDTO) {
         try {
             WishlistProduct wishlistProduct = wishlistProductMapper.mapWishlistProductDtoToWishlistProduct(wishlistProductDTO);
-            wishlistProduct = wishlistProductRepository.save(wishlistProduct);
+            wishlistProduct = wishlistProductRepository.saveAndFlush(wishlistProduct);
             return wishlistProductMapper.mapWishlistProductToWishlistProductDto(wishlistProduct);
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in Updating wishlist product by ID " + wishlistProductDTO.getId() + "." + e.getMessage());
@@ -118,9 +120,21 @@ public class WishlistProductServiceImpl implements WishlistProductService {
 
     @Override
     public Long deleteWishlistProductById(Long wishlistProductId) {
+        //SOFT DELETE WishlistProduct
+        //UPDATE WISHLIST COLLECTIONS with wishlistProduct as cover
+        //HARD DELETE WishlistCollectionProduct
         try {
-            wishlistProductRepository.deleteById(wishlistProductId);
-            return wishlistProductId;
+            Optional<WishlistProduct> optionalWishlistProduct = wishlistProductRepository.findById(wishlistProductId);
+            if (optionalWishlistProduct.isPresent()) {
+                WishlistProduct wishlistProduct = optionalWishlistProduct.get();
+                wishlistProduct.setActive(false);
+                wishlistProduct = wishlistProductRepository.save(wishlistProduct);
+                wishlistCollectionService.removeCoverWishlistCollectionProductByWishlistProductIdFromAllWishlistCollections(wishlistProductId);
+                wishlistCollectionProductService.deleteByWishlistProductId(wishlistProductId);
+                return wishlistProduct.getId();
+            } else {
+                throw new EntityNotFoundException("Wishlist Collection Product by ID " + optionalWishlistProduct + " not found.");
+            }
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error in removing item in wishlist product by ID " + wishlistProductId + ". " + e.getMessage());
@@ -143,4 +157,22 @@ public class WishlistProductServiceImpl implements WishlistProductService {
         ));
         return pageableResponseDTO;
     }
+
+    //TODO: IMPORTANT Make sure GenericMapper uses all Defined Mappers in this project
+//    private <D, E> PageableResponseDTO<D> getPageableResponseDTO(Page<E> page, GenericMapper<E, D> genericMapper) {
+//        List<D> list = page
+//                .getContent()
+//                .stream()
+//                .map(genericMapper::mapEntityToDTO)
+//                .toList();
+//        PageableResponseDTO<D> pageableResponseDTO = new PageableResponseDTO<>();
+//        pageableResponseDTO.setList(list);
+//        pageableResponseDTO.setPage(new PageableResponseDTO.PageMetadata(
+//                page.getSize(),
+//                page.getNumber(),
+//                page.getTotalElements(),
+//                page.getTotalPages()
+//        ));
+//        return pageableResponseDTO;
+//    }
 }

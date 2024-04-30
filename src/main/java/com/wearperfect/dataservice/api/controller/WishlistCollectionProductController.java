@@ -40,6 +40,6 @@ public class WishlistCollectionProductController {
 
     @DeleteMapping(path = "/v1/wishlistCollectionProducts/{wishlistCollectionProductId}")
     Long removeWishlistCollectionProductById(@PathVariable(name = "wishlistCollectionProductId", required = true) Long wishlistCollectionProductId) {
-        return wishlistCollectionProductService.deleteWishlistCollectionProductById(wishlistCollectionProductId);
+        return wishlistCollectionProductService.deleteById(wishlistCollectionProductId);
     }
 }

@@ -3,7 +3,6 @@ package com.wearperfect.dataservice.api.serviceImpl;
 import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDetailsDTO;
-import com.wearperfect.dataservice.api.entity.ProductMedia;
 import com.wearperfect.dataservice.api.entity.WishlistCollection;
 import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct;
 import com.wearperfect.dataservice.api.entity.WishlistCollectionProduct_;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,7 +96,7 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
     public WishlistCollectionProductDTO createWishlistCollectionProduct(WishlistCollectionProductDTO wishlistCollectionProductDTO) {
         try {
             Optional<WishlistCollection> optionalWishlistCollection = wishlistCollectionRepository.findById(wishlistCollectionProductDTO.getWishlistCollectionId());
-            if(optionalWishlistCollection.isPresent()){
+            if (optionalWishlistCollection.isPresent()) {
                 WishlistCollectionProduct wishlistCollectionProduct = wishlistCollectionProductMapper.mapWishlistCollectionProductDtoToWishlistCollectionProduct(wishlistCollectionProductDTO);
                 wishlistCollectionProduct = wishlistCollectionProductRepository.save(wishlistCollectionProduct);
                 WishlistCollection wishlistCollection = optionalWishlistCollection.get();
@@ -126,12 +124,24 @@ public class WishlistCollectionProductServiceImpl implements WishlistCollectionP
     }
 
     @Override
-    public Long deleteWishlistCollectionProductById(Long wishlistCollectionProductId) {
+    public Long deleteById(Long wishlistCollectionProductId) {
         try {
             wishlistCollectionProductRepository.deleteById(wishlistCollectionProductId);
             return wishlistCollectionProductId;
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Error in removing item in wishlist collection product by ID " + wishlistCollectionProductId + ".");
+        }
+    }
+
+    @Override
+    public void deleteByWishlistProductId(Long wishlistProductId) {
+        try {
+            wishlistCollectionProductRepository.deleteByWishlistProductId(wishlistProductId);
+        } catch (Exception e) {
+            throw new HttpClientErrorException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    String.format("Error in deleting WishlistCollectionProduct by WishlistProductId %s.", wishlistProductId)
+            );
         }
     }
 }

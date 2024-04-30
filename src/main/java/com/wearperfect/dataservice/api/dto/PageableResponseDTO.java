@@ -10,8 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PageableResponseDTO<T> {
-    List<T> list;
+public class PageableResponseDTO<D> {
+    List<D> list;
     PageMetadata page;
 
     public static class PageMetadata {

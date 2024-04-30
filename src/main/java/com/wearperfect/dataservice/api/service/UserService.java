@@ -1,40 +1,38 @@
 package com.wearperfect.dataservice.api.service;
 
-import java.util.List;
-
+import com.wearperfect.dataservice.api.dto.*;
+import com.wearperfect.dataservice.api.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wearperfect.dataservice.api.dto.AuthenticationRequest;
-import com.wearperfect.dataservice.api.dto.BusinessAndSupportDTO;
-import com.wearperfect.dataservice.api.dto.PasswordResetDTO;
-import com.wearperfect.dataservice.api.dto.UserDTO;
-import com.wearperfect.dataservice.api.dto.UserProfileDTO;
-import com.wearperfect.dataservice.api.entity.User;
+import java.util.List;
 
 public interface UserService {
+    Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-	List<UserDTO> getUsers(String realm);
-	
-	UserProfileDTO getUserDetailsById(Long userId);
+    List<UserDTO> getUsers(String realm);
 
-	UserProfileDTO getUserDetailsByUsername(String username);
-	
-	UserDTO createUser(User user);
+    UserProfileDTO getUserDetailsById(Long userId);
 
-	UserDTO updateUser(User user);
+    UserProfileDTO getUserDetailsByUsername(String username);
 
-	String authenticateUser(AuthenticationRequest authenticationRequest);
+    UserDTO createUser(User user);
 
-	UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture);
+    UserDTO updateUser(User user);
 
-	UserProfileDTO updateUserIntroductionDetails(Long userId, UserDTO userDto);
+    String authenticateUser(AuthenticationRequest authenticationRequest);
 
-	BusinessAndSupportDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
+    UserDTO updateUserBasicProfileDetails(Long userId, UserDTO userDto, MultipartFile profilePicture);
 
-	String resetUserPassword(Long userId, PasswordResetDTO passwordResetDto);
+    UserProfileDTO updateUserIntroductionDetails(Long userId, UserDTO userDto);
 
-	String changeUserPassword(Long userId, PasswordResetDTO passwordResetDto);
-	
-	UserProfileDTO changeUserRole(Long userId, Integer roleId);
-	
+    BusinessAndSupportDTO updateUserBusinessAndSupportDetails(Long userId, BusinessAndSupportDTO businessAndSupportDto);
+
+    String resetUserPassword(Long userId, PasswordResetDTO passwordResetDto);
+
+    String changeUserPassword(Long userId, PasswordResetDTO passwordResetDto);
+
+    UserProfileDTO changeUserRole(Long userId, Integer roleId);
+
 }

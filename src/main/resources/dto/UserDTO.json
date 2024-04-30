@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "name": "id",
+      "dataType": "LONG",
+      "active": true
+    },
+    {
+      "name": "name",
+      "dataType": "STRING",
+      "active": true
+    },
+    {
+      "name": "active",
+      "dataType": "BOOLEAN",
+      "active": true
+    }
+  ],
+  "metadata": {
+    "name": "UserDTO",
+    "fileName": "UserDTO",
+    "supportedTargetFileTypes": [
+      ".java",
+      ".js",
+      ".ts",
+      ".kt"
+    ]
+  }
+}

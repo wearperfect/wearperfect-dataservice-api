@@ -23,7 +23,7 @@ public class FeedController {
 
     @Cacheable(value = "feed", key = "#userId")
     @GetMapping(path = "/v1/users/{userId}/feed")
-    List<PostDetailsDTO> getFeedBUserId(@PathVariable(name = "userId", required = true) Long userId) {
+    public List<PostDetailsDTO> getFeedBUserId(@PathVariable(name = "userId", required = true) Long userId) {
         return feedService.getFeedByUserId(userId);
     }
 }

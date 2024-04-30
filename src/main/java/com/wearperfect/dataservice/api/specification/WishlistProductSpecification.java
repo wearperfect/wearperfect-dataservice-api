@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistProductSpecification {
-    public static Specification<WishlistProduct> wishlistProductsByUserIdAndWishlistCollectionId(Long userId, Long wishlistCollectionId) {
+    public static Specification<WishlistProduct> wishlistProductsByUserIdAndWishlistCollectionIdAndActive(Long userId, Long wishlistCollectionId, Boolean active) {
         return new Specification<WishlistProduct>() {
             @Serial
             private static final long serialVersionUID = 1L;
@@ -28,6 +28,9 @@ public class WishlistProductSpecification {
                     Predicate wishlistCollectionIdPredicate = cb.equal(wishlistCollectionIdExpression, wishlistCollectionId);
                     predicates.add(wishlistCollectionIdPredicate);
                 }
+                Expression<Boolean> activeExpression = root.get(WishlistProduct_.ACTIVE);
+                Predicate activePredicate = cb.equal(activeExpression, active);
+                predicates.add(activePredicate);
                 return cq.where(cb.and(predicates.toArray(new Predicate[] {}))).getRestriction();
             }
         };

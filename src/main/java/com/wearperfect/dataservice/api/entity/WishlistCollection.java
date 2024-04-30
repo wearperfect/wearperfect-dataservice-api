@@ -33,15 +33,13 @@ public class WishlistCollection extends Auditable {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "cover_wishlist_product_id", nullable = false)
-    private Long coverWishlistProductId;
+    @Column(name = "cover_wishlist_collection_product_id", nullable = false)
+    private Long coverWishlistCollectionProductId;
 
-    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = WishlistProduct.class)
-    @JoinColumn(name = "cover_wishlist_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private WishlistProduct coverWishlistProduct;
+    @JoinColumn(name = "cover_wishlist_collection_product_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private WishlistCollectionProduct coverWishlistCollectionProduct;
 
-    @NotAudited
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(fetch = FetchType.LAZY, targetEntity = WishlistCollectionProduct.class)
     @JoinColumn(name="wishlist_collection_id", referencedColumnName = "id", insertable = false, updatable = false)

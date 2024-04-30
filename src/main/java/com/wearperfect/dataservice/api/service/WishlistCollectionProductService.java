@@ -4,6 +4,8 @@ import com.wearperfect.dataservice.api.dto.PageableResponseDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDetailsDTO;
 import com.wearperfect.dataservice.api.dto.WishlistCollectionProductDTO;
 
+import java.util.List;
+
 public interface WishlistCollectionProductService {
     PageableResponseDTO<WishlistCollectionProductDetailsDTO> getWishlistCollectionProducts(Long wishlistCollectionId, Integer page, Integer size);
 
@@ -13,5 +15,7 @@ public interface WishlistCollectionProductService {
 
     WishlistCollectionProductDTO updateWishlistCollectionProduct(WishlistCollectionProductDTO wishlistCollectionProductDTO);
 
-    Long deleteWishlistCollectionProductById(Long wishlistCollectionProductId);
+    Long deleteById(Long wishlistCollectionProductId);
+
+    void deleteByWishlistProductId(Long wishlistProductId);
 }
